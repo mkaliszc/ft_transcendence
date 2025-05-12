@@ -1,0 +1,40 @@
+services:
+  frontend:
+    container_name: frontend
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    volumes:
+      - ./frontend:/frontend
+    depends_on:
+      - db
+    working_dir: /frontend
+    # ports:
+    restart: always
+
+  backend:
+    container_name: backend
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    depends_on:
+        - db
+    volumes:
+      - ./backend:/backend
+    working_dir: /backend
+    # ports:
+    restart: always
+
+  db:
+    container_name: DataBase
+    image: mariadb
+    environment:
+      MARIADB_ROOT_PASSWORD: ${MARIADB_ROOT_PASSWORD}
+    volumes:
+      - mariadb-data:/var/lib/mysql
+    ports:
+      - 3306:3306
+    restart: always
+
+volumes:
+  mariadb-data:
