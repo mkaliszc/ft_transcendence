@@ -4,12 +4,8 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile
-    volumes:
-      - ./frontend:/frontend
     depends_on:
       - db
-    working_dir: /frontend
-    # ports:
     restart: always
 
   backend:
@@ -19,10 +15,6 @@ services:
       dockerfile: Dockerfile
     depends_on:
         - db
-    volumes:
-      - ./backend:/backend
-    working_dir: /backend
-    # ports:
     restart: always
 
   db:
@@ -32,8 +24,18 @@ services:
       MARIADB_ROOT_PASSWORD: ${MARIADB_ROOT_PASSWORD}
     volumes:
       - mariadb-data:/var/lib/mysql
+    restart: always
+
+  web:
+    container_name: nginx
+    image: nginx
     ports:
-      - 3306:3306
+      - "2000:2000"
+    volumes:
+      - ./volumes/logs:var/log/nginx
+    depends_on:
+      - frontend
+      - backend
     restart: always
 
 volumes:
