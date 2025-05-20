@@ -20,6 +20,9 @@ services:
   db:
     container_name: DataBase
     image: mariadb
+    build:
+        context: ./mariadb
+        dockerfile: Dockerfile
     environment:
       MARIADB_ROOT_PASSWORD: ${MARIADB_ROOT_PASSWORD}
     volumes:
