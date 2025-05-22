@@ -1,7 +1,9 @@
 import { Sequelize, Model, DataTypes } from 'sequelize'
+import { config } from 'dotenv'
 
-// Create and export the Sequelize instance
-export const sequelize = new Sequelize('database', 'username', 'password', { // ! database username and password to change according to the .env (dotenv)
+require('dotenv').config({ path: '../../.env' })
+
+export const sequelize = new Sequelize(process.env.MARIADB_DATABASE as string, process.env.MARIADB_USER as string, process.env.MARIADB_ROOT_PASSWORD as string, {
   host: 'localhost',
   dialect: 'mariadb',
   logging: false, // Disable logging for cleaner output

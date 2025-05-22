@@ -15,21 +15,21 @@ fi
 
 # Créer la base de données si elle n'existe pas déjà
 echo "Vérification de l'existence de la base de données..."
-if mariadb -u "$DB_USER" ${MARIADB_ROOT_PASSWORD:+-p"$MARIADB_ROOT_PASSWORD"} -e "USE $DB_NAME" 2>/dev/null; then
-    echo -e "${GREEN}La base de données $DB_NAME existe déjà.${NC}"
+if mariadb -u "$DB_USER" ${MARIADB_ROOT_PASSWORD:+-p"$MARIADB_ROOT_PASSWORD"} -e "USE $MARIADB_DATABASE" 2>/dev/null; then
+    echo -e "${GREEN}La base de données $MARIADB_DATABASE existe déjà.${NC}"
 else
-    echo "Création de la base de données $DB_NAME..."
-    if mariadb -u "$DB_USER" ${MARIADB_ROOT_PASSWORD:+-p"$MARIADB_ROOT_PASSWORD"} -e "CREATE DATABASE IF NOT EXISTS $DB_NAME"; then
-        echo -e "${GREEN}Base de données $DB_NAME créée avec succès.${NC}"
+    echo "Création de la base de données $MARIADB_DATABASE..."
+    if mariadb -u "$DB_USER" ${MARIADB_ROOT_PASSWORD:+-p"$MARIADB_ROOT_PASSWORD"} -e "CREATE DATABASE IF NOT EXISTS $MARIADB_DATABASE"; then
+        echo -e "${GREEN}Base de données $MARIADB_DATABASE créée avec succès.${NC}"
     else
-        echo -e "${RED}Erreur lors de la création de la base de données $DB_NAME.${NC}"
+        echo -e "${RED}Erreur lors de la création de la base de données $MARIADB_DATABASE.${NC}"
         exit 1
     fi
 fi
 
 # Exécuter le script SQL pour créer les tables
 echo "Initialisation des tables..."
-if mariadb -u "$DB_USER" ${MARIADB_ROOT_PASSWORD:+-p"$MARIADB_ROOT_PASSWORD"} "$DB_NAME" < init.sql; then
+if mariadb -u "$DB_USER" ${MARIADB_ROOT_PASSWORD:+-p"$MARIADB_ROOT_PASSWORD"} "$MARIADB_DATABASE" < init.sql; then
     echo -e "${GREEN}Initialisation des tables réussie !${NC}"
 else
     echo -e "${RED}Erreur lors de l'initialisation des tables.${NC}"
