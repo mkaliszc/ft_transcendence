@@ -4,7 +4,7 @@ class User extends Model {
   user_id!: number
   username!: string
   email_adress!: string
-  hassed_password!: string
+  hashed_password!: string
   number_of_matches!: number
   number_of_win!: number
   number_of_lose!: number
@@ -13,6 +13,7 @@ class User extends Model {
   customization_data?: object
   avatar?: string
   twoFA?: boolean
+  twoFA_secret?: string
 }
 
 User.init({
@@ -37,7 +38,7 @@ User.init({
       isEmail: true
     }
   },
-  hassed_password: {
+  hashed_password: {
     type: DataTypes.STRING(255),
     allowNull: false,
     validate: {
@@ -71,9 +72,6 @@ User.init({
   avatar: {
     type: DataTypes.TEXT('medium'),
     allowNull: true,
-    validate: {
-      isUrl: true
-    }
   },
   twoFA: {
     type: DataTypes.BOOLEAN,
