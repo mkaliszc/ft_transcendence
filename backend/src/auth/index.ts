@@ -1,7 +1,10 @@
 import Fastify, { FastifyInstance, FastifyRequest, FastifyReply } from 'fastify'
-import { User } from './utils/db_model'
+import auth_plugins from './utils/auth_plugins';
+import jwt from '@fastify/jwt'
 
 const fastify: FastifyInstance = Fastify({ logger: true })
+
+fastify.register(auth_plugins);
 
 const start = async () => {
   try {

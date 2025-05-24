@@ -1,4 +1,5 @@
 import { FastifyRequest, FastifyReply } from 'fastify'
+import { Op } from 'sequelize';
 import bcrypt from 'bcryptjs'
 import { User } from '../utils/db_model'
 
@@ -15,6 +16,19 @@ export async function sign_up (request: FastifyRequest<{ Body: SignUpRequest }>,
 {
 	try {
 	  const { username, email_adress, password, creation_date, avatar, twoFA } = request.body
+	  
+	  const existingUser = await User.findOne({ 
+		  where: { 
+			  [Op.or]: [
+				  { email_adress }, 
+				  { username }
+				] 
+			} 
+		})
+		if (existingUser) {
+			return reply.status(400).send({ error: 'Username or email already exists' })
+		}
+
 	  const hashed_password = await bcrypt.hash(password, 13)
 	  const newUser = await User.create({
 		username,
