@@ -1,6 +1,5 @@
-import Fastify, { FastifyInstance, FastifyRequest, FastifyReply } from 'fastify'
+import Fastify, { FastifyInstance } from 'fastify'
 import auth_plugins from './utils/auth_plugins';
-import jwt from '@fastify/jwt'
 
 const fastify: FastifyInstance = Fastify({ logger: true })
 

@@ -16,34 +16,28 @@ export async function sign_up (request: FastifyRequest<{ Body: SignUpRequest }>,
 {
 	try {
 	  const { username, email_adress, password, creation_date, avatar, twoFA } = request.body
-	  
 	  const existingUser = await User.findOne({ 
-		  where: { 
-			  [Op.or]: [
-				  { email_adress }, 
-				  { username }
-				] 
-			} 
+			where: { [Op.or]: [{ email_adress }, { username }] }
 		})
 		if (existingUser) {
 			return reply.status(400).send({ error: 'Username or email already exists' })
 		}
 
-	  const hashed_password = await bcrypt.hash(password, 13)
-	  const newUser = await User.create({
-		username,
-		email_adress,
-		hashed_password,
-		creation_date,
-		avatar,
-		twoFA
-	  })
+		const hashed_password = await bcrypt.hash(password, 13)
+		const newUser = await User.create({
+			username,
+			email_adress,
+			hashed_password,
+			creation_date,
+			avatar,
+			twoFA
+	  	})
 
-	  if (!newUser) {
+	if (!newUser) {
 		return reply.status(400).send({ error: 'User creation failed' })
-	  }
-	  reply.status(201).send(newUser)
+	}
+	reply.status(201).send(newUser)
 	} catch (error) {
-	  reply.status(500).send({ error: 'Error creating user' })
+		reply.status(500).send({ error: 'Error creating user' })
 	}
 }

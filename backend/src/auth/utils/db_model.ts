@@ -10,7 +10,6 @@ class User extends Model {
   number_of_lose!: number
   creation_date!: Date
   last_update!: Date
-  customization_data?: object
   avatar?: string
   twoFA?: boolean
   twoFA_secret?: string
@@ -65,10 +64,6 @@ User.init({
     type: DataTypes.DATEONLY,
     defaultValue: DataTypes.NOW
   },
-  customization_data: {
-    type: DataTypes.JSON,
-    allowNull: true
-  },
   avatar: {
     type: DataTypes.TEXT('medium'),
     allowNull: true,
@@ -78,9 +73,9 @@ User.init({
     defaultValue: false
   }
 }, {
-  sequelize, // Pass the connection instance
-  tableName: 'users', // Important: match the actual table name
-  timestamps: false   // Prevent Sequelize from auto-adding `createdAt` and `updatedAt`
+  sequelize,
+  tableName: 'users',
+  timestamps: false
 })
 
 export { User }

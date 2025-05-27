@@ -41,6 +41,9 @@ services:
   web:
     container_name: nginx
     image: nginx
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile
     ports:
       - "2000:2000"
     volumes:
