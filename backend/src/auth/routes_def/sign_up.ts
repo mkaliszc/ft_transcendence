@@ -2,15 +2,7 @@ import { FastifyRequest, FastifyReply } from 'fastify'
 import { Op } from 'sequelize';
 import bcrypt from 'bcryptjs'
 import { User } from '../utils/db_model'
-
-interface SignUpRequest {
-	username: string;
-	email_adress: string;
-	password: string;
-	creation_date?: Date;
-	avatar?: string;
-	twoFA?: boolean;
-}
+import { SignUpRequest } from '../utils/interfaces'
 
 export async function sign_up (request: FastifyRequest<{ Body: SignUpRequest }>, reply: FastifyReply)
 {
