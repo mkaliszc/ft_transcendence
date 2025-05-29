@@ -12,9 +12,9 @@ CREATE TABLE IF NOT EXISTS USERS (
     number_of_lose INT DEFAULT 0,
     creation_date DATE DEFAULT CURRENT_DATE,
     last_update DATE DEFAULT CURRENT_DATE,
-    customization_data JSON,
     avatar MEDIUMTEXT,
     twoFA BOOLEAN DEFAULT FALSE
+    twoFA_secret VARCHAR(255) DEFAULT NULL,
 );
 
 -- Table MATCHES

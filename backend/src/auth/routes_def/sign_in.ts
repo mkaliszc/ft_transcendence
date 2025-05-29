@@ -2,8 +2,12 @@ import { FastifyRequest, FastifyReply } from 'fastify'
 import bcrypt from 'bcryptjs'
 import { User } from '../utils/db_model'
 
-export async function sign_in(mail_adress: string, password: string, reply:FastifyReply) {
-  try {
+export async function sign_in(request: FastifyRequest, reply:FastifyReply) {
+	const { mail_adress, password } = request.body as {
+		mail_adress: string;
+		password: string;
+	};
+	try {
 		const user = await User.findOne({ where: { email_adress: mail_adress } })
 		if (!user) {
 		  return reply.code(401).send({ error: 'User not found' })
@@ -13,7 +17,11 @@ export async function sign_in(mail_adress: string, password: string, reply:Fasti
 		  return reply.code(401).send({ error: 'Invalid password' })
 		}
 		if(user.twoFA) {
-			// TODO : add 2FA verification
+			const tmp_token = reply.jwtSign({
+				mail_adress: user.email_adress,
+				user_id: user.user_id,
+				twoFA: true }, { expiresIn: '5m' });
+			return reply.code(200).send({ token: tmp_token})
 		}
 		await User.update(
 			{ last_login: new Date() },

@@ -71,6 +71,10 @@ User.init({
   twoFA: {
     type: DataTypes.BOOLEAN,
     defaultValue: false
+  },
+  twoFA_secret: {
+    type: DataTypes.STRING(255),
+    allowNull: true
   }
 }, {
   sequelize,

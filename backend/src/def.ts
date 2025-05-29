@@ -15,5 +15,4 @@ export const sequelize = new Sequelize(process.env.MARIADB_DATABASE as string, p
   }
 })
 
-// Re-export Model and DataTypes so they can be imported from this file
 export { Model, DataTypes }

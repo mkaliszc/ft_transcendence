@@ -1,4 +1,4 @@
-FROM alpine:3.22
+FROM alpine:3.21.2
 
 # Install MariaDB and required tools
 RUN apk add --no-cache mariadb mariadb-client bash
