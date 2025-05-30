@@ -37,6 +37,22 @@ const routes = [
     name: "Signin",
     component: Signin,
   },
+  {
+    path: '/multiplayer',
+    name: 'MultiplayerHub',
+    component: () => import('./components/MultiplayerHub.vue'),
+  },
+  {
+    path: '/multiplayer/create',
+    name: 'CreateGame',
+    component: () => import('./components/CreateGame.vue'),
+  },
+  {
+    path: '/multiplayer/join',
+    name: 'JoinGame',
+    component: () => import('./components/JoinGame.vue'),
+  },
+  
 //   {
 //     path: "/register",
 //     name: "Register",

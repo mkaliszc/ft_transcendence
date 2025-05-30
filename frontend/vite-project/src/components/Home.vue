@@ -200,9 +200,9 @@
 	}
 
 	const goToFeature2 = () => {
-	  console.log('Navigate to Feature 2 - profile')
-	  window.location.assign('/profile')
-	}
+      console.log('Navigate to Feature 2 - multiplayer')
+      router.push('/multiplayer')
+}
 
 	const goToFeature3 = () => {
 	  console.log('Navigate to Feature 3 - Tournaments')
