@@ -6,11 +6,13 @@ import fp from 'fastify-plugin';
 export async function refreshToken(request: FastifyRequest<{Body: { refreshtoken: string } }>, reply: FastifyReply) {
 	try {
 	// Verify the refresh token
-		const rtoken = request.body;
-		const decoded = await request.jwtVerify();
-	
+		const decoded = await request.jwtVerify<JWTpayload>();
+        const user = await User.findByPk(decoded.user_id);
+        if (!user) {
+            return reply.status(400).send({ error: 'User no longer exists' });
+        }
 	// Generate a new access token
-		const newToken = reply.jwtSign({ mail_adress: decoded.mail_adress, user_id: decoded.user_id }, { expiresIn: '15min' });
+		const newToken = reply.jwtSign({ email_adress: decoded.email_adress, user_id: decoded.user_id }, { expiresIn: '15min' });
 	
 		return reply.status(200).send({ token: newToken });
 	} catch (error) {
