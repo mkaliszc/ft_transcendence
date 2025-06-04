@@ -1,13 +1,13 @@
 import { FastifyRequest, FastifyReply } from 'fastify'
 import { Op } from 'sequelize';
 import bcrypt from 'bcryptjs'
-import { User } from '../utils/db_model'
+import { User } from '../../db_models/user_model'
 import { SignUpRequest } from '../utils/interfaces'
 
 export async function sign_up (request: FastifyRequest<{ Body: SignUpRequest }>, reply: FastifyReply)
 {
 	try {
-	  const { username, email_adress, password, creation_date, avatar, twoFA } = request.body
+	  const { username, email_adress, password } = request.body
 	  const existingUser = await User.findOne({ 
 			where: { [Op.or]: [{ email_adress }, { username }] }
 		})
@@ -19,10 +19,7 @@ export async function sign_up (request: FastifyRequest<{ Body: SignUpRequest }>,
 		const newUser = await User.create({
 			username,
 			email_adress,
-			hashed_password,
-			creation_date,
-			avatar,
-			twoFA
+			hashed_password
 	  	})
 
 	if (!newUser) {

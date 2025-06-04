@@ -2,7 +2,7 @@
 FROM node:22-alpine3.20
 
 # Set the working directory
-WORKDIR /app
+WORKDIR /app/backend
 
 # Copy package.json and package-lock.json for dependency installation
 COPY package.json package-lock.json ./
@@ -17,4 +17,4 @@ COPY . .
 EXPOSE 8000
 
 # Start the application
-CMD ["npm", "start"]
+CMD ["npm", "run", "dev"]

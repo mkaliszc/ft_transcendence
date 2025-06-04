@@ -1,4 +1,5 @@
-import { sequelize, DataTypes, Model } from '../../def'
+import { DataTypes, Model } from 'sequelize';
+import { sequelize } from '../def'
 
 class User extends Model {
   user_id!: number

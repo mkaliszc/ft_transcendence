@@ -7,6 +7,8 @@ WORKDIR /app
 # Copy package.json and package-lock.json for dependency installation
 COPY ./vite-project/package.json ./vite-project/package-lock.json ./
 
+WORKDIR /app/vite-project
+
 # Install dependencies
 RUN npm install
 
@@ -14,7 +16,7 @@ RUN npm install
 COPY . .
 
 # Expose the application port
-EXPOSE 8000
+EXPOSE 2000
 
 # Start the application
-CMD ["npm", "start"]
+CMD ["npm", "run", "preview"]

@@ -1,26 +1,16 @@
 FROM alpine:3.21.2
 
-# Install MariaDB and required tools
-RUN apk add --no-cache mariadb mariadb-client bash
+RUN apk update --no-cache \
+    && apk add --no-cache mariadb mariadb-client gettext-envsubst \
+    && mkdir -p /var/lib/mysql /run/mysqld \
+    && chown -R mysql:mysql /var/lib/mysql /run/mysqld \
+    && mariadb-install-db --user=mysql --datadir=/var/lib/mysql
 
-# Create necessary directories for MariaDB
-RUN mkdir -p /run/mysqld && chown -R mysql:mysql /run/mysqld /var/lib/mysql
+COPY conf/mariadb-server.cnf /etc/my.cnf.d/mariadb-server.cnf
+COPY tools/init.sql /tools/init.sql
+COPY tools/script.sh /tools/script.sh
+RUN chmod +x /tools/script.sh
 
-# Copy the initialization script and SQL file to the container
-COPY ./tools/script.sh /docker-entrypoint-initdb.d/script.sh
-COPY ./tools/init.sql /docker-entrypoint-initdb.d/init.sql
+USER mysql
 
-# Ensure the script has execution permissions
-RUN chmod +x /docker-entrypoint-initdb.d/script.sh
-
-# Set environment variables for MariaDB
-ENV MYSQL_ROOT_PASSWORD=test
-ENV MYSQL_DATABASE=ft_transcendance
-ENV MYSQL_USER=root
-ENV MYSQL_PASSWORD=123456789
-
-# Expose the default MariaDB port
-EXPOSE 3306
-
-# Set the default command to start MariaDB
-CMD ["sh", "-c", "mysqld --init-file=/docker-entrypoint-initdb.d/init.sql"]
+CMD ["/tools/script.sh"]

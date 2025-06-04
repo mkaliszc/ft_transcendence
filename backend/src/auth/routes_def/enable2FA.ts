@@ -1,6 +1,6 @@
 import { FastifyRequest, FastifyReply } from 'fastify'
 import speakeasy from 'speakeasy';
-import { User } from '../utils/db_model';
+import { User } from '../../db_models/user_model';
 import QRCode from 'qrcode';
 import { JWTpayload } from '../utils/interfaces';
 
