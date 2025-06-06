@@ -15,15 +15,15 @@ export async function disable2FA(request: FastifyRequest, reply: FastifyReply) {
 		}
 
 		// Check if 2FA is already disabled
-		if (!userRecord.twoFA_secret) {
+		if (!userRecord.twoFA) {
 			return reply.status(400).send({ error: '2FA is not enabled' });
 		}
 
         // Disable 2FA by removing the secret
-		await userRecord.update({
-		    twoFactorSecret: null,
-		    twoFactorEnabled: false
-		});
+		await userRecord.update(
+			{ twoFA: false, twoFASecret: null },
+			{ where: { user_id : userRecord.user_id } }
+		);
 
 		return reply.status(200).send({ 
 			message: '2FA has been disabled successfully' 

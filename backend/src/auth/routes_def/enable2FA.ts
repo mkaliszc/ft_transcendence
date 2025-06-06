@@ -13,15 +13,17 @@ export async function enable2FA(request: FastifyRequest, reply: FastifyReply) {
 			return reply.code(404).send({ error: 'User not found' });
 		}
   
-		const generatedSecret = speakeasy.generateSecret();
+		const generatedSecret = speakeasy.generateSecret({
+      		name: `TonApp (${user.username})`,
+    	});
 		if (!generatedSecret) {
 			return reply.code(400).send({ error: 'Internal ERROR' });
 		}
 
 		user.twoFA_secret = generatedSecret.base32;
 		await User.update(
-			{ twoFA: true, twoFASecret: generatedSecret },
-			{ where: { id } }
+			{ twoFA: true, twoFASecret: generatedSecret.base32 },
+			{ where: { user_id : id } }
 		);
 		if (generatedSecret.otpauth_url) {
 			const qrCode = await QRCode.toDataURL(generatedSecret.otpauth_url);

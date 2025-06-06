@@ -30,11 +30,11 @@ export async function check2FA(request: FastifyRequest, reply: FastifyReply) {
 		{ last_login: new Date() },
 		{ where: { user_id: user.user_id } },
 	);
-	const token = reply.jwtSign(
+	const token = await reply.jwtSign(
 		{ mail_adress: user.email_adress, user_id: user.user_id },
 		{ expiresIn: '15min' }
 	);
-	const refreshToken = reply.jwtSign(
+	const refreshToken = await reply.jwtSign(
 		{ mail_adress: user.email_adress, user_id: user.user_id },
 		{ expiresIn: '7d' }
 	);
