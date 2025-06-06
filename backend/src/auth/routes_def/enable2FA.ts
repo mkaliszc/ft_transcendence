@@ -1,0 +1,35 @@
+import { FastifyRequest, FastifyReply } from 'fastify'
+import speakeasy from 'speakeasy';
+import { User } from '../../db_models/user_model';
+import QRCode from 'qrcode';
+import { JWTpayload } from '../utils/interfaces';
+
+export async function enable2FA(request: FastifyRequest, reply: FastifyReply) {
+	try {
+		const payload = request.user as JWTpayload;
+		const id = payload.user_id;
+		const user = await User.findByPk(id);
+		if (!user) {
+			return reply.code(404).send({ error: 'User not found' });
+		}
+  
+		const generatedSecret = speakeasy.generateSecret();
+		if (!generatedSecret) {
+			return reply.code(400).send({ error: 'Internal ERROR' });
+		}
+
+		user.twoFA_secret = generatedSecret.base32;
+		await User.update(
+			{ twoFA: true, twoFASecret: generatedSecret },
+			{ where: { id } }
+		);
+		if (generatedSecret.otpauth_url) {
+			const qrCode = await QRCode.toDataURL(generatedSecret.otpauth_url);
+			return reply.send({ qrCode: qrCode, secret: generatedSecret.base32 });
+		}
+		return reply.status(500).send('QR_CODE_GENERATION_ERROR ');
+	} catch (error) {
+		console.error(error);
+		return reply.code(500).send({ error: 'Internal server error' });
+	}
+}
