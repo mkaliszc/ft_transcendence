@@ -12,6 +12,10 @@ services:
 
   backend:
     container_name: backend
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
     build:
       context: ./backend
       dockerfile: Dockerfile
@@ -23,7 +27,6 @@ services:
 
   db:
     container_name: DataBase
-    image: mariadb
     build:
         context: ./mariadb
         dockerfile: Dockerfile
@@ -38,20 +41,25 @@ services:
       - ./volumes/mariadb:/var/lib/mysql
     restart: always
 
-  web:
-    container_name: nginx
-    image: nginx
-    ports:
-      - "2000:2000"
-    volumes:
-      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
-      - ./volumes/logs:/var/log/nginx
-    depends_on:
-      # - frontend
-      - backend
-    networks:
-      - ft_transcendance
-    restart: always
+  # web:
+  #   container_name: nginx
+  #   image: nginx
+  #   env_file:
+  #     - .env
+  #   build:
+  #     context: ./nginx
+  #     dockerfile: Dockerfile
+  #   ports:
+  #     - "5000:5000"
+  #   volumes:
+  #     - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+  #     - ./volumes/logs:/var/log/nginx
+  #   depends_on:
+  #     - frontend
+  #     - backend
+  #   networks:
+  #     - ft_transcendance
+  #   restart: always
 
 volumes:
   mariadb-data:
