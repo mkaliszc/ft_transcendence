@@ -3,7 +3,7 @@ import jwt from '@fastify/jwt'
 
 export default fp(async (fastify) => {
 	fastify.register(jwt, {
-		secret: process.env.JWT_SECRET_KEY || 'blonde',
+		secret: process.env.JWT_SECRET_KEY as string,
 		sign: { expiresIn: '1h' }
 	});
 

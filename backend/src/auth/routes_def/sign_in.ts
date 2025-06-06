@@ -27,8 +27,11 @@ export async function sign_in(request: FastifyRequest, reply:FastifyReply) {
 			{ last_login: new Date() },
 			{ where: { user_id: user.user_id } },
 		)
-		const token = reply.jwtSign({ mail_adress: user.email_adress, user_id: user.user_id }, { expiresIn: '15min'})
-		const refreshToken = reply.jwtSign({ mail_adress: user.email_adress, user_id: user.user_id }, { expiresIn: '7d' })
+		const token = await reply.jwtSign({ mail_adress: user.email_adress, user_id: user.user_id }, { expiresIn: '15min'})
+		const refreshToken = await reply.jwtSign({ mail_adress: user.email_adress, user_id: user.user_id }, { expiresIn: '7d' })
+		if (!token || !refreshToken) {
+			return reply.code(500).send({ error: 'Failed to generate tokens' })
+		}
 		return reply.code(200).send({ token: token, refreshToken})
 	}
 	catch (error) 

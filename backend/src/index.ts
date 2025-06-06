@@ -1,7 +1,7 @@
 import Fastify, { FastifyInstance } from 'fastify'
+import { sequelize, testConnection, syncDatabase } from './def';
 import auth_plugins from './plugins/auth_plugins';
 import routes_auth from './auth/utils/routes';
-import { sequelize, testConnection, syncDatabase } from './def';
 
 const fastify: FastifyInstance = Fastify({ logger: true })
 
@@ -21,7 +21,7 @@ const start = async () => {
         await syncDatabase(3, 2000); // 3 retries, 2 second delay
 
         console.log('🚀 Starting Fastify server...');
-        await fastify.listen({ port: 8000 })
+        await fastify.listen({ port: 8000, host: '0.0.0.0' });
         console.log('✅ Server is running on port 8000');
 	} catch (err) {
 		fastify.log.error(err)
