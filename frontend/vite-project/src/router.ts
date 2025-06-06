@@ -5,12 +5,19 @@ import Profile from "./components/profile.vue";
 import Signin from "./components/signin.vue";
 import Gamemulti from "./components/Gamemulti.vue";
 import Signup from "./components/signup.vue";
+import Tournament from "./components/tournament.vue";
+import Tournamentgame from "./components/tournamentgame.vue";
 
 const routes = [
   {
     path: "/",
     name: "Home",
     component: Home,
+  },
+    {
+    path: "/touramentgame",
+    name: "tournamentgame",
+    component: Tournamentgame,
   },
   {
     path: "/signup",
@@ -37,11 +44,11 @@ const routes = [
     name: "Signin",
     component: Signin,
   },
-//   {
-//     path: "/register",
-//     name: "Register",
-//     component: Register,
-//   },
+  {
+    path: "/tournament",
+    name: "tournament",
+    component: Tournament,
+  },
 ];
 
 const router = createRouter({

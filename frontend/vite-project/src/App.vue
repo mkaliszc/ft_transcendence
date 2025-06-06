@@ -60,7 +60,7 @@
 	route.path === '/register'
   )
   
-		const isGameRoute = computed(() => route.path === '/' || route.path === '/Game' || route.path === '/profile' || route.path === '/gamemulti')
+		const isGameRoute = computed(() => route.path === '/' || route.path === '/Game' || route.path === '/profile' || route.path === '/tournament')
   
   // Charger la langue préférée
   const savedLanguage = localStorage.getItem('preferred-language')
