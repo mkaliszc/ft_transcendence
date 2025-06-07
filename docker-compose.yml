@@ -38,7 +38,7 @@ services:
     networks:
       - ft_transcendance
     volumes:
-      - ./volumes/mariadb:/var/lib/mysql
+      - db_data:/var/lib/mysql
     restart: always
 
   # web:
@@ -62,7 +62,7 @@ services:
   #   restart: always
 
 volumes:
-  mariadb-data:
+  db_data:
 
 networks:
   ft_transcendance:
