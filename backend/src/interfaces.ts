@@ -1,4 +1,3 @@
-import { User } from './db_models/user_model';
 
 export interface JWTpayload {
 	email_adress: string;
@@ -35,5 +34,6 @@ export interface UpdateData {
 	email_adress?: string;
 	avatar?: string;
 	twoFA?: boolean;
+	last_update?: Date;
 }
 

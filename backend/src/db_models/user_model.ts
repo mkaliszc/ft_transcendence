@@ -77,7 +77,7 @@ User.init({
 	last_update: {
 		type: DataTypes.DATEONLY,
 		allowNull: false,
-		defaultValue: DataTypes.NOW
+		defaultValue: DataTypes.NOW,
 	},
 	avatar: {
 		type: DataTypes.TEXT('medium'),

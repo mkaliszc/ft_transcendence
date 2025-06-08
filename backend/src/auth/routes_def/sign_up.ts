@@ -30,3 +30,5 @@ export async function sign_up (request: FastifyRequest<{ Body: SignUpRequest }>,
 		reply.status(500).send({ error: 'Error creating user' })
 	}
 }
+
+// TODO : Add verification on every field
