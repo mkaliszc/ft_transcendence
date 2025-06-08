@@ -1,0 +1,48 @@
+import { DataTypes, Model } from 'sequelize';
+import { sequelize } from '../def'
+
+class UserMatch extends Model {
+	match_id!: number;
+	user_id!: number;
+	winner!: boolean;
+	user_score!: number;
+}
+
+UserMatch.init({
+	match_id: {
+		type: DataTypes.INTEGER,
+		allowNull: false,
+		references: {
+			model: 'matches',  
+			key: 'match_id'
+		},
+		onDelete: 'CASCADE'
+	},
+	user_id: {
+		type: DataTypes.INTEGER,
+		allowNull: false,
+		references: {
+			model: 'users',
+			key: 'user_id'
+		},
+		onDelete: 'CASCADE'
+	},	
+	winner: {
+			type: DataTypes.BOOLEAN,
+			allowNull: false
+	},
+	user_score: {
+		type: DataTypes.INTEGER,
+		allowNull: false,
+		validate: {
+			min: 0
+    	}
+	}
+}, {
+	sequelize,
+	modelName: 'UserMatch',
+	tableName: 'user_matches',
+	timestamps: false
+});
+
+export { UserMatch };

@@ -1,7 +1,7 @@
 import { FastifyRequest, FastifyReply } from 'fastify';
 import speakeasy from 'speakeasy';
 import { User } from '../../db_models/user_model';
-import { JWTpayload } from '../utils/interfaces';
+import { JWTpayload } from '../../interfaces';
 
 export async function check2FA(request: FastifyRequest, reply: FastifyReply) {
 	const payload = request.user as JWTpayload;

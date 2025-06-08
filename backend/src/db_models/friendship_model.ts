@@ -1,0 +1,60 @@
+import { DataTypes, Model } from 'sequelize';
+import { sequelize } from '../def'
+
+class Friendship extends Model {
+	friendship_id!: number;
+	user_id1!: number;
+	user_id2!: number;
+	status!: string; // 'pending', 'accepted', 'declined', 'blocked'
+	creation_date!: Date;
+	last_update!: Date;
+}
+
+Friendship.init({
+	friendship_id: {
+		type: DataTypes.INTEGER,
+		autoIncrement: true,
+		primaryKey: true
+	},
+	user_id1: {
+		type: DataTypes.INTEGER,
+		allowNull: false,
+		references: {
+			model: 'users',
+			key: 'user_id'
+		},
+		onDelete: 'CASCADE'
+	},
+	user_id2: {
+		type: DataTypes.INTEGER,
+		allowNull: false,
+		references: {
+			model: 'users',
+			key: 'user_id'
+		},
+		onDelete: 'CASCADE'
+	},
+	status: {
+		type: DataTypes.STRING(20),
+		allowNull: false,
+		defaultValue: 'pending',
+		validate: {
+			isIn: [['pending', 'accepted', 'declined', 'blocked']]
+		}
+	},
+	creation_date: {
+		type: DataTypes.DATE,
+		defaultValue: DataTypes.NOW
+	},
+	last_update: {
+		type: DataTypes.DATE,
+		defaultValue: DataTypes.NOW
+	}
+}, {
+	sequelize,
+	modelName: 'Friendship',
+	tableName: 'friendships',
+	timestamps: false
+});
+
+export { Friendship };

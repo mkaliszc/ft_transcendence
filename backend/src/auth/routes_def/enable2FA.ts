@@ -2,7 +2,7 @@ import { FastifyRequest, FastifyReply } from 'fastify'
 import speakeasy from 'speakeasy';
 import { User } from '../../db_models/user_model';
 import QRCode from 'qrcode';
-import { JWTpayload } from '../utils/interfaces';
+import { JWTpayload } from '../../interfaces';
 
 export async function enable2FA(request: FastifyRequest, reply: FastifyReply) {
 	try {

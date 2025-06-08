@@ -2,13 +2,13 @@ import Fastify, { FastifyInstance } from 'fastify'
 import { sequelize, testConnection, syncDatabase } from './def';
 import auth_plugins from './plugins/auth_plugins';
 import routes_auth from './auth/utils/routes';
+import routes_stats from './stats/utils/routes';
 
 const fastify: FastifyInstance = Fastify({ logger: true })
 
-
 fastify.register(auth_plugins);
 fastify.register(routes_auth);
-
+fastify.register(routes_stats);
 
 const start = async () => {
 	try {
