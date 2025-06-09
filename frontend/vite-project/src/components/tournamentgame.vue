@@ -479,7 +479,7 @@ function confirmWinner() {
   localStorage.setItem('tournamentMatchResult', JSON.stringify(matchResult))
   
   // Redirection avec rechargement complet de la page
-  window.location.href = '/tournament'
+  window.location.href = '/tournamentbracket'
 }
 
 function returnToTournament() {
@@ -488,9 +488,9 @@ function returnToTournament() {
     localStorage.removeItem('lastMatchResult')
     
     if (router) {
-      router.push('/tournament')
+      router.push('/tournamentbracket')
     } else {
-      window.location.href = '/tournament'
+      window.location.href = '/tournamentbracket'
     }
   }
 }
