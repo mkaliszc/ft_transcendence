@@ -46,7 +46,7 @@ CREATE TABLE IF NOT EXISTS FRIENDSHIP (
     friendship_id INT AUTO_INCREMENT PRIMARY KEY,
     user_id1 INT,
     user_id2 INT,
-    status VARCHAR(20) NOT NULL DEFAULT 'pending',
+    status VARCHAR(20) NOT NULL DEFAULT 'none',
     creation_date DATE DEFAULT CURRENT_DATE,
     last_update DATE DEFAULT CURRENT_DATE,
     FOREIGN KEY (user_id1) REFERENCES USERS(user_id) ON DELETE CASCADE,

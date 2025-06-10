@@ -1,5 +1,6 @@
 import { DataTypes, Model } from 'sequelize';
 import { sequelize } from '../def'
+import { User } from './user_model';
 
 class UserMatch extends Model {
 	match_id!: number;
@@ -22,14 +23,15 @@ UserMatch.init({
 		type: DataTypes.INTEGER,
 		allowNull: false,
 		references: {
-			model: 'users',
+			model: 'user',
 			key: 'user_id'
 		},
 		onDelete: 'CASCADE'
 	},	
 	winner: {
 			type: DataTypes.BOOLEAN,
-			allowNull: false
+			allowNull: false,
+			defaultValue: false
 	},
 	user_score: {
 		type: DataTypes.INTEGER,
@@ -44,5 +46,6 @@ UserMatch.init({
 	tableName: 'user_matches',
 	timestamps: false
 });
+
 
 export { UserMatch };

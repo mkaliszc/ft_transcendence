@@ -25,7 +25,7 @@ export async function sign_up (request: FastifyRequest<{ Body: SignUpRequest }>,
 	if (!newUser) {
 		return reply.status(400).send({ error: 'User creation failed' })
 	}
-	reply.status(201).send(newUser)
+	reply.status(201).send({ message: 'User created successfully'})
 	} catch (error) {
 		reply.status(500).send({ error: 'Error creating user' })
 	}

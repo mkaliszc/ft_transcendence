@@ -20,7 +20,7 @@ Friendship.init({
 		type: DataTypes.INTEGER,
 		allowNull: false,
 		references: {
-			model: 'users',
+			model: 'user',
 			key: 'user_id'
 		},
 		onDelete: 'CASCADE'
@@ -29,7 +29,7 @@ Friendship.init({
 		type: DataTypes.INTEGER,
 		allowNull: false,
 		references: {
-			model: 'users',
+			model: 'user',
 			key: 'user_id'
 		},
 		onDelete: 'CASCADE'
@@ -37,9 +37,9 @@ Friendship.init({
 	status: {
 		type: DataTypes.STRING(20),
 		allowNull: false,
-		defaultValue: 'pending',
+		defaultValue: 'none',
 		validate: {
-			isIn: [['pending', 'accepted', 'declined', 'blocked']]
+			isIn: [['pending', 'accepted', 'declined', 'blocked', 'none']]
 		}
 	},
 	creation_date: {
