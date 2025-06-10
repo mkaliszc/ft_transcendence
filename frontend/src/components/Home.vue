@@ -206,7 +206,7 @@
 
 	const goToFeature3 = () => {
 	  console.log('Navigate to Feature 3 - Tournaments')
-	  window.location.assign('/tournament')
+	  window.location.assign('/tournamentplayer')
 	}
 
   </script>

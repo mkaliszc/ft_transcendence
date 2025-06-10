@@ -5,8 +5,9 @@ import Profile from "./components/profile.vue";
 import Signin from "./components/signin.vue";
 import Gamemulti from "./components/Gamemulti.vue";
 import Signup from "./components/signup.vue";
-import Tournament from "./components/tournament.vue";
 import Tournamentgame from "./components/tournamentgame.vue";
+import Tournamentbracket from "./components/tournamentbracket.vue";
+import Tournamentplayer from "./components/tournamentplayer.vue";
 
 const routes = [
   {
@@ -45,9 +46,14 @@ const routes = [
     component: Signin,
   },
   {
-    path: "/tournament",
-    name: "tournament",
-    component: Tournament,
+    path: "/tournamentbracket",
+    name: "tournamentbracket",
+    component: Tournamentbracket,
+  },
+    {
+    path: "/tournamentplayer",
+    name: "tournamentplayer",
+    component: Tournamentplayer,
   },
 ];
 

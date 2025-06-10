@@ -8,4 +8,8 @@ export default defineConfig({
 	vue(),
 	tailwindcss()
 ],
+  server: {
+    host: '0.0.0.0',  // Écouter sur toutes les interfaces
+    port: 2000        // Port pour Docker
+  }
 })
