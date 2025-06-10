@@ -1,19 +1,13 @@
-FROM node:22-alpine3.20
-
-# Set the working directory
+# Dockerfile frontend avec nginx interne
+FROM node:18-alpine AS build
 WORKDIR /app
+COPY package*.json ./
+RUN npm ci
+COPY . .
+RUN npm run build
 
-# Copy package.json and package-lock.json for dependency installation
-COPY ./vite-project/package.json ./vite-project/package-lock.json ./
-
-# Install dependencies
-RUN npm install
-
-# Copy the rest of the application code
-COPY ./vite-project .
-
-# Expose the application port
+FROM nginx:alpine
+COPY --from=build /app/dist /usr/share/nginx/html
+COPY nginx.conf /etc/nginx/conf.d/default.conf
 EXPOSE 2000
-
-# Start the application in preview mode
-CMD ["npm", "run", "preview", "--", "--host", "0.0.0.0", "--port", "2000"]zz
+CMD ["nginx", "-g", "daemon off;"]

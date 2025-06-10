@@ -1,7 +1,7 @@
 import { FastifyRequest, FastifyReply } from 'fastify';
 import speakeasy from 'speakeasy';
 import { User } from '../../db_models/user_model';
-import { JWTpayload } from '../utils/interfaces';
+import { JWTpayload } from '../../interfaces';
 
 export async function check2FA(request: FastifyRequest, reply: FastifyReply) {
 	const payload = request.user as JWTpayload;
@@ -30,11 +30,11 @@ export async function check2FA(request: FastifyRequest, reply: FastifyReply) {
 		{ last_login: new Date() },
 		{ where: { user_id: user.user_id } },
 	);
-	const token = reply.jwtSign(
+	const token = await reply.jwtSign(
 		{ mail_adress: user.email_adress, user_id: user.user_id },
 		{ expiresIn: '15min' }
 	);
-	const refreshToken = reply.jwtSign(
+	const refreshToken = await reply.jwtSign(
 		{ mail_adress: user.email_adress, user_id: user.user_id },
 		{ expiresIn: '7d' }
 	);

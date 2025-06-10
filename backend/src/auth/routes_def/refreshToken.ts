@@ -1,10 +1,10 @@
 import { FastifyRequest, FastifyReply } from 'fastify';
-import { JWTpayload } from '../utils/interfaces';
+import { JWTpayload } from '../../interfaces';
 import { User } from '../../db_models/user_model';
 
 export async function refreshToken(request: FastifyRequest<{Body: { refreshtoken: string } }>, reply: FastifyReply) {
 	try {
-		const decoded = await request.jwtVerify() as JWTpayload;
+		const decoded = request.user as JWTpayload;
         const user = await User.findByPk(decoded.user_id);
         if (!user) {
             return reply.status(400).send({ error: 'User no longer exists' });
