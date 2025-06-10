@@ -19,20 +19,26 @@
       <!-- Côté gauche - Quarts de finale -->
       <div class="bracket-side left-side">
         <div class="round round-1">
-          <div class="match" v-for="(match, index) in leftQuarterFinals" :key="'left-qf-' + index">
-            <div class="team-container">
-              <div 
-                :class="['team', { 'winner': match.team1.isWinner, 'clickable': !match.isCompleted }]"
-                @click="selectWinner(match, 1)"
-              >
-                {{ match.team1.name }}
+          <div class="match-wrapper" v-for="(match, index) in leftQuarterFinals" :key="'left-qf-' + index">
+            <div class="match">
+              <div class="team-container">
+                <div 
+                  :class="['team', { 'winner': match.team1.isWinner, 'clickable': !match.isCompleted }]"
+                  @click="selectWinner(match, 1)"
+                >
+                  {{ match.team1.name }}
+                </div>
+                <div 
+                  :class="['team', { 'winner': match.team2.isWinner, 'clickable': !match.isCompleted }]"
+                  @click="selectWinner(match, 2)"
+                >
+                  {{ match.team2.name }}
+                </div>
               </div>
-              <div 
-                :class="['team', { 'winner': match.team2.isWinner, 'clickable': !match.isCompleted }]"
-                @click="selectWinner(match, 2)"
-              >
-                {{ match.team2.name }}
-              </div>
+              <div class="connector-right"></div>
+            </div>
+            <!-- Zone d'action avec hauteur fixe -->
+            <div class="action-zone">
               <button 
                 v-if="!match.isCompleted" 
                 @click="launchPongGame(match)"
@@ -41,46 +47,52 @@
                 🏓 Jouer Pong
               </button>
             </div>
-            <div class="connector-right"></div>
           </div>
         </div>
 
         <!-- Demi-finale gauche -->
         <div class="round round-2">
-          <div class="match">
-            <div class="team-container">
-              <div 
-                :class="['team', { 
-                  'winner': leftSemiFinal.team1.isWinner, 
-                  'clickable': canPlaySemiFinal(leftSemiFinal) && leftSemiFinal.team1.name,
-                  'disabled': !canPlaySemiFinal(leftSemiFinal)
-                }]"
-                @click="leftSemiFinal.team1.name && canPlaySemiFinal(leftSemiFinal) && selectWinner(leftSemiFinal, 1)"
-              >
-                {{ leftSemiFinal.team1.name || 'En attente' }}
+          <div class="match-wrapper">
+            <div class="match">
+              <div class="team-container">
+                <div 
+                  :class="['team', { 
+                    'winner': leftSemiFinal.team1.isWinner, 
+                    'clickable': canPlaySemiFinal(leftSemiFinal) && leftSemiFinal.team1.name,
+                    'disabled': !canPlaySemiFinal(leftSemiFinal),
+                    'ready-to-play': isMatchReadyToPlay(leftSemiFinal)
+                  }]"
+                  @click="leftSemiFinal.team1.name && canPlaySemiFinal(leftSemiFinal) && selectWinner(leftSemiFinal, 1)"
+                >
+                  {{ leftSemiFinal.team1.name || 'En attente' }}
+                </div>
+                <div 
+                  :class="['team', { 
+                    'winner': leftSemiFinal.team2.isWinner, 
+                    'clickable': canPlaySemiFinal(leftSemiFinal) && leftSemiFinal.team2.name,
+                    'disabled': !canPlaySemiFinal(leftSemiFinal),
+                    'ready-to-play': isMatchReadyToPlay(leftSemiFinal)
+                  }]"
+                  @click="leftSemiFinal.team2.name && canPlaySemiFinal(leftSemiFinal) && selectWinner(leftSemiFinal, 2)"
+                >
+                  {{ leftSemiFinal.team2.name || 'En attente' }}
+                </div>
               </div>
-              <div 
-                :class="['team', { 
-                  'winner': leftSemiFinal.team2.isWinner, 
-                  'clickable': canPlaySemiFinal(leftSemiFinal) && leftSemiFinal.team2.name,
-                  'disabled': !canPlaySemiFinal(leftSemiFinal)
-                }]"
-                @click="leftSemiFinal.team2.name && canPlaySemiFinal(leftSemiFinal) && selectWinner(leftSemiFinal, 2)"
-              >
-                {{ leftSemiFinal.team2.name || 'En attente' }}
-              </div>
+              <div class="connector-right"></div>
+            </div>
+            <!-- Zone d'action avec hauteur fixe -->
+            <div class="action-zone">
               <button 
-                v-if="!leftSemiFinal.isCompleted && leftSemiFinal.team1.name && leftSemiFinal.team2.name && canPlaySemiFinal(leftSemiFinal)" 
+                v-if="isMatchReadyToPlay(leftSemiFinal)" 
                 @click="launchPongGame(leftSemiFinal)"
-                class="play-pong-btn"
+                class="play-pong-btn ready-btn"
               >
                 🏓 Jouer Pong
               </button>
-              <div v-else-if="!canPlaySemiFinal(leftSemiFinal)" class="waiting-message">
+              <div v-else-if="!canPlaySemiFinal(leftSemiFinal) && (leftSemiFinal.team1.name || leftSemiFinal.team2.name)" class="waiting-message">
                 Terminez tous les quarts de finale
               </div>
             </div>
-            <div class="connector-right"></div>
           </div>
         </div>
       </div>
@@ -90,46 +102,58 @@
         <div class="final-section">
           <h2 class="final-title">JOUEUR<br>GAGNANT</h2>
           
-          <div class="final-match">
-            <div class="team-container final-teams">
-              <div 
-                :class="['team final-team', { 
-                  'winner': finalMatch.team1.isWinner, 
-                  'clickable': canPlayFinal() && finalMatch.team1.name,
-                  'disabled': !canPlayFinal()
-                }]"
-                @click="finalMatch.team1.name && canPlayFinal() && selectWinner(finalMatch, 1)"
-              >
-                {{ finalMatch.team1.name || 'En attente' }}
+          <div class="final-match-wrapper">
+            <div class="final-match">
+              <div class="team-container final-teams">
+                <div 
+                  :class="['team final-team', { 
+                    'winner': finalMatch.team1.isWinner, 
+                    'clickable': canPlayFinal() && finalMatch.team1.name,
+                    'disabled': !canPlayFinal(),
+                    'ready-to-play': isMatchReadyToPlay(finalMatch)
+                  }]"
+                  @click="finalMatch.team1.name && canPlayFinal() && selectWinner(finalMatch, 1)"
+                >
+                  {{ finalMatch.team1.name || 'En attente' }}
+                </div>
+                <div 
+                  :class="['team final-team', { 
+                    'winner': finalMatch.team2.isWinner, 
+                    'clickable': canPlayFinal() && finalMatch.team2.name,
+                    'disabled': !canPlayFinal(),
+                    'ready-to-play': isMatchReadyToPlay(finalMatch)
+                  }]"
+                  @click="finalMatch.team2.name && canPlayFinal() && selectWinner(finalMatch, 2)"
+                >
+                  {{ finalMatch.team2.name || 'En attente' }}
+                </div>
               </div>
-              <div 
-                :class="['team final-team', { 
-                  'winner': finalMatch.team2.isWinner, 
-                  'clickable': canPlayFinal() && finalMatch.team2.name,
-                  'disabled': !canPlayFinal()
-                }]"
-                @click="finalMatch.team2.name && canPlayFinal() && selectWinner(finalMatch, 2)"
-              >
-                {{ finalMatch.team2.name || 'En attente' }}
-              </div>
+            </div>
+            <!-- Zone d'action finale avec hauteur fixe -->
+            <div class="action-zone final-action-zone">
               <button 
-                v-if="!finalMatch.isCompleted && finalMatch.team1.name && finalMatch.team2.name && canPlayFinal()" 
+                v-if="isMatchReadyToPlay(finalMatch)" 
                 @click="launchPongGame(finalMatch)"
-                class="play-pong-btn final-pong-btn"
+                class="play-pong-btn final-pong-btn ready-btn"
               >
                 🏓 FINALE PONG
               </button>
-              <div v-else-if="!canPlayFinal()" class="waiting-message">
+              <div v-else-if="!canPlayFinal() && (finalMatch.team1.name || finalMatch.team2.name)" class="waiting-message">
                 Terminez toutes les demi-finales
               </div>
             </div>
           </div>
 
-          <!-- Champion -->
-          <div v-if="champion" class="champion-section">
-            <div class="trophy">🏆</div>
-            <div class="champion-name">{{ champion }}</div>
-            <div class="champion-subtitle">Champion du Tournoi !</div>
+          <!-- Champion avec hauteur fixe -->
+          <div class="champion-section">
+            <div v-if="champion" class="champion-content">
+              <div class="trophy">🏆</div>
+              <div class="champion-name">{{ champion }}</div>
+              <div class="champion-subtitle">Champion du Tournoi !</div>
+              <button @click="celebrateAndReset" class="celebrate-button">
+                🎉 Nouveau Tournoi
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -138,37 +162,44 @@
       <div class="bracket-side right-side">
         <!-- Demi-finale droite -->
         <div class="round round-2">
-          <div class="match">
-            <div class="connector-left"></div>
-            <div class="team-container">
-              <div 
-                :class="['team', { 
-                  'winner': rightSemiFinal.team1.isWinner, 
-                  'clickable': canPlaySemiFinal(rightSemiFinal) && rightSemiFinal.team1.name,
-                  'disabled': !canPlaySemiFinal(rightSemiFinal)
-                }]"
-                @click="rightSemiFinal.team1.name && canPlaySemiFinal(rightSemiFinal) && selectWinner(rightSemiFinal, 1)"
-              >
-                {{ rightSemiFinal.team1.name || 'En attente' }}
+          <div class="match-wrapper">
+            <div class="match">
+              <div class="connector-left"></div>
+              <div class="team-container">
+                <div 
+                  :class="['team', { 
+                    'winner': rightSemiFinal.team1.isWinner, 
+                    'clickable': canPlaySemiFinal(rightSemiFinal) && rightSemiFinal.team1.name,
+                    'disabled': !canPlaySemiFinal(rightSemiFinal),
+                    'ready-to-play': isMatchReadyToPlay(rightSemiFinal)
+                  }]"
+                  @click="rightSemiFinal.team1.name && canPlaySemiFinal(rightSemiFinal) && selectWinner(rightSemiFinal, 1)"
+                >
+                  {{ rightSemiFinal.team1.name || 'En attente' }}
+                </div>
+                <div 
+                  :class="['team', { 
+                    'winner': rightSemiFinal.team2.isWinner, 
+                    'clickable': canPlaySemiFinal(rightSemiFinal) && rightSemiFinal.team2.name,
+                    'disabled': !canPlaySemiFinal(rightSemiFinal),
+                    'ready-to-play': isMatchReadyToPlay(rightSemiFinal)
+                  }]"
+                  @click="rightSemiFinal.team2.name && canPlaySemiFinal(rightSemiFinal) && selectWinner(rightSemiFinal, 2)"
+                >
+                  {{ rightSemiFinal.team2.name || 'En attente' }}
+                </div>
               </div>
-              <div 
-                :class="['team', { 
-                  'winner': rightSemiFinal.team2.isWinner, 
-                  'clickable': canPlaySemiFinal(rightSemiFinal) && rightSemiFinal.team2.name,
-                  'disabled': !canPlaySemiFinal(rightSemiFinal)
-                }]"
-                @click="rightSemiFinal.team2.name && canPlaySemiFinal(rightSemiFinal) && selectWinner(rightSemiFinal, 2)"
-              >
-                {{ rightSemiFinal.team2.name || 'En attente' }}
-              </div>
+            </div>
+            <!-- Zone d'action avec hauteur fixe -->
+            <div class="action-zone">
               <button 
-                v-if="!rightSemiFinal.isCompleted && rightSemiFinal.team1.name && rightSemiFinal.team2.name && canPlaySemiFinal(rightSemiFinal)" 
+                v-if="isMatchReadyToPlay(rightSemiFinal)" 
                 @click="launchPongGame(rightSemiFinal)"
-                class="play-pong-btn"
+                class="play-pong-btn ready-btn"
               >
                 🏓 Jouer Pong
               </button>
-              <div v-else-if="!canPlaySemiFinal(rightSemiFinal)" class="waiting-message">
+              <div v-else-if="!canPlaySemiFinal(rightSemiFinal) && (rightSemiFinal.team1.name || rightSemiFinal.team2.name)" class="waiting-message">
                 Terminez tous les quarts de finale
               </div>
             </div>
@@ -177,21 +208,26 @@
 
         <!-- Quarts de finale droite -->
         <div class="round round-1">
-          <div class="match" v-for="(match, index) in rightQuarterFinals" :key="'right-qf-' + index">
-            <div class="connector-left"></div>
-            <div class="team-container">
-              <div 
-                :class="['team', { 'winner': match.team1.isWinner, 'clickable': !match.isCompleted }]"
-                @click="selectWinner(match, 1)"
-              >
-                {{ match.team1.name }}
+          <div class="match-wrapper" v-for="(match, index) in rightQuarterFinals" :key="'right-qf-' + index">
+            <div class="match">
+              <div class="connector-left"></div>
+              <div class="team-container">
+                <div 
+                  :class="['team', { 'winner': match.team1.isWinner, 'clickable': !match.isCompleted }]"
+                  @click="selectWinner(match, 1)"
+                >
+                  {{ match.team1.name }}
+                </div>
+                <div 
+                  :class="['team', { 'winner': match.team2.isWinner, 'clickable': !match.isCompleted }]"
+                  @click="selectWinner(match, 2)"
+                >
+                  {{ match.team2.name }}
+                </div>
               </div>
-              <div 
-                :class="['team', { 'winner': match.team2.isWinner, 'clickable': !match.isCompleted }]"
-                @click="selectWinner(match, 2)"
-              >
-                {{ match.team2.name }}
-              </div>
+            </div>
+            <!-- Zone d'action avec hauteur fixe -->
+            <div class="action-zone">
               <button 
                 v-if="!match.isCompleted" 
                 @click="launchPongGame(match)"
@@ -209,32 +245,14 @@
     <div class="instructions">
       <p>🎮 <strong>Instructions :</strong> Cliquez sur un joueur pour le faire gagner ou sur "Jouer Pong" pour lancer un match</p>
       <p>🏓 <strong>Pong :</strong> Cliquez sur "Jouer Pong" pour lancer un match entre deux joueurs</p>
-      <p>⚠️ <strong>Important :</strong> Terminez tous les matchs d'un tour avant de passer au suivant</p>
+      <p>⚠️ <strong>Important :</strong> Les vainqueurs avancent automatiquement au tour suivant</p>
     </div>
 
-    <!-- Progression du tournoi -->
-    <div class="tournament-progress">
-      <h3>📊 Progression du Tournoi</h3>
-      <div class="progress-stats">
-        <div class="stat" :class="{ 'completed': completedQuarterFinals === 4 }">
-          <span class="stat-label">Quarts de finale :</span>
-          <span class="stat-value">{{ completedQuarterFinals }}/4</span>
-        </div>
-        <div class="stat" :class="{ 'completed': completedSemiFinals === 2, 'available': completedQuarterFinals === 4 }">
-          <span class="stat-label">Demi-finales :</span>
-          <span class="stat-value">{{ completedSemiFinals }}/2</span>
-        </div>
-        <div class="stat" :class="{ 'completed': finalMatch.isCompleted, 'available': completedSemiFinals === 2 }">
-          <span class="stat-label">Finale :</span>
-          <span class="stat-value">{{ finalMatch.isCompleted ? '1/1' : '0/1' }}</span>
-        </div>
-      </div>
-    </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, watch } from 'vue'
+import { ref, computed, onMounted, onUnmounted, watch } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 
 const router = useRouter()
@@ -250,6 +268,7 @@ interface Match {
   team2: Team
   isCompleted: boolean
   winner?: Team
+  autoAdvance?: boolean // Indique si le match doit avancer automatiquement
 }
 
 // État du tournoi
@@ -270,6 +289,27 @@ const finalMatch = ref<Match>({
   team2: { name: '', isWinner: false },
   isCompleted: false
 })
+
+// Navigation et réinitialisation
+const goBack = () => {
+  // Nettoyer l'état du tournoi
+  localStorage.removeItem('tournament_state')
+  
+  // Rediriger vers la page de configuration
+  router.push({ 
+    name: 'tournament-setup',
+    query: {} // Nettoyer les paramètres
+  })
+}
+
+const resetTournament = () => {
+  // Nettoyer complètement l'état
+  localStorage.removeItem('tournament_state')
+  
+  // Réinitialiser avec de nouveaux joueurs par défaut
+  const defaultPlayers = ['Alice', 'Bob', 'Charlie', 'Diana', 'Eve', 'Frank', 'Grace', 'Henry']
+  initializeTournament(defaultPlayers)
+}
 
 // Champion
 const champion = computed(() => {
@@ -311,7 +351,6 @@ const loadTournamentState = () => {
     try {
       const state = JSON.parse(saved)
       
-      // Vérifier que les données sont valides
       if (state.leftQuarterFinals && state.rightQuarterFinals) {
         leftQuarterFinals.value = state.leftQuarterFinals
         rightQuarterFinals.value = state.rightQuarterFinals
@@ -330,7 +369,6 @@ const loadTournamentState = () => {
 
 // Fonctions de validation
 const canPlaySemiFinal = (semiFinal: Match) => {
-  // On peut jouer une demi-finale seulement si tous les quarts de finale sont terminés
   return completedQuarterFinals.value === 4 && 
          semiFinal.team1.name && 
          semiFinal.team2.name && 
@@ -338,11 +376,27 @@ const canPlaySemiFinal = (semiFinal: Match) => {
 }
 
 const canPlayFinal = () => {
-  // On peut jouer la finale seulement si toutes les demi-finales sont terminées
   return completedSemiFinals.value === 2 && 
          finalMatch.value.team1.name && 
          finalMatch.value.team2.name && 
          !finalMatch.value.isCompleted
+}
+
+// Vérifier si un match est prêt à être joué
+const isMatchReadyToPlay = (match: Match) => {
+  if (match.isCompleted) return false
+  
+  // Pour les demi-finales
+  if (match === leftSemiFinal.value || match === rightSemiFinal.value) {
+    return completedQuarterFinals.value === 4 && match.team1.name && match.team2.name
+  }
+  
+  // Pour la finale
+  if (match === finalMatch.value) {
+    return completedSemiFinals.value === 2 && match.team1.name && match.team2.name
+  }
+  
+  return false
 }
 
 // Gestion du retour du jeu Pong
@@ -352,9 +406,7 @@ const handleGameResult = () => {
   const player2 = route.query.player2 as string
   
   if (winner && player1 && player2) {
-    console.log('Retour du jeu avec gagnant:', winner)
-    
-    // Trouver le match correspondant
+    // Trouver et mettre à jour le match correspondant
     const allMatches = [
       ...leftQuarterFinals.value,
       ...rightQuarterFinals.value,
@@ -369,7 +421,6 @@ const handleGameResult = () => {
     )
     
     if (match && !match.isCompleted) {
-      console.log('Match trouvé, application du résultat')
       if (winner === match.team1.name) {
         selectWinner(match, 1)
       } else if (winner === match.team2.name) {
@@ -377,40 +428,42 @@ const handleGameResult = () => {
       }
     }
     
-    // Nettoyer les paramètres de l'URL mais garder les joueurs
+    // Nettoyer l'URL sans changer de page
+    const newQuery = { ...route.query }
+    delete newQuery.winner
+    delete newQuery.player1
+    delete newQuery.player2
+    
     router.replace({ 
-      name: route.name || 'tournament-bracket',
-      query: { players: route.query.players } 
+      name: route.name,
+      query: newQuery
     })
   }
 }
 
 // Initialiser le tournoi avec les joueurs
 const initializeTournament = (playerNames: string[]) => {
-  if (playerNames.length !== 8) {
-    router.push({ name: 'tournament-setup' })
-    return
+  // Utiliser des joueurs par défaut si pas assez de joueurs
+  if (playerNames.length < 8) {
+    playerNames = ['Alice', 'Bob', 'Charlie', 'Diana', 'Eve', 'Frank', 'Grace', 'Henry']
   }
 
-  // Essayer de charger l'état sauvegardé d'abord
   if (loadTournamentState()) {
-    console.log('État du tournoi chargé depuis localStorage')
     return
   }
-
-  console.log('Initialisation d\'un nouveau tournoi')
   
-  // Sinon, initialiser un nouveau tournoi
   leftQuarterFinals.value = [
     {
       team1: { name: playerNames[0], isWinner: false },
       team2: { name: playerNames[1], isWinner: false },
-      isCompleted: false
+      isCompleted: false,
+      autoAdvance: true
     },
     {
       team1: { name: playerNames[2], isWinner: false },
       team2: { name: playerNames[3], isWinner: false },
-      isCompleted: false
+      isCompleted: false,
+      autoAdvance: true
     }
   ]
 
@@ -418,25 +471,29 @@ const initializeTournament = (playerNames: string[]) => {
     {
       team1: { name: playerNames[4], isWinner: false },
       team2: { name: playerNames[5], isWinner: false },
-      isCompleted: false
+      isCompleted: false,
+      autoAdvance: true
     },
     {
       team1: { name: playerNames[6], isWinner: false },
       team2: { name: playerNames[7], isWinner: false },
-      isCompleted: false
+      isCompleted: false,
+      autoAdvance: true
     }
   ]
 
   leftSemiFinal.value = {
     team1: { name: '', isWinner: false },
     team2: { name: '', isWinner: false },
-    isCompleted: false
+    isCompleted: false,
+    autoAdvance: true
   }
 
   rightSemiFinal.value = {
     team1: { name: '', isWinner: false },
     team2: { name: '', isWinner: false },
-    isCompleted: false
+    isCompleted: false,
+    autoAdvance: true
   }
 
   finalMatch.value = {
@@ -445,23 +502,19 @@ const initializeTournament = (playerNames: string[]) => {
     isCompleted: false
   }
   
-  // Sauvegarder l'état initial
   saveTournamentState()
 }
 
 // Lancer le jeu Pong
 const launchPongGame = (match: Match) => {
-  // Sauvegarder l'état actuel avant de naviguer
   saveTournamentState()
   
-  // Naviguer vers le jeu avec les paramètres
   router.push({
     name: 'tournamentgame',
     query: {
       player1: match.team1.name,
       player2: match.team2.name,
-      // Ajouter un paramètre pour s'assurer de revenir au bracket
-      return: 'bracket'
+      returnTo: 'tournament-bracket'
     }
   })
 }
@@ -470,11 +523,9 @@ const launchPongGame = (match: Match) => {
 const selectWinner = (match: Match, teamNumber: 1 | 2) => {
   if (match.isCompleted) return
 
-  // Réinitialiser les gagnants
   match.team1.isWinner = false
   match.team2.isWinner = false
 
-  // Définir le gagnant
   if (teamNumber === 1) {
     match.team1.isWinner = true
     match.winner = match.team1
@@ -484,80 +535,160 @@ const selectWinner = (match: Match, teamNumber: 1 | 2) => {
   }
 
   match.isCompleted = true
-
-  // Avancer le gagnant au tour suivant
-  advanceWinner(match)
   
-  // Sauvegarder l'état après modification
+  // Avancer automatiquement le vainqueur au tour suivant
+  if (match.autoAdvance) {
+    advanceWinner(match)
+  }
+  
   saveTournamentState()
+  
+  // Vérifier si c'est la fin du tournoi
+  if (finalMatch.value.isCompleted) {
+    checkAutoReset()
+  }
+  
+  // Vérifier si on peut jouer automatiquement le prochain match
+  checkNextMatches()
 }
 
 // Avancer le gagnant au tour suivant
 const advanceWinner = (match: Match) => {
   if (!match.winner) return
 
-  // Trouver d'où vient ce match et où envoyer le gagnant
   const leftQFIndex = leftQuarterFinals.value.indexOf(match)
   const rightQFIndex = rightQuarterFinals.value.indexOf(match)
 
   if (leftQFIndex !== -1) {
-    // Quart de finale gauche -> demi-finale gauche
+    // Quart de finale gauche
     if (leftQFIndex === 0) {
-      leftSemiFinal.value.team1 = { ...match.winner }
+      leftSemiFinal.value.team1.name = match.winner.name
+      leftSemiFinal.value.team1.isWinner = false
     } else {
-      leftSemiFinal.value.team2 = { ...match.winner }
+      leftSemiFinal.value.team2.name = match.winner.name
+      leftSemiFinal.value.team2.isWinner = false
     }
   } else if (rightQFIndex !== -1) {
-    // Quart de finale droite -> demi-finale droite
+    // Quart de finale droite
     if (rightQFIndex === 0) {
-      rightSemiFinal.value.team1 = { ...match.winner }
+      rightSemiFinal.value.team1.name = match.winner.name
+      rightSemiFinal.value.team1.isWinner = false
     } else {
-      rightSemiFinal.value.team2 = { ...match.winner }
+      rightSemiFinal.value.team2.name = match.winner.name
+      rightSemiFinal.value.team2.isWinner = false
     }
   } else if (match === leftSemiFinal.value) {
-    // Demi-finale gauche -> finale
-    finalMatch.value.team1 = { ...match.winner }
+    // Demi-finale gauche vers finale
+    finalMatch.value.team1.name = match.winner.name
+    finalMatch.value.team1.isWinner = false
   } else if (match === rightSemiFinal.value) {
-    // Demi-finale droite -> finale
-    finalMatch.value.team2 = { ...match.winner }
+    // Demi-finale droite vers finale
+    finalMatch.value.team2.name = match.winner.name
+    finalMatch.value.team2.isWinner = false
+  }
+  
+  // Sauvegarder l'état après l'avancement
+  saveTournamentState()
+}
+
+// Vérifier si les prochains matchs peuvent être joués
+const checkNextMatches = () => {
+  // Vérifier les demi-finales
+  if (completedQuarterFinals.value === 4) {
+    // Mettre en évidence les demi-finales prêtes à être jouées
+    if (leftSemiFinal.value.team1.name && leftSemiFinal.value.team2.name && !leftSemiFinal.value.isCompleted) {
+      // La demi-finale gauche est prête
+      console.log("Demi-finale gauche prête à être jouée")
+    }
+    
+    if (rightSemiFinal.value.team1.name && rightSemiFinal.value.team2.name && !rightSemiFinal.value.isCompleted) {
+      // La demi-finale droite est prête
+      console.log("Demi-finale droite prête à être jouée")
+    }
+  }
+  
+  // Vérifier la finale
+  if (completedSemiFinals.value === 2) {
+    if (finalMatch.value.team1.name && finalMatch.value.team2.name && !finalMatch.value.isCompleted) {
+      // La finale est prête
+      console.log("Finale prête à être jouée")
+    }
   }
 }
 
-// Navigation
-const goBack = () => {
-  router.push({ name: 'tournament-setup' })
+// Célébrer et réinitialiser après la finale
+const celebrateAndReset = () => {
+  // Animation de célébration
+  setTimeout(() => {
+    localStorage.removeItem('tournament_state')
+    
+    // Choix : soit réinitialiser sur place, soit retourner à la config
+    // Option 1: Réinitialiser sur place
+    const defaultPlayers = ['Alice', 'Bob', 'Charlie', 'Diana', 'Eve', 'Frank', 'Grace', 'Henry']
+    initializeTournament(defaultPlayers)
+  }, 1000)
 }
 
-const resetTournament = () => {
-  localStorage.removeItem('tournament_state')
-  router.push({ name: 'tournament-setup' })
+// Réinitialiser automatiquement si on quitte la page
+const handleBeforeUnload = () => {
+  // Vérifier si on ne va pas vers le jeu
+  const isLeavingForGame = route.query.player1 && route.query.player2
+  
+  if (!isLeavingForGame) {
+    localStorage.removeItem('tournament_state')
+  }
 }
+
+// Réinitialiser automatiquement après la finale
+const checkAutoReset = () => {
+  if (finalMatch.value.isCompleted && champion.value) {
+    // Attendre 5 secondes puis réinitialiser automatiquement
+    setTimeout(() => {
+      if (finalMatch.value.isCompleted) { // Double vérification
+        localStorage.removeItem('tournament_state')
+        initializeTournament(['Alice', 'Bob', 'Charlie', 'Diana', 'Eve', 'Frank', 'Grace', 'Henry'])
+      }
+    }, 5000)
+  }
+}
+
+// Initialisation
+const playersParam = route.query.players as string
+let playerNames: string[] = []
+
+if (!playersParam) {
+  // Utiliser des joueurs par défaut
+  playerNames = ['Alice', 'Bob', 'Charlie', 'Diana', 'Eve', 'Frank', 'Grace', 'Henry']
+} else {
+  playerNames = playersParam.split(',').filter(name => name.trim() !== '')
+  // S'assurer qu'on a 8 joueurs
+  while (playerNames.length < 8) {
+    playerNames.push(`Joueur ${playerNames.length + 1}`)
+  }
+}
+
+onMounted(() => {
+  initializeTournament(playerNames)
+  handleGameResult()
+  
+  // Écouter les changements de route
+  window.addEventListener('beforeunload', handleBeforeUnload)
+  
+  // Vérifier si des matchs sont prêts à être joués
+  checkNextMatches()
+})
+
+onUnmounted(() => {
+  window.removeEventListener('beforeunload', handleBeforeUnload)
+})
 
 // Watcher pour gérer le retour du jeu
 watch(() => route.query, () => {
   handleGameResult()
 }, { immediate: true })
-
-// Initialisation
-onMounted(() => {
-  const playersParam = route.query.players as string
-  if (!playersParam) {
-    router.push({ name: 'tournament-setup' })
-    return
-  }
-  
-  const playerNames = playersParam.split(',')
-  
-  // Initialiser le tournoi (charge l'état sauvegardé ou crée un nouveau)
-  initializeTournament(playerNames)
-  
-  // Gérer le retour du jeu si il y a des paramètres
-  handleGameResult()
-})
 </script>
 
 <style scoped>
-/* Tous les styles précédents + nouvelles classes */
 .tournament-container {
   min-height: 100vh;
   background: linear-gradient(135deg, #1a472a 0%, #2d5a3d 50%, #1a472a 100%);
@@ -623,7 +754,7 @@ onMounted(() => {
   display: grid;
   grid-template-columns: 1fr auto 1fr;
   gap: 2rem;
-  max-width: 1200px;
+  max-width: 1300px;
   margin: 0 auto;
   padding: 2rem;
   border: 2px solid #d4af37;
@@ -649,15 +780,33 @@ onMounted(() => {
   display: flex;
   flex-direction: column;
   justify-content: space-around;
-  min-height: 400px;
 }
 
 .round-1 {
+  min-height: 500px;
   gap: 2rem;
 }
 
 .round-2 {
+  min-height: 500px;
   justify-content: center;
+}
+
+/* Wrapper de match avec hauteur fixe */
+.match-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 120px; /* Hauteur fixe pour chaque match */
+  position: relative;
+}
+
+.final-match-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 140px; /* Hauteur fixe pour la finale */
+  position: relative;
 }
 
 .match {
@@ -671,7 +820,6 @@ onMounted(() => {
   flex-direction: column;
   gap: 2px;
   position: relative;
-  margin-bottom: 3rem;
 }
 
 .team {
@@ -709,6 +857,24 @@ onMounted(() => {
   opacity: 0.6;
 }
 
+.team.ready-to-play {
+  border-color: #22c55e;
+  box-shadow: 0 0 10px rgba(34, 197, 94, 0.3);
+  animation: readyPulse 2s infinite;
+}
+
+@keyframes readyPulse {
+  0% {
+    box-shadow: 0 0 10px rgba(34, 197, 94, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 15px rgba(34, 197, 94, 0.6);
+  }
+  100% {
+    box-shadow: 0 0 10px rgba(34, 197, 94, 0.3);
+  }
+}
+
 .team:first-child {
   border-bottom: none;
   border-radius: 0.5rem 0.5rem 0 0;
@@ -725,6 +891,23 @@ onMounted(() => {
   padding: 1rem 1.5rem;
 }
 
+/* Zone d'action avec hauteur fixe */
+.action-zone {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  height: 40px; /* Hauteur fixe réservée */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.final-action-zone {
+  height: 45px; /* Hauteur légèrement plus grande pour la finale */
+}
+
 .play-pong-btn {
   background: #22c55e;
   color: white;
@@ -733,19 +916,30 @@ onMounted(() => {
   border-radius: 0.25rem;
   font-weight: bold;
   cursor: pointer;
-  margin-top: 0.5rem;
   font-size: 0.9rem;
   transition: all 0.3s ease;
-  position: absolute;
-  bottom: -2.5rem;
-  left: 50%;
-  transform: translateX(-50%);
   white-space: nowrap;
 }
 
 .play-pong-btn:hover {
   background: #16a34a;
-  transform: translateX(-50%) scale(1.05);
+  transform: scale(1.05);
+}
+
+.play-pong-btn.ready-btn {
+  animation: readyButtonPulse 2s infinite;
+}
+
+@keyframes readyButtonPulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
 }
 
 .final-pong-btn {
@@ -761,10 +955,6 @@ onMounted(() => {
 }
 
 .waiting-message {
-  position: absolute;
-  bottom: -2.5rem;
-  left: 50%;
-  transform: translateX(-50%);
   background: #f59e0b;
   color: white;
   padding: 0.5rem 1rem;
@@ -773,6 +963,9 @@ onMounted(() => {
   font-weight: bold;
   white-space: nowrap;
   text-align: center;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .connector-right, .connector-left {
@@ -832,8 +1025,17 @@ onMounted(() => {
   margin-bottom: 2rem;
 }
 
+/* Section champion avec hauteur fixe */
 .champion-section {
+  height: 150px; /* Hauteur fixe réservée */
+  display: flex;
+  align-items: center;
+  justify-content: center;
   margin-top: 2rem;
+}
+
+.champion-content {
+  text-align: center;
 }
 
 .trophy {
@@ -867,6 +1069,54 @@ onMounted(() => {
   font-size: 1.2rem;
   color: #bbf7d0;
   margin-bottom: 1.5rem;
+}
+
+.celebrate-button {
+  background: linear-gradient(45deg, #d4af37, #f4d03f);
+  color: #1a472a;
+  border: none;
+  padding: 1rem 2rem;
+  border-radius: 2rem;
+  font-weight: bold;
+  font-size: 1.1rem;
+  cursor: pointer;
+  margin-top: 1rem;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+  animation: pulse 2s infinite;
+}
+
+.celebrate-button:hover {
+  transform: scale(1.05);
+  box-shadow: 0 6px 20px rgba(212, 175, 55, 0.5);
+}
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+  }
+  50% {
+    box-shadow: 0 4px 25px rgba(212, 175, 55, 0.6);
+  }
+  100% {
+    box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+  }
+}
+
+.champion-content {
+  text-align: center;
+  animation: championAppear 1s ease-out;
+}
+
+@keyframes championAppear {
+  0% {
+    opacity: 0;
+    transform: scale(0.8) translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
 }
 
 .tournament-progress {
@@ -980,7 +1230,15 @@ onMounted(() => {
   }
   
   .round {
-    min-height: 300px;
+    min-height: 400px;
+  }
+  
+  .match-wrapper {
+    height: 100px;
+  }
+  
+  .final-match-wrapper {
+    height: 120px;
   }
   
   .team {
@@ -992,12 +1250,20 @@ onMounted(() => {
     font-size: 1.5rem;
   }
 
-  .team-container {
-    margin-bottom: 3rem;
+  .champion-section {
+    height: 120px;
   }
 
   .progress-stats {
     grid-template-columns: 1fr;
+  }
+
+  .action-zone {
+    height: 35px;
+  }
+
+  .final-action-zone {
+    height: 40px;
   }
 }
 </style>

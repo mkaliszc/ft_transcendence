@@ -10,7 +10,7 @@
     <div class="setup-section">
       <h2 class="setup-title">Configuration des Joueurs</h2>
       <div class="players-grid">
-        <div v-for="(player, index) in playerNames" :key="index" class="player-input-group">
+        <div v-for="(_, index) in playerNames" :key="index" class="player-input-group">
           <label :for="'player' + index">Joueur {{ index + 1 }}:</label>
           <input 
             :id="'player' + index"
