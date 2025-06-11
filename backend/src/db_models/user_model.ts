@@ -100,4 +100,13 @@ User.init({
 	timestamps: false
 })
 
+User.addHook('beforeUpdate', (user: User) => {
+	user.last_update = new Date();
+});
+
+User.addHook('beforeCreate', (user: any) => {
+    user.creation_date = new Date();
+    user.last_update = new Date();
+});
+
 export { User }

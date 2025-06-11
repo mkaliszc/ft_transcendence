@@ -22,17 +22,9 @@ export interface Pub_User {
 	twoFA: boolean;
 }
 
-export interface FriendshipRequest {
-	user_id1: number;
-	user_id2: number;
-	status: 'pending';
-}
-
 export interface UpdateData {
 	username?: string;
 	email_adress?: string;
 	avatar?: string;
-	twoFA?: boolean;
-	last_update?: Date;
 }
 

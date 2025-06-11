@@ -41,7 +41,8 @@ export async function getHistory(request: FastifyRequest<{ Params: { username: s
 				[{ model: Matches, as: 'match' }, 'match_date', 'DESC'],
 				[{ model: Matches, as: 'match' }, 'match_id', 'DESC']
 			]
-			});
+		});
+
 		if (!userMatches || userMatches.length === 0) {
 			return reply.status(200).send({ message: 'No matches found for this user' });
 		}

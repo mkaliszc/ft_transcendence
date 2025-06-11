@@ -33,7 +33,7 @@ export async function update(request: FastifyRequest<{ Body: UpdateData }>, repl
 				return reply.status(400).send({ error: 'Email address already exists' });
 			}
 		}
-		update_payload.last_update = new Date();
+
 		const updatedFields = await user.update(update_payload);
 		if (!updatedFields) {
 			return reply.status(400).send({ error: 'No fields updated' });
