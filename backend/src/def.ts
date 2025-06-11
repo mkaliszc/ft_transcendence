@@ -1,5 +1,4 @@
 import { Sequelize } from 'sequelize';
-import path from 'path';
 import dotenv from 'dotenv';
 
 dotenv.config({ path: '../../.env' });
@@ -14,7 +13,6 @@ export const sequelize = new Sequelize({
     logging: console.log,
 });
 
-// Enhanced connection function with retry logic
 async function testConnection(maxRetries = 5, delay = 3000) {
     for (let attempt = 1; attempt <= maxRetries; attempt++) {
         try {
@@ -35,7 +33,7 @@ async function testConnection(maxRetries = 5, delay = 3000) {
     }
 }
 
-import './associations';
+import './db_models/associations';
 
 export { testConnection}
 export default sequelize;

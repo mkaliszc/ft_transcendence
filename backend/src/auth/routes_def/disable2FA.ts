@@ -21,8 +21,7 @@ export async function disable2FA(request: FastifyRequest, reply: FastifyReply) {
 
         // Disable 2FA by removing the secret
 		await userRecord.update(
-			{ twoFA: false, twoFASecret: null },
-			{ where: { user_id : userRecord.user_id } }
+			{ twoFA: false, twoFASecret: null }
 		);
 
 		return reply.status(200).send({ 

@@ -11,7 +11,6 @@ export interface SignUpRequest {
 }
 
 export interface Pub_User {
-	user_id: number;
 	username: string;
 	email_adress: string;
 	number_of_matches: number;
@@ -26,7 +25,7 @@ export interface Pub_User {
 export interface FriendshipRequest {
 	user_id1: number;
 	user_id2: number;
-	status: 'pending' | 'accepted' | 'rejected';
+	status: 'pending';
 }
 
 export interface UpdateData {

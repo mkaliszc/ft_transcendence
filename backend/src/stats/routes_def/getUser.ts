@@ -1,19 +1,16 @@
-import { Pub_User, JWTpayload } from "../../interfaces";
+import { Pub_User } from "../../interfaces";
 import { User } from "../../db_models/user_model";
 import { FastifyRequest, FastifyReply } from "fastify";
 
-export async function getUser(request: FastifyRequest<{ Params: { user_id: string } }>, reply: FastifyReply) {
+export async function getUser(request: FastifyRequest<{ Params: { username: string } }>, reply: FastifyReply) {
 	try {
-		const payload = request.user as JWTpayload;
-		const id = payload.user_id;
-		const user = await User.findByPk(id)
+		const user = await User.findOne({ where: { username: request.params.username }, })
 
 		if (!user) {
 			return reply.status(404).send({ error: 'User not found' });
 		}
 
 		const Public: Pub_User = {
-			user_id: user.user_id,
 			username: user.username,
 			email_adress: user.email_adress,
 			number_of_matches: user.number_of_matches,
