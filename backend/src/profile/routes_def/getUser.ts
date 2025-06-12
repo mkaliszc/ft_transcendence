@@ -16,6 +16,7 @@ export async function getUser(request: FastifyRequest<{ Params: { username: stri
 			number_of_matches: user.number_of_matches,
 			number_of_win: user.number_of_win,
 			number_of_lose: user.number_of_lose,
+			ratio: user.number_of_win / (user.number_of_matches || 1),
 			created_at: user.creation_date,
 			updated_at: user.last_update,
 			avatar: user.avatar,

@@ -16,6 +16,7 @@ export interface Pub_User {
 	number_of_matches: number;
 	number_of_win: number;
 	number_of_lose: number;
+	ratio: number;
 	created_at: Date;
 	updated_at: Date;
 	avatar?: string;

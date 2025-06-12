@@ -23,8 +23,13 @@ export async function friendList(request: FastifyRequest, reply: FastifyReply) {
 			include: [
 				{
 					model: User,
-					as: 'friend',
-					attributes: ['username']
+					as: 'sender',
+					attributes: ['user_id', 'username']
+				},
+				{
+					model: User,
+					as: 'receiver',
+					attributes: ['user_id', 'username']
 				}
 			],
 			order: [['creation_date', 'DESC']]
@@ -36,7 +41,26 @@ export async function friendList(request: FastifyRequest, reply: FastifyReply) {
 				friends: []
 			});
 		}
-		// TODO : finish the formatting of the response
+
+		const formattedFriends = friendships.map(friendship => {
+			const friendUser = friendship.user_id1 === userId 
+				? (friendship as any).receiver 
+				: (friendship as any).sender;
+
+			return {
+				friendship_id: friendship.friendship_id,
+				friend: { 
+					username: friendUser.username 
+				},
+				creation_date: friendship.creation_date,
+				status: friendship.status
+			};
+		});
+
+		return reply.code(200).send({
+			total_friends: formattedFriends.length,
+			friends: formattedFriends
+		});
 	}
 	catch (error) {
 		console.error('Error fetching friend list:', error);
