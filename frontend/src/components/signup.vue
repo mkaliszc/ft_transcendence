@@ -717,7 +717,7 @@ const goBack = () => {
   .divider::before {
 	content: '';
 	position: absolute;
-	top: 50%;
+	top: -50%;
 	left: 0;
 	right: 0;
 	height: 1px;
