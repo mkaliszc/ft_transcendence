@@ -26,22 +26,24 @@ export async function friendrequest(request: FastifyRequest<{Params: { username 
 				],
 			}
 		});
+		if (existingFriendship && existingFriendship.status)
+		{
+			if (existingFriendship?.status === 'accepted') {
+				return reply.status(400).send({ error: 'You are already friends with this user' });
+			}
 
-		if (existingFriendship?.status === 'accepted') {
-			return reply.status(400).send({ error: 'You are already friends with this user' });
-		}
+			if (existingFriendship.status=== 'pending') {
+				return reply.status(400).send({ error: 'Friend request already sent' });
+			}
 
-		if (existingFriendship?.status === 'pending') {
-			return reply.status(400).send({ error: 'Friend request already sent' });
-		}
+			if (existingFriendship?.status === 'declined') {
+				return reply.status(200).send({ message: 'This user declined your request' });
+			}
 
-		if (existingFriendship?.status === 'declined') {
-			return reply.status(200).send({ message: 'This user declined your request' });
-		}
-
-		if (existingFriendship?.status === 'none') {
-			await existingFriendship.update({ status: 'pending' });
-			return reply.status(200).send({ message: 'Friend request re-sent successfully' });
+			if (existingFriendship?.status === 'none') {
+				await existingFriendship.update({ status: 'pending' });
+				return reply.status(200).send({ message: 'Friend request re-sent successfully' });
+			}
 		}
 
 		const NewFriendship = Friendship.create({
@@ -53,7 +55,7 @@ export async function friendrequest(request: FastifyRequest<{Params: { username 
 		if (!NewFriendship) {
 			return reply.status(400).send({ error: 'Failed to create friendship' });
 		}
-		return reply.status(200).send({ message: 'Friend request processed successfully', status });
+		return reply.status(200).send({ message: 'Friend request processed successfully' });
 	}
 	catch (error) {
 		console.error('Error processing friend request:', error);
