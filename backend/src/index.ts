@@ -1,6 +1,6 @@
 import Fastify, { FastifyInstance } from 'fastify'
 import { testConnection } from './def';
-import { syncDatabase } from './db_models/syncDatabase';
+import { syncDatabase } from './db_models/associations';
 import auth_plugins from './plugins/auth_plugins';
 import routes_auth from './auth/utils/routes';
 import routes_stats from './stats/utils/routes';
