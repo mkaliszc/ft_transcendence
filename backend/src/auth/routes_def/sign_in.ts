@@ -7,10 +7,11 @@ export async function sign_in(request: FastifyRequest, reply:FastifyReply) {
 		email: string;
 		password: string;
 	};
+
 	try {
 		const user = await User.findOne({ where: { email_adress: email } })
 		if (!user) {
-		  return reply.code(400).send({ error: 'User not found' })
+		  return reply.code(404).send({ error: 'User not found' })
 		}
 
 		const isPasswordValid = await bcrypt.compare(password, user.hashed_password)
@@ -20,7 +21,7 @@ export async function sign_in(request: FastifyRequest, reply:FastifyReply) {
 
 		if(user.twoFA) {
 			const tmp_token = await reply.jwtSign({
-				mail_adress: user.email_adress,
+				email_adress: user.email_adress,
 				user_id: user.user_id,
 				twoFA: true }, { expiresIn: '2m' });
 			return reply.code(200).send({ token: tmp_token})
