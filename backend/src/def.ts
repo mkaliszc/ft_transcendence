@@ -1,5 +1,4 @@
 import { Sequelize } from 'sequelize';
-import path from 'path';
 import dotenv from 'dotenv';
 
 dotenv.config({ path: '../../.env' });
@@ -14,7 +13,6 @@ export const sequelize = new Sequelize({
     logging: console.log,
 });
 
-// Enhanced connection function with retry logic
 async function testConnection(maxRetries = 5, delay = 3000) {
     for (let attempt = 1; attempt <= maxRetries; attempt++) {
         try {
@@ -35,29 +33,7 @@ async function testConnection(maxRetries = 5, delay = 3000) {
     }
 }
 
-// Database sync with retry logic
-async function syncDatabase(maxRetries = 3, delay = 2000) {
-    for (let attempt = 1; attempt <= maxRetries; attempt++) {
-        try {
-            await sequelize.sync({ 
-                force: false,
-                alter: true
-            });
-            console.log(`✅ Database synchronized successfully (attempt ${attempt})`);
-            return true;
-        } catch (error) {
-            console.error(`❌ Database sync attempt ${attempt}/${maxRetries} failed:`);
-            
-            if (attempt === maxRetries) {
-                console.error('🔴 All database sync attempts failed. Exiting...');
-                process.exit(1);
-            }
-            
-            console.log(`⏳ Retrying database sync in ${delay/1000} seconds...`);
-            await new Promise(resolve => setTimeout(resolve, delay));
-        }
-    }
-}
+import './db_models/associations';
 
-export { syncDatabase, testConnection}
+export { testConnection}
 export default sequelize;

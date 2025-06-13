@@ -4,4 +4,4 @@ volumes/logs/*
 volumes/mariadb/*
 
 nginx/certificates/
-.vscode
+.vscode/

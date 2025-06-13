@@ -10,7 +10,7 @@ import { refreshToken } from '../routes_def/refreshToken';
 export default fp(async function routes_auth(fastify: any) {
 	fastify.post('/auth', sign_in);
 	fastify.post('/auth/register', sign_up);
-	fastify.post('/auth/refreshtoken', refreshToken);
+	fastify.post('/auth/refreshtoken', { preHandler: fastify.authenticate }, refreshToken);
 	fastify.get('/auth/enable2FA', { preHandler: fastify.authenticate }, enable2FA);
 	fastify.post('/auth/check2FA', { preHandler: fastify.authenticate }, check2FA);
 	fastify.post('/auth/disable2FA', { preHandler: fastify.authenticate }, disable2FA);

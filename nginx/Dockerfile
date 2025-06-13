@@ -7,7 +7,7 @@ COPY certificates /etc/nginx/certs
 COPY script.sh /script.sh
 RUN chmod +x /script.sh
 
-EXPOSE 3306
+EXPOSE 5000
 
 ENTRYPOINT [ "/script.sh" ]
 CMD [ "nginx", "-g", "daemon off;" ]
