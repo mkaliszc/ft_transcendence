@@ -3,12 +3,12 @@ import bcrypt from 'bcryptjs'
 import { User } from '../../db_models/user_model'
 
 export async function sign_in(request: FastifyRequest, reply:FastifyReply) {
-	const { email_adress, password } = request.body as {
-		email_adress: string;
+	const { email, password } = request.body as {
+		email: string;
 		password: string;
 	};
 	try {
-		const user = await User.findOne({ where: { email_adress: email_adress } })
+		const user = await User.findOne({ where: { email_adress: email } })
 		if (!user) {
 		  return reply.code(400).send({ error: 'User not found' })
 		}
