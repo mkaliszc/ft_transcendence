@@ -83,17 +83,6 @@
             </div>
           </div>
 
-          <div class="form-options">
-            <label class="remember-me">
-              <input type="checkbox" v-model="form.rememberMe" :disabled="loading">
-              <span class="checkmark"></span>
-              {{ $t('rememberMe') }}
-            </label>
-            <a href="#" class="forgot-password" @click.prevent="handleForgotPassword">
-              {{ $t('forgotPassword') }}
-            </a>
-          </div>
-          
           <button type="submit" class="signin-button" :disabled="loading">
             <svg v-if="loading" class="loading-spinner" fill="none" viewBox="0 0 24 24">
               <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
@@ -174,18 +163,13 @@ import { authApi } from '../services/api'
 // Utilisation de vue-i18n
 const { t, locale } = useI18n()
 
-onMounted(() => {
-  console.log('SignIn component mounted')
-})
-
 // Props et émissions
 const router = useRouter()
 
 // États réactifs
 const form = ref({
   email: '',
-  password: '',
-  rememberMe: false
+  password: ''
 })
 const loading = ref(false)
 const error = ref('')
@@ -219,8 +203,7 @@ const handleSignIn = async () => {
     // Appel à l'API de connexion
     const response = await authApi.login({
       email: form.value.email,
-      password: form.value.password,
-      rememberMe: form.value.rememberMe
+      password: form.value.password
     })
     
     console.log('Login response:', response)
@@ -307,12 +290,6 @@ const handleSuccessfulLogin = async (loginData) => {
       localStorage.setItem('user_data', JSON.stringify(loginData.user))
     }
     
-    // Sauvegarder la préférence "Se souvenir de moi"
-    if (form.value.rememberMe) {
-      localStorage.setItem('remember_me', 'true')
-      localStorage.setItem('user_email', form.value.email)
-    }
-    
     successMessage.value = t('loginSuccessful')
     
     // Redirection après un court délai pour montrer le message de succès
@@ -332,10 +309,6 @@ const handleGoogleSignIn = () => {
   alert(t('googleSignInNotImplemented'))
 }
 
-const handleForgotPassword = () => {
-  alert(t('forgotPasswordNotImplemented'))
-}
-
 const goToSignUp = () => {
   router.push('/signup')
 }
@@ -344,15 +317,9 @@ const goBack = () => {
   router.push('/')
 }
 
-// Charger les données sauvegardées si "Se souvenir de moi" était activé
+// Initialisation simple au montage
 onMounted(() => {
-  const rememberMe = localStorage.getItem('remember_me')
-  const savedEmail = localStorage.getItem('user_email')
-  
-  if (rememberMe === 'true' && savedEmail) {
-    form.value.email = savedEmail
-    form.value.rememberMe = true
-  }
+  console.log('SignIn component mounted')
 })
 </script>
 
@@ -652,7 +619,7 @@ label {
 .divider::before {
   content: '';
   position: absolute;
-  top: 50%;
+  top: -50%;
   left: 0;
   right: 0;
   height: 1px;
