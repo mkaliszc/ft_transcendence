@@ -265,23 +265,20 @@
         if (animationId) {
           cancelAnimationFrame(animationId)
         }
-      })
-  
-      // Fonctions pour les boutons de fonctionnalités
+      })      // Fonctions pour les boutons de fonctionnalités
       const goToFeature1 = () => {
         console.log('Navigate to Feature 1 - Solo Game')
-        window.location.assign('/Game')
+        router.push('/game')
       }
-  
+
       const goToFeature2 = () => {
         console.log('Navigate to Feature 2 - Multiplayer')
-        // Feature 2 reste inchangée - accès direct au multijoueur
-        window.location.assign('/multiplayer')
+        router.push('/Gamemulti')
       }
-  
+
       const goToFeature3 = () => {
         console.log('Navigate to Feature 3 - Tournaments')
-        window.location.assign('/tournamentplayer')
+        router.push('/tournamentplayer')
       }
 
       // Nouvelle Feature 4 pour le profil avec vérification d'authentification

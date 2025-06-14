@@ -27,7 +27,7 @@ const routes = [
     component: Home2,
   },
   {
-    path: "/touramentgame",
+    path: "/tournamentgame",
     name: "tournamentgame",
     component: Tournamentgame,
   },
@@ -71,12 +71,20 @@ const routes = [
 const router = createRouter({
   history: createWebHistory(),
   routes,
+  // Ajout d'options pour améliorer la navigation
+  scrollBehavior(_to, _from, savedPosition) {
+    if (savedPosition) {
+      return savedPosition;
+    } else {
+      return { top: 0 };
+    }
+  },
 });
 
 // Navigation guard
 router.beforeEach((to, _from, next) => {
   // Liste des routes protégées qui nécessitent une authentification
-  const protectedRoutes = ['/profile', '/Game', '/Gamemulti', '/tournamentgame', '/tournamentbracket', '/tournamentplayer'];
+  const protectedRoutes = ['/profile'];
   
   // Si la route est protégée et que l'utilisateur n'est pas authentifié
   if (protectedRoutes.includes(to.path) && !isAuthenticated()) {

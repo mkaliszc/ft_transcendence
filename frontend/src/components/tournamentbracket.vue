@@ -696,150 +696,685 @@
 	}
   })
   </script>
-  
-  <style scoped>
-  .tournament-container {
-	min-height: 100vh;
-	background: linear-gradient(135deg, #1a472a 0%, #2d5a3d 50%, #1a472a 100%);
-	padding: 2rem;
-	font-family: 'Inter', sans-serif;
-	position: relative;
+ <style scoped>
+.tournament-container {
+  height: 100vh;
+  background: linear-gradient(135deg, #1a472a 0%, #2d5a3d 50%, #1a472a 100%);
+  background-size: 400% 400%;
+  animation: backgroundMove 20s ease infinite;
+  padding: 1rem;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+@keyframes backgroundMove {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+.tournament-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(circle at 20% 80%, rgba(212, 175, 55, 0.1) 0%, transparent 50%),
+              radial-gradient(circle at 80% 20%, rgba(187, 247, 208, 0.05) 0%, transparent 50%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.tournament-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  padding: 1.5rem 2rem;
+  border: 2px solid rgba(212, 175, 55, 0.3);
+  border-radius: 1rem;
+  background: rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(10px);
+  flex-shrink: 0;
+  position: relative;
+  z-index: 1;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+}
+
+.header-content {
+  text-align: center;
+  flex: 1;
+}
+
+.back-button, .reset-button {
+  background: linear-gradient(135deg, #6b7280, #4b5563);
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.75rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(107, 114, 128, 0.3);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  position: relative;
+  overflow: hidden;
+}
+
+.back-button::before, .reset-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.6s;
+}
+
+.back-button:hover::before, .reset-button:hover::before {
+  left: 100%;
+}
+
+.back-button:hover {
+  background: linear-gradient(135deg, #4b5563, #374151);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(107, 114, 128, 0.4);
+}
+
+.reset-button:hover {
+  background: linear-gradient(135deg, #d4af37, #c19b2e);
+  color: #1a472a;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(212, 175, 55, 0.4);
+}
+
+.tournament-title {
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: #d4af37;
+  margin: 0 0 0.5rem 0;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+  letter-spacing: 2px;
+  font-family: 'Georgia', serif;
+}
+
+.tournament-subtitle {
+  font-size: 1.1rem;
+  color: #e0e0e0;
+  margin: 0;
+  font-weight: 500;
+}
+
+.bracket-container {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  gap: 2rem;
+  flex: 1;
+  padding: 1.5rem;
+  border: 2px solid #d4af37;
+  border-radius: 1rem;
+  background: rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(10px);
+  overflow: hidden;
+  position: relative;
+  z-index: 1;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1), 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+.bracket-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(circle at 50% 50%, rgba(212, 175, 55, 0.03) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.bracket-side {
+  display: flex;
+  gap: 2rem;
+}
+
+.left-side {
+  justify-content: flex-end;
+}
+
+.right-side {
+  justify-content: flex-start;
+}
+
+.round {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+}
+
+.round-1 {
+  min-height: 400px;
+  gap: 1.5rem;
+}
+
+.round-2 {
+  min-height: 400px;
+  justify-content: center;
+}
+
+.match-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100px;
+  position: relative;
+}
+
+.final-match-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 120px;
+  position: relative;
+}
+
+.match {
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+.team-container {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  position: relative;
+}
+
+.team {
+  background: rgba(255, 255, 255, 0.9);
+  color: #1a472a;
+  padding: 0.6rem 1.2rem;
+  border: 2px solid #d4af37;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  min-width: 140px;
+  text-align: center;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  font-size: 0.9rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.team::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.1), transparent);
+  transition: left 0.6s;
+}
+
+.team:hover::before {
+  left: 100%;
+}
+
+.team:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3);
+}
+
+.team.winner {
+  background: linear-gradient(135deg, #d4af37, #c19b2e);
+  color: #1a472a;
+  border-color: #b8941f;
+  font-weight: bold;
+  transform: scale(1.02);
+  box-shadow: 0 4px 15px rgba(212, 175, 55, 0.5);
+  animation: winnerGlow 2s ease-in-out infinite alternate;
+}
+
+@keyframes winnerGlow {
+  from { box-shadow: 0 4px 15px rgba(212, 175, 55, 0.5); }
+  to { box-shadow: 0 6px 20px rgba(212, 175, 55, 0.7); }
+}
+
+.team.ready-to-play {
+  background: linear-gradient(135deg, #bbf7d0, #86efac);
+  border-color: #10b981;
+  animation: readyPulse 2s ease-in-out infinite;
+  box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+}
+
+@keyframes readyPulse {
+  0%, 100% { 
+    transform: scale(1);
+    box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
   }
-  
-  .tournament-header {
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
-	margin-bottom: 3rem;
-	padding: 2rem;
-	border: 3px solid #d4af37;
-	border-radius: 1rem;
-	background: rgba(0, 0, 0, 0.3);
-	backdrop-filter: blur(10px);
+  50% { 
+    transform: scale(1.02);
+    box-shadow: 0 6px 20px rgba(16, 185, 129, 0.5);
   }
-  
-  .header-content {
-	text-align: center;
-	flex: 1;
+}
+
+.final-teams {
+  gap: 4px;
+}
+
+.final-team {
+  min-width: 160px;
+  padding: 0.8rem 1.5rem;
+  font-size: 1rem;
+  font-weight: bold;
+}
+
+.connector-right, .connector-left {
+  width: 30px;
+  height: 2px;
+  background: #d4af37;
+  position: relative;
+}
+
+.connector-right::after, .connector-left::before {
+  content: '';
+  position: absolute;
+  width: 2px;
+  height: 40px;
+  background: #d4af37;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.connector-right::after {
+  right: 0;
+}
+
+.connector-left::before {
+  left: 0;
+}
+
+.bracket-center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-width: 200px;
+}
+
+.final-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.final-title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #d4af37;
+  text-align: center;
+  margin: 0;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+  letter-spacing: 1px;
+}
+
+.action-zone {
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 0.5rem;
+}
+
+.final-action-zone {
+  height: 50px;
+  margin-top: 0.8rem;
+}
+
+.play-pong-btn {
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  font-weight: bold;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  position: relative;
+  overflow: hidden;
+}
+
+.play-pong-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.6s;
+}
+
+.play-pong-btn:hover::before {
+  left: 100%;
+}
+
+.play-pong-btn:hover {
+  background: linear-gradient(135deg, #059669, #047857);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+}
+
+.final-pong-btn {
+  padding: 0.8rem 1.5rem;
+  font-size: 1rem;
+  background: linear-gradient(135deg, #d4af37, #c19b2e);
+  color: #1a472a;
+}
+
+.final-pong-btn:hover {
+  background: linear-gradient(135deg, #c19b2e, #b8941f);
+  box-shadow: 0 6px 20px rgba(212, 175, 55, 0.5);
+}
+
+.ready-btn {
+  animation: readyGlow 2s ease-in-out infinite alternate;
+}
+
+@keyframes readyGlow {
+  from { 
+    box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
+    transform: scale(1);
   }
-  
-  .back-button, .reset-button {
-	background: #6b7280;
-	color: white;
-	border: none;
-	padding: 0.75rem 1.5rem;
-	border-radius: 0.5rem;
-	font-weight: bold;
-	cursor: pointer;
-	transition: all 0.3s ease;
+  to { 
+    box-shadow: 0 4px 16px rgba(16, 185, 129, 0.6);
+    transform: scale(1.02);
   }
-  
-  .back-button:hover {
-	background: #4b5563;
-	transform: translateY(-2px);
+}
+
+.match-completed {
+  color: #10b981;
+  font-weight: bold;
+  font-size: 0.85rem;
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.waiting-message {
+  color: #fbbf24;
+  font-size: 0.8rem;
+  text-align: center;
+  font-style: italic;
+}
+
+.champion-section {
+  height: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 1rem;
+}
+
+.champion-content {
+  text-align: center;
+  padding: 1.5rem;
+  background: linear-gradient(135deg, rgba(212, 175, 55, 0.2), rgba(193, 155, 46, 0.1));
+  border: 3px solid #d4af37;
+  border-radius: 1rem;
+  backdrop-filter: blur(10px);
+  animation: championVictory 2s ease-in-out infinite;
+}
+
+@keyframes championVictory {
+  0%, 100% { 
+    transform: scale(1);
+    box-shadow: 0 8px 20px rgba(212, 175, 55, 0.3);
   }
-  
-  .reset-button:hover {
-	background: #d4af37;
-	color: #1a472a;
-	transform: translateY(-2px);
+  50% { 
+    transform: scale(1.05);
+    box-shadow: 0 12px 30px rgba(212, 175, 55, 0.5);
   }
-  
-  .tournament-title {
-	font-size: 3rem;
-	font-weight: bold;
-	color: #d4af37;
-	margin: 0 0 0.5rem 0;
-	text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-	letter-spacing: 2px;
-  }
-  
-  .tournament-subtitle {
-	font-size: 1.2rem;
-	color: #bbf7d0;
-	margin: 0;
-  }
-  
+}
+
+.trophy {
+  font-size: 3rem;
+  margin-bottom: 0.5rem;
+  animation: trophyBounce 1s ease-in-out infinite;
+}
+
+@keyframes trophyBounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+.champion-name {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #d4af37;
+  margin-bottom: 0.5rem;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.champion-subtitle {
+  color: #bbf7d0;
+  font-size: 1rem;
+  margin-bottom: 1rem;
+}
+
+.celebrate-button {
+  background: linear-gradient(135deg, #d4af37, #c19b2e);
+  color: #1a472a;
+  border: none;
+  padding: 0.8rem 1.5rem;
+  border-radius: 0.75rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(212, 175, 55, 0.4);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  position: relative;
+  overflow: hidden;
+}
+
+.celebrate-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  transition: left 0.6s;
+}
+
+.celebrate-button:hover::before {
+  left: 100%;
+}
+
+.celebrate-button:hover {
+  background: linear-gradient(135deg, #c19b2e, #b8941f);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(212, 175, 55, 0.6);
+}
+
+.instructions {
+  text-align: center;
+  padding: 1rem;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 1rem;
+  border: 1px solid rgba(212, 175, 55, 0.3);
+  backdrop-filter: blur(10px);
+  margin-top: 1rem;
+  flex-shrink: 0;
+}
+
+.instructions p {
+  color: #bbf7d0;
+  margin: 0.3rem 0;
+  font-size: 0.95rem;
+}
+
+.instructions p:first-child {
+  margin-top: 0;
+}
+
+.instructions p:last-child {
+  margin-bottom: 0;
+}
+
+.match-result-notification {
+  position: fixed;
+  top: 2rem;
+  right: 2rem;
+  z-index: 1000;
+  animation: notificationSlide 0.5s ease-out;
+}
+
+@keyframes notificationSlide {
+  from { transform: translateX(100%); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+
+.notification-content {
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.95), rgba(5, 150, 105, 0.9));
+  color: white;
+  padding: 1rem 1.5rem;
+  border-radius: 1rem;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+  border: 2px solid #10b981;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  backdrop-filter: blur(10px);
+  max-width: 350px;
+}
+
+.notification-icon {
+  font-size: 2rem;
+  animation: bounce 1s ease-in-out infinite;
+}
+
+.notification-text {
+  flex: 1;
+}
+
+.notification-text strong {
+  font-size: 1.1rem;
+}
+
+.notification-text small {
+  opacity: 0.9;
+  font-size: 0.85rem;
+}
+
+.dismiss-btn {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding: 0.2rem;
+  border-radius: 50%;
+  transition: background 0.3s ease;
+}
+
+.dismiss-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* Responsive */
+@media (max-width: 1200px) {
   .bracket-container {
-	display: grid;
-	grid-template-columns: 1fr auto 1fr;
-	gap: 2rem;
-	max-width: 1300px;
-	margin: 0 auto;
-	padding: 2rem;
-	border: 2px solid #d4af37;
-	border-radius: 1rem;
-	background: rgba(0, 0, 0, 0.2);
-	backdrop-filter: blur(10px);
+    gap: 1rem;
+    padding: 1rem;
   }
   
   .bracket-side {
-	display: flex;
-	gap: 3rem;
-  }
-  
-  .left-side {
-	justify-content: flex-end;
-  }
-  
-  .right-side {
-	justify-content: flex-start;
-  }
-  
-  .round {
-	display: flex;
-	flex-direction: column;
-	justify-content: space-around;
-  }
-  
-  .round-1 {
-	min-height: 500px;
-	gap: 2rem;
-  }
-  
-  .round-2 {
-	min-height: 500px;
-	justify-content: center;
-  }
-  
-  .match-wrapper {
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	height: 120px;
-	position: relative;
-  }
-  
-  .final-match-wrapper {
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	height: 140px;
-	position: relative;
-  }
-  
-  .match {
-	display: flex;
-	align-items: center;
-	position: relative;
-  }
-  
-  .team-container {
-	display: flex;
-	flex-direction: column;
-	gap: 2px;
-	position: relative;
+    gap: 1rem;
   }
   
   .team {
-	background: white;
-	color: #1a472a;
-	padding: 0.75rem 1.5rem;
-	border: 2px solid #d4af37;
-	font-weight: 600;
-	min-width: 150px;
-	text-align: center;
-	transition: all 0.3s ease;
-	/* position */
+    min-width: 120px;
+    padding: 0.5rem 1rem;
+    font-size: 0.85rem;
   }
+  
+  .tournament-title {
+    font-size: 2rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .tournament-container {
+    padding: 0.5rem;
+  }
+  
+  .tournament-header {
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1rem;
+  }
+  
+  .bracket-container {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    text-align: center;
+  }
+  
+  .bracket-side {
+    justify-content: center;
+  }
+  
+  .round-1, .round-2 {
+    min-height: auto;
+  }
+  
+  .match-result-notification {
+    top: 1rem;
+    right: 1rem;
+    left: 1rem;
+  }
+  
+  .notification-content {
+    max-width: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .tournament-title {
+    font-size: 1.5rem;
+  }
+  
+  .final-title {
+    font-size: 1.2rem;
+  }
+  
+  .champion-name {
+    font-size: 1.2rem;
+  }
+  
+  .team {
+    min-width: 100px;
+    padding: 0.4rem 0.8rem;
+    font-size: 0.8rem;
+  }
+  
+  .play-pong-btn {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.8rem;
+  }
+}
 </style>
