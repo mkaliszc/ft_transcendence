@@ -1,5 +1,5 @@
 <template>
-	<div class="tournament-container">
+	<div class="tournament-container" :key="componentKey">
 	  <!-- Header -->
 	  <div class="tournament-header">
 		<button @click="goBack" class="back-button">
@@ -257,7 +257,7 @@
   </template>
   
   <script setup lang="ts">
-  import { ref, computed, onMounted, onUnmounted } from 'vue'
+  import { ref, computed, onMounted, onUnmounted, watch, nextTick } from 'vue'
   import { useRouter, useRoute } from 'vue-router'
   
   const router = useRouter()
@@ -286,6 +286,7 @@
   }
   
   // État du tournoi
+  const componentKey = ref(Date.now())
   const leftQuarterFinals = ref<Match[]>([])
   const rightQuarterFinals = ref<Match[]>([])
   const leftSemiFinal = ref<Match>({
@@ -314,8 +315,7 @@
   const goBack = () => {
 	localStorage.removeItem('tournament_state')
 	router.push({ 
-	  name: 'tournament-setup',
-	  query: {}
+	  path: '/tournamentplayer'
 	})
   }
   
@@ -525,14 +525,22 @@
   
   // Initialiser le tournoi avec les joueurs
   const initializeTournament = (playerNames: string[]) => {
+    console.log('🚀 Initialisation du tournoi avec:', playerNames)
   
 	if (playerNames.length < 8) {
+      console.log('⚠️ Pas assez de joueurs, utilisation des noms par défaut')
 	  playerNames = ['Alice', 'Bob', 'Charlie', 'Diana', 'Eve', 'Frank', 'Grace', 'Henry']
 	}
   
-	if (loadTournamentState()) {
+    // Ne pas charger l'état sauvegardé si on vient avec de nouveaux joueurs
+    const shouldLoadSaved = route.query.timestamp ? false : loadTournamentState()
+    
+	if (shouldLoadSaved) {
+      console.log('✅ État du tournoi chargé depuis localStorage')
 	  return
 	}
+    
+    console.log('🆕 Création d\'un nouveau tournoi')
 	
 	leftQuarterFinals.value = [
 	  {
@@ -585,14 +593,15 @@
 	}
 	
 	saveTournamentState()
+    console.log('💾 Nouvel état du tournoi sauvegardé')
   }
   
   // Lancer le jeu Pong
   const launchPongGame = (match: Match) => {
 	saveTournamentState()
 	
-	router.push({
-	  name: 'tournamentgame',
+	router.replace({
+	  path: '/tournamentgame',
 	  query: {
 		player1: match.team1.name,
 		player2: match.team2.name,
@@ -667,32 +676,114 @@
 	lastMatchResult.value = null
   }
   
-  // Initialisation
-  const playersParam = route.query.players as string
-  let playerNames: string[] = []
-  
-  if (!playersParam) {
-	playerNames = ['Alice', 'Bob', 'Charlie', 'Diana', 'Eve', 'Frank', 'Grace', 'Henry']
-  } else {
-	playerNames = playersParam.split(',').filter(name => name.trim() !== '')
-	while (playerNames.length < 8) {
-	  playerNames.push(`Joueur ${playerNames.length + 1}`)
-	}
+  // Fonction pour initialiser le tournoi selon les paramètres
+  const initializeFromRoute = () => {
+    console.log('🔄 Initialisation depuis la route...')
+    const playersParam = route.query.players as string
+    let playerNames: string[] = []
+    
+    // Forcer une nouvelle clé pour re-rendre le composant
+    componentKey.value = Date.now()
+    
+    if (!playersParam) {
+      console.log('⚠️ Aucun paramètre joueurs, utilisation des joueurs par défaut')
+      playerNames = ['Alice', 'Bob', 'Charlie', 'Diana', 'Eve', 'Frank', 'Grace', 'Henry']
+    } else {
+      console.log('✅ Paramètres joueurs trouvés:', playersParam)
+      playerNames = playersParam.split(',').filter(name => name.trim() !== '')
+      while (playerNames.length < 8) {
+        playerNames.push(`Joueur ${playerNames.length + 1}`)
+      }
+    }
+    
+    console.log('🎮 Joueurs finaux:', playerNames)
+    
+    // Réinitialiser complètement l'état
+    resetTournamentState()
+    
+    initializeTournament(playerNames)
   }
   
+  // Fonction pour réinitialiser complètement l'état du tournoi
+  const resetTournamentState = () => {
+    leftQuarterFinals.value = []
+    rightQuarterFinals.value = []
+    leftSemiFinal.value = {
+      team1: { name: '', isWinner: false },
+      team2: { name: '', isWinner: false },
+      isCompleted: false
+    }
+    rightSemiFinal.value = {
+      team1: { name: '', isWinner: false },
+      team2: { name: '', isWinner: false },
+      isCompleted: false
+    }
+    finalMatch.value = {
+      team1: { name: '', isWinner: false },
+      team2: { name: '', isWinner: false },
+      isCompleted: false
+    }
+    lastMatchResult.value = null
+  }
+  
+  // Watcher pour les changements de route avec debounce
+  let routeWatchTimeout: ReturnType<typeof setTimeout> | null = null
+  
+  watch(() => route.query.players, (newPlayers, oldPlayers) => {
+    console.log('🔍 Changement détecté dans route.query.players:', { newPlayers, oldPlayers })
+    
+    // Nettoyer le timeout précédent
+    if (routeWatchTimeout) {
+      clearTimeout(routeWatchTimeout)
+    }
+    
+    // Attendre un peu pour éviter les appels multiples rapides
+    routeWatchTimeout = setTimeout(() => {
+      nextTick(() => {
+        console.log('🚀 Exécution de initializeFromRoute depuis le watcher')
+        initializeFromRoute()
+      })
+    }, 100)
+  }, { immediate: false })
+  
+  // Watcher pour les changements de route complète (pour détecter toute navigation)
+  watch(() => route.fullPath, (newPath, oldPath) => {
+    console.log('🛣️ Changement de route détecté:', { newPath, oldPath })
+    if (newPath.includes('/tournamentbracket')) {
+      nextTick(() => {
+        console.log('🎯 Navigation vers tournamentbracket détectée')
+        initializeFromRoute()
+      })
+    }
+  }, { immediate: false })
+  
+  // Initialisation avec vérification de l'état de montage
   onMounted(() => {
-	initializeTournament(playerNames)
-	
-	// Démarrer la vérification automatique des résultats
-	resultCheckInterval = setInterval(checkForMatchResults, 1000)
-	
-	// Vérification immédiate au cas où il y aurait déjà un résultat
-	checkForMatchResults()
+    console.log('🎬 Composant monté, initialisation...')
+    console.log('📍 Route actuelle:', route.fullPath)
+    console.log('👥 Paramètres joueurs:', route.query.players)
+    
+    nextTick(() => {
+      // S'assurer que le composant est complètement monté
+      setTimeout(() => {
+        initializeFromRoute()
+        
+        // Démarrer la vérification automatique des résultats
+        resultCheckInterval = setInterval(checkForMatchResults, 1000)
+        
+        // Vérification immédiate au cas où il y aurait déjà un résultat
+        checkForMatchResults()
+      }, 50)
+    })
   })
   
   onUnmounted(() => {
+	console.log('🏁 Composant démonté, nettoyage...')
 	if (resultCheckInterval) {
 	  clearInterval(resultCheckInterval)
+	}
+	if (routeWatchTimeout) {
+	  clearTimeout(routeWatchTimeout)
 	}
   })
   </script>

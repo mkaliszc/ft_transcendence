@@ -122,14 +122,19 @@ const startTournament = () => {
     return
   }
   
+  // Nettoyer l'état précédent du localStorage
+  localStorage.removeItem('tournament_state')
+  localStorage.removeItem('tournamentMatchResult')
+  
   // Naviguer vers la page bracket avec les noms des joueurs
   const cleanNames = playerNames.value.map(name => name.trim())
   
-  // Navigation avec replace au lieu de push pour éviter les problèmes de cache
+  // Utiliser replace et forcer le rechargement du composant
   router.replace({
     path: '/tournamentbracket',
     query: {
-      players: cleanNames.join(',')
+      players: cleanNames.join(','),
+      timestamp: Date.now().toString() // Force refresh
     }
   })
 }
