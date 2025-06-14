@@ -11,29 +11,21 @@ export interface SignUpRequest {
 }
 
 export interface Pub_User {
-	user_id: number;
 	username: string;
 	email_adress: string;
 	number_of_matches: number;
 	number_of_win: number;
 	number_of_lose: number;
+	ratio: number;
 	created_at: Date;
 	updated_at: Date;
 	avatar?: string;
 	twoFA: boolean;
 }
 
-export interface FriendshipRequest {
-	user_id1: number;
-	user_id2: number;
-	status: 'pending' | 'accepted' | 'rejected';
-}
-
 export interface UpdateData {
 	username?: string;
 	email_adress?: string;
 	avatar?: string;
-	twoFA?: boolean;
-	last_update?: Date;
 }
 

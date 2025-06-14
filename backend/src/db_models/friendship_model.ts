@@ -39,7 +39,7 @@ Friendship.init({
 		allowNull: false,
 		defaultValue: 'none',
 		validate: {
-			isIn: [['pending', 'accepted', 'declined', 'blocked', 'none']]
+			isIn: [['pending', 'accepted', 'declined', 'none']]
 		}
 	},
 	creation_date: {
@@ -55,6 +55,15 @@ Friendship.init({
 	modelName: 'Friendship',
 	tableName: 'friendships',
 	timestamps: false
+});
+
+Friendship.addHook('beforeUpdate', (friendship: any) => {
+	friendship.last_update = new Date();
+});
+
+Friendship.addHook('beforeCreate', (friendship: any) => {
+	friendship.creation_date = new Date();
+	friendship.last_update = new Date();
 });
 
 export { Friendship };
