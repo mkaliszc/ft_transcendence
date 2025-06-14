@@ -1,5 +1,5 @@
 <template>
-  <div class="signin-container">
+  <div class="signup-container">
     <!-- Header avec retour et langue -->
     <header class="header">
       <button @click="goBack" class="back-button">
@@ -19,13 +19,13 @@
     </header>
 
     <!-- Contenu principal -->
-    <main class="signin-main">
-      <div class="signin-content">
+    <main class="signup-main">
+      <div class="signup-content">
         <!-- Logo et titre -->
         <div class="logo-container">
           <div class="billiard-ball ball-8"></div>
-          <h1 class="title">{{ $t('signInTitle') }}</h1>
-          <p class="subtitle">{{ $t('signInSubtitle') }}</p>
+          <h1 class="title">{{ $t('signUpTitle') }}</h1>
+          <p class="subtitle">{{ $t('signUpSubtitle') }}</p>
         </div>
         
         <!-- Messages d'erreur -->
@@ -38,8 +38,21 @@
           {{ successMessage }}
         </div>
         
-        <!-- Formulaire de connexion -->
-        <form @submit.prevent="handleSignIn" class="signin-form">
+        <!-- Formulaire d'inscription -->
+        <form @submit.prevent="handleSignUp" class="signup-form">
+          <div class="form-group">
+            <label for="username">{{ $t('username') }}</label>
+            <input 
+              id="username"
+              v-model="form.username"
+              type="text"
+              required
+              placeholder="username"
+              class="form-input"
+              :disabled="loading"
+            />
+          </div>
+
           <div class="form-group">
             <label for="email">{{ $t('email') }}</label>
             <input 
@@ -61,7 +74,7 @@
                 v-model="form.password"
                 :type="showPassword ? 'text' : 'password'"
                 required
-                :placeholder="$t('passwordPlaceholder')"
+                placeholder="Password"
                 class="form-input"
                 :disabled="loading"
               />
@@ -81,59 +94,66 @@
                 </svg>
               </button>
             </div>
+            <!-- Jauge de force du mot de passe -->
+            <div class="password-strength-container">
+              <div class="password-strength-bar" :style="{ width: passwordStrength + '%' }">
+                <div class="strength-level" :class="[
+                  { 'very-weak': passwordStrength <= 20 },
+                  { 'weak': passwordStrength > 20 && passwordStrength <= 40 },
+                  { 'medium': passwordStrength > 40 && passwordStrength <= 60 },
+                  { 'strong': passwordStrength > 60 && passwordStrength <= 80 },
+                  { 'very-strong': passwordStrength > 80 }
+                ]"></div>
+              </div>
+              <div v-if="passwordFeedback" class="password-feedback">
+                {{ passwordFeedback }}
+              </div>
+            </div>
           </div>
 
-          <div class="form-options">
-            <label class="remember-me">
-              <input type="checkbox" v-model="form.rememberMe" :disabled="loading">
-              <span class="checkmark"></span>
-              {{ $t('rememberMe') }}
-            </label>
-            <a href="#" class="forgot-password" @click.prevent="handleForgotPassword">
-              {{ $t('forgotPassword') }}
-            </a>
+          <div class="form-group">
+            <label for="confirmPassword">{{ $t('confirmPassword') }}</label>
+            <div class="password-input-container">
+              <input
+                id="confirmPassword"
+                v-model="form.confirmPassword"
+                :type="showConfirmPassword ? 'text' : 'password'"
+                required
+                :placeholder="$t('confirmPasswordPlaceholder')"
+                class="form-input"
+                :disabled="loading"
+              />
+              <button 
+                type="button" 
+                @click="toggleConfirmPassword" 
+                class="password-toggle"
+                :disabled="loading"
+              >
+                <svg v-if="showConfirmPassword" class="eye-icon" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M3.707 2.293a1 1 0 00-1.414 1.414l14 14a1 1 0 001.414-1.414l-1.473-1.473A10.014 10.014 0 0019.542 10C18.268 5.943 14.478 3 10 3a9.958 9.958 0 00-4.512 1.074l-1.78-1.781zm4.261 4.26l1.514 1.515a2.003 2.003 0 012.45 2.45l1.514 1.514a4 4 0 00-5.478-5.478z" clip-rule="evenodd"></path>
+                  <path d="M12.454 16.697L9.75 13.992a4 4 0 01-3.742-3.741L2.335 6.578A9.98 9.98 0 00.458 10c1.274 4.057 5.065 7 9.542 7 .847 0 1.669-.105 2.454-.303z"></path>
+                </svg>
+                <svg v-else class="eye-icon" fill="currentColor" viewBox="0 0 20 20">
+                  <path d="M10 12a2 2 0 100-4 2 2 0 000 4z"></path>
+                  <path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd"></path>
+                </svg>
+              </button>
+            </div>
           </div>
           
-          <button type="submit" class="signin-button" :disabled="loading">
+          <button type="submit" class="signup-button" :disabled="loading">
             <svg v-if="loading" class="loading-spinner" fill="none" viewBox="0 0 24 24">
               <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
               <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
             </svg>
-            {{ loading ? $t('signingIn') : $t('signIn') }}
+            {{ loading ? $t('signingUp') : $t('signUp') }}
           </button>
-
-          <!-- Section 2FA si nécessaire -->
-          <div v-if="show2FA" class="twofa-section">
-            <h3 class="twofa-title">{{ $t('twoFactorAuth') }}</h3>
-            <p class="twofa-description">{{ $t('enter2FACode') }}</p>
-            
-            <div class="form-group">
-              <label for="twofa-code">{{ $t('authCode') }}</label>
-              <input 
-                id="twofa-code"
-                v-model="twoFACode"
-                type="text"
-                maxlength="6"
-                :placeholder="$t('sixDigitCode')"
-                class="form-input"
-                :disabled="loading"
-              />
-            </div>
-            
-            <button @click="handle2FAVerification" class="signin-button" :disabled="loading || !twoFACode">
-              <svg v-if="loading" class="loading-spinner" fill="none" viewBox="0 0 24 24">
-                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-              </svg>
-              {{ loading ? $t('verifying') : $t('verify') }}
-            </button>
-          </div>
         </form>
         
-        <!-- Lien vers inscription -->
-        <p class="signup-link">
-          {{ $t('noAccount') }} 
-          <a href="#" @click.prevent="goToSignUp" class="link">{{ $t('signUp') }}</a>
+        <!-- Lien vers connexion -->
+        <p class="signin-link">
+          {{ $t('alreadyHaveAccount') }} 
+          <a href="#" @click.prevent="goToSignIn" class="link">{{ $t('signIn') }}</a>
         </p>
       </div>
 
@@ -149,33 +169,34 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
-import { useAuth } from '@/composable/useAuths'
+import { useAuth } from '../composable/useAuths'
 
 // Utilisation de vue-i18n
 const { t, locale } = useI18n()
 
 // Utilisation du composable d'authentification
-const { login } = useAuth()
+const { register } = useAuth()
 
-// Props et émissions
+// Router
 const router = useRouter()
 
 // États réactifs
 const form = ref({
+  username: '',
   email: '',
   password: '',
-  rememberMe: false
+  confirmPassword: ''
 })
 const loading = ref(false)
 const error = ref('')
 const successMessage = ref('')
 const showPassword = ref(false)
-const show2FA = ref(false)
-const twoFACode = ref('')
-const pendingLoginData = ref(null)
+const showConfirmPassword = ref(false)
+const passwordStrength = ref(0)
+const passwordFeedback = ref('')
 
 // Charger la langue préférée
 const savedLanguage = localStorage.getItem('preferred-language')
@@ -183,18 +204,49 @@ if (savedLanguage && ['en', 'fr', 'es'].includes(savedLanguage)) {
   locale.value = savedLanguage
 }
 
-onMounted(() => {
-  console.log('SignIn component mounted')
-  
-  // Charger les données sauvegardées si "Se souvenir de moi" était activé
-  const rememberMe = localStorage.getItem('remember_me')
-  const savedEmail = localStorage.getItem('user_email')
-  
-  if (rememberMe === 'true' && savedEmail) {
-    form.value.email = savedEmail
-    form.value.rememberMe = true
+// Fonction pour évaluer la force du mot de passe
+const evaluatePasswordStrength = (password) => {
+  let strength = 0
+  let feedback = []
+
+  // Vérifier la longueur minimum (8 caractères)
+  if (password.length >= 8) {
+    strength += 20
+  } else {
+    feedback.push('Au moins 8 caractères')
   }
-})
+
+  // Vérifier les lettres majuscules
+  if (/[A-Z]/.test(password)) {
+    strength += 20
+  } else {
+    feedback.push('Au moins une majuscule')
+  }
+
+  // Vérifier les lettres minuscules
+  if (/[a-z]/.test(password)) {
+    strength += 20
+  } else {
+    feedback.push('Au moins une minuscule')
+  }
+
+  // Vérifier les chiffres
+  if (/[0-9]/.test(password)) {
+    strength += 20
+  } else {
+    feedback.push('Au moins un chiffre')
+  }
+
+  // Vérifier les caractères spéciaux
+  if (/[!@#$%^&*(),.?":{}|<>]/.test(password)) {
+    strength += 20
+  } else {
+    feedback.push('Au moins un caractère spécial')
+  }
+
+  passwordStrength.value = strength
+  passwordFeedback.value = feedback.join(' - ')
+}
 
 // Méthodes
 const saveLanguagePreference = () => {
@@ -205,85 +257,85 @@ const togglePassword = () => {
   showPassword.value = !showPassword.value
 }
 
-const handleSignIn = async () => {
+const toggleConfirmPassword = () => {
+  showConfirmPassword.value = !showConfirmPassword.value
+}
+
+const validateForm = () => {
+  if (!form.value.username || !form.value.email || !form.value.password || !form.value.confirmPassword) {
+    error.value = t('allFieldsRequired')
+    return false
+  }
+
+  if (form.value.password !== form.value.confirmPassword) {
+    error.value = t('passwordsDoNotMatch')
+    return false
+  }
+
+  if (form.value.password.length < 8) {
+    error.value = t('passwordTooShort')
+    return false
+  }
+
+  return true
+}
+
+const handleSignUp = async () => {
+  if (!validateForm()) return
+
   error.value = ''
   successMessage.value = ''
   loading.value = true
   
   try {
-    // Utilisation du composable useAuth
-    const response = await login({
-      email: form.value.email,
-      password: form.value.password,
-      rememberMe: form.value.rememberMe
+    const response = await register({
+      username: form.value.username,
+      email_adress: form.value.email,
+      password: form.value.password
     })
     
-    console.log('Login response:', response)
+    console.log('Registration response:', response)
     
-    // Vérifier si la 2FA est requise
-    if (response.requires2FA) {
-      show2FA.value = true
-      pendingLoginData.value = response
-      successMessage.value = t('2FARequired')
-    } else {
-      // Connexion réussie sans 2FA
-      await handleSuccessfulLogin(response)
+    if (response.message === 'User created successfully') {
+      successMessage.value = t('registrationSuccessful')
+      
+      // Redirection après un court délai pour montrer le message de succès
+      setTimeout(() => {
+        router.push('/signin')
+      }, 1500)
     }
     
   } catch (err) {
-    console.error('Login error:', err)
+    console.error('Registration error:', err)
     
-    // Gestion des erreurs spécifiques
-    if (err.response?.status === 401) {
-      error.value = t('invalidCredentials')
-    } else if (err.response?.status === 429) {
-      error.value = t('tooManyAttempts')
-    } else if (err.response?.status >= 500) {
-      error.value = t('serverError')
-    } else {
-      error.value = err.response?.data?.message || err.message || t('connectionError')
-    }
+    // Simplified error handling
+    error.value = err?.message || t('registrationError')
   } finally {
     loading.value = false
   }
 }
 
-const handle2FAVerification = async () => {
-  // Logique 2FA à implémenter
-  console.log('2FA verification with code:', twoFACode.value)
-}
-
-const handleSuccessfulLogin = async (loginData) => {
-  try {
-    successMessage.value = t('loginSuccessful')
-    
-    // Redirection après un court délai pour montrer le message de succès
-    setTimeout(() => {
-      router.push('/game')
-    }, 1500)
-    
-  } catch (err) {
-    console.error('Error handling successful login:', err)
-    error.value = t('loginProcessingError')
-  }
-}
-
-const handleForgotPassword = () => {
-  alert(t('forgotPasswordNotImplemented'))
-}
-
-const goToSignUp = () => {
-  router.push('/signup')
+const goToSignIn = () => {
+  router.push('/signin')
 }
 
 const goBack = () => {
   router.push('/')
 }
+
+// Écouter les changements du mot de passe
+watch(() => form.value.password, (newPassword) => {
+  if (newPassword) {
+    evaluatePasswordStrength(newPassword)
+  } else {
+    passwordStrength.value = 0
+    passwordFeedback.value = ''
+  }
+})
 </script>
 
 <style scoped>
-/* Tous vos styles CSS existants restent identiques */
-.signin-container {
+.signup-container {
   min-height: 100vh;
   background: linear-gradient(135deg, #1a472a 0%, #2d5a3d 50%, #1a472a 100%);
   color: #f8f9fa;
@@ -334,7 +386,7 @@ const goBack = () => {
   transition: all 0.2s ease-in-out;
 }
 
-.signin-main {
+.signup-main {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -343,7 +395,7 @@ const goBack = () => {
   position: relative;
 }
 
-.signin-content {
+.signup-content {
   background: rgba(0, 0, 0, 0.4);
   backdrop-filter: blur(15px);
   border: 1px solid rgba(212, 175, 55, 0.3);
@@ -414,21 +466,11 @@ const goBack = () => {
   border-left: 4px solid #28a745;
 }
 
-.signin-form {
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-}
-
 .form-group {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
-}
-
-label {
-  font-weight: 500;
-  color: #e0e0e0;
+  margin-bottom: 1.5rem;
 }
 
 .form-input {
@@ -446,10 +488,6 @@ label {
   border-color: #d4af37;
   box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.3);
   background-color: rgba(255, 255, 255, 0.15);
-}
-
-.form-input::placeholder {
-  color: rgba(248, 249, 250, 0.6);
 }
 
 .password-input-container {
@@ -473,67 +511,12 @@ label {
   height: 20px;
 }
 
-.form-options {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin: 0.5rem 0;
-}
-
-.remember-me {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  cursor: pointer;
-  color: #e0e0e0;
-  font-size: 0.875rem;
-}
-
-.remember-me input[type="checkbox"] {
-  display: none;
-}
-
-.checkmark {
-  width: 18px;
-  height: 18px;
-  border: 2px solid #d4af37;
-  border-radius: 3px;
-  position: relative;
-  transition: all 0.2s ease;
-}
-
-.remember-me input[type="checkbox"]:checked + .checkmark {
-  background-color: #d4af37;
-}
-
-.remember-me input[type="checkbox"]:checked + .checkmark::after {
-  content: "✓";
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  color: #1a1a1a;
-  font-size: 12px;
-  font-weight: bold;
-}
-
-.forgot-password {
-  color: #d4af37;
-  text-decoration: none;
-  font-size: 0.875rem;
-  transition: color 0.2s ease;
-}
-
-.forgot-password:hover {
-  color: #c19b2e;
-  text-decoration: underline;
-}
-
-.signin-button {
+.signup-button {
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
+  width: 100%;
   padding: 1rem;
   background: linear-gradient(135deg, #d4af37, #c19b2e);
   color: #1a1a1a;
@@ -545,14 +528,15 @@ label {
   transition: all 0.3s ease;
   text-transform: uppercase;
   letter-spacing: 1px;
+  margin-top: 1rem;
 }
 
-.signin-button:hover:not(:disabled) {
+.signup-button:hover:not(:disabled) {
   transform: translateY(-2px);
   box-shadow: 0 6px 20px rgba(212, 175, 55, 0.4);
 }
 
-.signin-button:disabled {
+.signup-button:disabled {
   opacity: 0.7;
   cursor: not-allowed;
   transform: none;
@@ -569,7 +553,7 @@ label {
   to { transform: rotate(360deg); }
 }
 
-.signup-link {
+.signin-link {
   text-align: center;
   margin-top: 2rem;
   color: #e0e0e0;
@@ -586,27 +570,6 @@ label {
 .link:hover {
   color: #c19b2e;
   text-decoration: underline;
-}
-
-.twofa-section {
-  margin-top: 2rem;
-  padding-top: 2rem;
-  border-top: 1px solid rgba(212, 175, 55, 0.3);
-}
-
-.twofa-title {
-  font-size: 1.25rem;
-  font-weight: bold;
-  color: #d4af37;
-  margin-bottom: 0.5rem;
-  text-align: center;
-}
-
-.twofa-description {
-  color: #e0e0e0;
-  text-align: center;
-  margin-bottom: 1.5rem;
-  font-size: 0.875rem;
 }
 
 .billiard-decoration {
@@ -648,7 +611,7 @@ label {
     gap: 1rem;
   }
   
-  .signin-content {
+  .signup-content {
     padding: 2rem;
     margin: 1rem;
   }
@@ -656,11 +619,55 @@ label {
   .title {
     font-size: 1.75rem;
   }
-  
-  .form-options {
-    flex-direction: column;
-    gap: 1rem;
-    align-items: flex-start;
-  }
+}
+
+.password-strength-container {
+  margin-top: 0.5rem;
+}
+
+.password-strength-bar {
+  height: 4px;
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 2px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.strength-level {
+  height: 100%;
+  width: 100%;
+  transition: all 0.3s ease;
+}
+
+.strength-level.very-weak {
+  background-color: #ff4444;
+  width: 20%;
+}
+
+.strength-level.weak {
+  background-color: #ffa700;
+  width: 40%;
+}
+
+.strength-level.medium {
+  background-color: #ffdb4a;
+  width: 60%;
+}
+
+.strength-level.strong {
+  background-color: #99cc00;
+  width: 80%;
+}
+
+.strength-level.very-strong {
+  background-color: #00c851;
+  width: 100%;
+}
+
+.password-feedback {
+  margin-top: 0.5rem;
+  font-size: 0.75rem;
+  color: #e0e0e0;
+  text-align: left;
 }
 </style>

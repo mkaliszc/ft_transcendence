@@ -19,7 +19,7 @@
 	  <!-- Section Hero -->
 	  <main class="hero-section">
 		  <div class="title-container">
-			<h1 class="main-title">{{ $t('welcomeTitle') }}</h1>
+			<h1 class="main-title">Bienvenue {{ username || 'joueur' }} !</h1>
 		  </div>
   
 		  <!-- Animation de la table de pong -->
@@ -36,18 +36,12 @@
   
 		  <!-- Boutons d'action -->
 		  <div class="action-buttons">
-			<button @click="goToSignIn" class="btn btn-primary">
+			<!-- Bouton de déconnexion -->
+			<button @click="handleLogout" class="btn btn-logout">
 			  <svg class="btn-icon" fill="currentColor" viewBox="0 0 20 20">
-				<path fill-rule="evenodd" d="M3 3a1 1 0 011 1v12a1 1 0 11-2 0V4a1 1 0 011-1zm7.707 3.293a1 1 0 010 1.414L9.414 9H17a1 1 0 110 2H9.414l1.293 1.293a1 1 0 01-1.414 1.414l-3-3a1 1 0 010-1.414l3-3a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+				<path fill-rule="evenodd" d="M3 3a1 1 0 00-1 1v12a1 1 0 102 0V4a1 1 0 00-1-1zm10.293 9.293a1 1 0 001.414 1.414l3-3a1 1 0 000-1.414l-3-3a1 1 0 10-1.414 1.414L14.586 9H7a1 1 0 100 2h7.586l-1.293 1.293z" clip-rule="evenodd"></path>
 			  </svg>
-			  {{ $t('signIn') }}
-			</button>
-			
-			<button @click="goToSignUp" class="btn btn-secondary">
-			  <svg class="btn-icon" fill="currentColor" viewBox="0 0 20 20">
-				<path d="M8 9a3 3 0 100-6 3 3 0 000 6zM8 11a6 6 0 016 6H2a6 6 0 016-6zM16 7a1 1 0 10-2 0v1h-1a1 1 0 100 2h1v1a1 1 0 102 0v-1h1a1 1 0 100-2h-1V7z"></path>
-			  </svg>
-			  {{ $t('signUp') }}
+			  {{ $t('logout') || 'Déconnexion' }}
 			</button>
 		  </div>
   
@@ -147,6 +141,7 @@
   import { useI18n } from 'vue-i18n'
   import { useRouter } from 'vue-router'
   import { defineComponent } from 'vue';
+  import { useAuth } from '../composable/useAuths';
 
   export default defineComponent({
     setup() {
@@ -157,6 +152,9 @@
   
       // État pour le popup de connexion
       const showLoginPopup = ref(false)
+      
+      // État pour le nom d'utilisateur
+      const username = ref('')
   
       // Charger la langue préférée
       const savedLanguage = localStorage.getItem('preferred-language')
@@ -241,6 +239,16 @@
         window.location.assign('/signup')
       }
   
+      // Fonction pour déconnexion
+      const handleLogout = () => {
+        // Supprimer tous les tokens d'authentification
+        localStorage.removeItem('user-token')
+        localStorage.removeItem('auth_token')
+        localStorage.removeItem('refresh_token')
+        // Rediriger vers la page de connexion
+        router.push('/signin')
+      }
+  
       // Fonctions pour le popup
       const closePopup = () => {
         showLoginPopup.value = false
@@ -256,9 +264,43 @@
         goToSignUp()
       }
   
+      // Récupérer le nom d'utilisateur
+      const getUserData = () => {
+        try {
+          const userData = localStorage.getItem('user_data')
+          console.log('Raw user data from localStorage:', userData)
+          
+          if (userData) {
+            const parsedUser = JSON.parse(userData)
+            console.log('Parsed user data:', parsedUser)
+            
+            if (parsedUser.username) {
+              username.value = parsedUser.username
+              console.log('Username set to:', username.value)
+            } else {
+              console.error('Username not found in user data')
+              // Si on ne trouve pas username, vérifions d'autres propriétés possibles
+              const possibleUsernames = ['name', 'userName', 'login', 'email']
+              for (const key of possibleUsernames) {
+                if (parsedUser[key]) {
+                  username.value = parsedUser[key]
+                  console.log('Using alternative username field:', key)
+                  break
+                }
+              }
+            }
+          } else {
+            console.error('No user data found in localStorage')
+          }
+        } catch (err) {
+          console.error('Error parsing user data:', err)
+        }
+      }
+
       // Lifecycle hooks
       onMounted(() => {
         animatePong()
+        getUserData()
       })
   
       onUnmounted(() => {
@@ -284,19 +326,15 @@
       // Nouvelle Feature 4 pour le profil avec vérification d'authentification
       const goToFeature4 = () => {
         console.log('Navigate to Feature 4 - Profile')
-        // Vérifier si l'utilisateur est connecté avant d'accéder au profil
-        if (isUserLoggedIn()) {
-          window.location.assign('/profile')
-        } else {
-          // Afficher le popup si l'utilisateur n'est pas connecté
-          showLoginPopup.value = true
-        }
+        // L'utilisateur est toujours connecté sur cette page
+        router.push('/profile')
       }
 
       return {
         t,
         locale,
         showLoginPopup,
+        username,
         ballX,
         ballY,
         ballSpeedX,
@@ -312,7 +350,8 @@
         goToFeature1,
         goToFeature2,
         goToFeature3,
-        goToFeature4
+        goToFeature4,
+        handleLogout
       }
     }
   })
@@ -527,6 +566,27 @@ html, body {
 	background: #d4af37;
 	color: #1a1a1a;
 	transform: translateY(-2px);
+  }
+  
+  .btn-logout {
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: background-color 0.2s;
+  }
+  
+  .btn-logout:hover {
+    background-color: #c82333;
+  }
+  
+  .btn-logout .btn-icon {
+    width: 1.25rem;
+    height: 1.25rem;
   }
   
   .features {

@@ -20,7 +20,7 @@ const fetchApi = async (url: string, options: RequestInit = {}) => {
 	  // Vérifier si la réponse est OK
 	  if (!response.ok) {
 		const errorData = await response.json().catch(() => ({}))
-		throw new Error(errorData.message || `Erreur ${response.status}: ${response.statusText}`)
+		throw new Error(errorData.error || `Error ${response.status}: ${response.statusText}`)
 	  }
   
 	  // Vérifier si la réponse est vide
@@ -30,7 +30,7 @@ const fetchApi = async (url: string, options: RequestInit = {}) => {
 	  }
   
 	  return {}
-	} catch (error) {
+	} catch (error: any) {
 	  console.error("API request error:", error)
 	  throw error
 	}
@@ -40,10 +40,14 @@ const fetchApi = async (url: string, options: RequestInit = {}) => {
   export const authApi = {
 	// Inscription
 	register: async (userData: Record<string, any>) => {
-	  return fetchApi("/auth/register", {
-		method: "POST",
-		body: JSON.stringify(userData),
-	  })
+	  try {
+		return await fetchApi("/auth/register", {
+		  method: "POST",
+		  body: JSON.stringify(userData),
+		})
+	  } catch (error) {
+		throw error
+	  }
 	},
   
 	// Connexion
@@ -83,4 +87,3 @@ const fetchApi = async (url: string, options: RequestInit = {}) => {
 	  })
 	},
   }
-  

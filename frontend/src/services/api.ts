@@ -60,13 +60,11 @@ export const fetchWithAuth = async (url: string, options: RequestInit = {}) => {
 	  })
 	},
   
-	// Inscription utilisateur - OK (pas de changement)
+	// Inscription utilisateur - Mise à jour pour correspondre au backend
 	register: async (userData: { 
-	  email: string; 
-	  password: string; 
-	  username?: string; 
-	  firstName?: string; 
-	  lastName?: string; 
+	  username: string;
+	  email_adress: string;
+	  password: string;
 	}) => {
 	  return await fetchWithAuth('/auth/register', {
 		method: 'POST',
