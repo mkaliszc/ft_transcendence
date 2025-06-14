@@ -290,7 +290,7 @@ const handleSignUp = async () => {
   try {
     const response = await register({
       username: form.value.username,
-      email_adress: form.value.email, // Changé de email à email_adress pour correspondre au backend
+      email_adress: form.value.email,
       password: form.value.password
     })
     
@@ -308,13 +308,8 @@ const handleSignUp = async () => {
   } catch (err) {
     console.error('Registration error:', err)
     
-    if (err.response?.status === 400 && err.response?.data?.error === 'Username or email already exists') {
-      error.value = t('usernameOrEmailExists')
-    } else if (err.response?.status === 400) {
-      error.value = t('invalidRegistrationData')
-    } else {
-      error.value = err.response?.data?.error || err.message || t('registrationError')
-    }
+    // Simplified error handling
+    error.value = err?.message || t('registrationError')
   } finally {
     loading.value = false
   }

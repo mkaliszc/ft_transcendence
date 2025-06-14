@@ -336,6 +336,8 @@
   import { ref, computed, onMounted } from 'vue'
   import { useI18n } from 'vue-i18n'
   import BillardBall from './BillardBall.vue'
+  import { useAuth } from '../composable/useAuths';
+  import { useRouter } from 'vue-router';
   
   const { t } = useI18n()
   
@@ -673,6 +675,19 @@
 	  }
 	}
   })
+  
+  // Vérification de l'authentification
+  const { isAuthenticated } = useAuth();
+  const router = useRouter();
+
+  onMounted(() => {
+    if (!isAuthenticated.value) {
+      router.push({
+        path: '/signin',
+        query: { redirect: '/profile' }
+      });
+    }
+  });
   </script>
   
   <style scoped>

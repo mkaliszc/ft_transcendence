@@ -1,36 +1,5 @@
 <template>
 	<div id="app">
-	  <!-- Navigation principale -->
-	  <nav v-if="!isAuthRoute && !isGameRoute" class="main-nav">
-		<div class="container mx-auto px-4 py-3 flex items-center justify-between">
-		  <div class="flex items-center gap-2">
-			<BillardBall :number="8" :size="36" />
-			<span class="text-xl font-bold text-white">{{ $t('gameTitle') }}</span>
-		  </div>
-		  <div class="flex gap-4">
-			<router-link to="/" class="nav-link">{{ $t('home') }}</router-link>
-			<router-link v-if="isAuthenticated" to="/game" class="nav-link">{{ $t('play') }}</router-link>
-			<router-link v-if="isAuthenticated" to="/profile" class="nav-link">{{ $t('profile') }}</router-link>
-			<div v-if="!isAuthenticated" class="flex gap-2">
-			  <router-link to="/signin" class="nav-link auth-link">{{ $t('signIn') }}</router-link>
-			  <router-link to="/signup" class="nav-link auth-link signup">{{ $t('signUp') }}</router-link>
-			</div>
-			<button v-if="isAuthenticated" @click="logout" class="nav-link logout-btn">
-			  {{ $t('logout') }}
-			</button>
-		  </div>
-		  
-		  <!-- Sélecteur de langue -->
-		  <div class="language-switcher">
-			<select v-model="$i18n.locale" @change="saveLanguagePreference" class="language-select">
-			  <option value="en">🇺🇸 EN</option>
-			  <option value="fr">🇫🇷 FR</option>
-			  <option value="es">🇪🇸 ES</option>
-			</select>
-		  </div>
-		</div>
-	  </nav>
-	  
 	  <!-- Contenu principal -->
 	  <router-view v-slot="{ Component }">
 		<transition name="fade" mode="out-in">
@@ -41,60 +10,7 @@
   </template>
   
   <script setup>
-  import { computed, ref, onMounted } from 'vue'
-  import { useRoute, useRouter } from 'vue-router'
-  import { useI18n } from 'vue-i18n'
-  import BillardBall from './components/BillardBall.vue'
-  
-  const route = useRoute()
-  const router = useRouter()
-  const { t, locale } = useI18n()
-  
-  // État d'authentification
-  const isAuthenticated = ref(false)
-  
-  // Masquer la navigation sur certaines pages
-  const isAuthRoute = computed(() => 
-	route.path === '/signin' || 
-	route.path === '/signup' || 
-	route.path === '/register'
-  )
-  
-		const isGameRoute = computed(() => route.path === '/' || route.path === '/Game' || route.path === '/profile' || route.path === '/tournament')
-  
-  // Charger la langue préférée
-  const savedLanguage = localStorage.getItem('preferred-language')
-  if (savedLanguage && ['en', 'fr', 'es'].includes(savedLanguage)) {
-	locale.value = savedLanguage
-  }
-  
-  // Sauvegarder la préférence de langue
-  const saveLanguagePreference = () => {
-	localStorage.setItem('preferred-language', locale.value)
-  }
-  
-  // Vérifier l'état d'authentification
-  const checkAuthStatus = () => {
-	const token = localStorage.getItem('auth_token')
-	isAuthenticated.value = !!token
-  }
-  
-  // Déconnexion
-  const logout = () => {
-	localStorage.removeItem('auth_token')
-	isAuthenticated.value = false
-	router.push('/')
-  }
-  
-  // Vérifier l'authentification au montage
-  onMounted(() => {
-	checkAuthStatus()
-  })
-  
-  // Surveiller les changements de route pour mettre à jour l'état d'auth
-  router.afterEach(() => {
-	checkAuthStatus()
-  })
+  // Il n'y a plus besoin de code ici car la navigation a été retirée
   </script>
   
   <style>
@@ -120,33 +36,7 @@
 	flex-direction: column;
   }
   
-  /* Navigation */
-  .main-nav {
-	background: linear-gradient(135deg, rgba(26, 71, 42, 0.9) 0%, rgba(45, 90, 61, 0.9) 50%, rgba(26, 71, 42, 0.9) 100%);
-	backdrop-filter: blur(10px);
-	border-bottom: 1px solid rgba(212, 175, 55, 0.3);
-	position: sticky;
-	top: 0;
-	z-index: 50;
-	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  }
-  
-  .nav-link {
-	color: rgba(255, 255, 255, 0.8);
-	font-size: 0.875rem;
-	font-weight: 500;
-	padding: 0.5rem 0.75rem;
-	border-radius: 0.375rem;
-	transition: all 0.2s ease;
-	text-decoration: none;
-	border: 1px solid transparent;
-  }
-  
-  .nav-link:hover {
-	color: #ffffff;
-	background-color: rgba(212, 175, 55, 0.2);
-	border-color: rgba(212, 175, 55, 0.3);
-  }
+  /* Pas de styles de navigation nécessaires car elle a été retirée */
   
   .router-link-active {
 	color: #d4af37;

@@ -14,6 +14,21 @@ export function useAuth() {
   const isLoading = computed(() => loading.value)
   const hasError = computed(() => !!error.value)
 
+  const register = async (userData: { username: string; email_adress: string; password: string }) => {
+    loading.value = true
+    error.value = ""
+
+    try {
+      const response = await authApi.register(userData)
+      return response
+    } catch (err: any) {
+      error.value = err.message || "Erreur d'inscription"
+      throw err
+    } finally {
+      loading.value = false
+    }
+  }
+
   const login = async (credentials: { email: string; password: string; rememberMe?: boolean }) => {
     loading.value = true
     error.value = ""
@@ -112,5 +127,6 @@ export function useAuth() {
     refreshAuthToken,
     initializeAuth,
     clearError,
+    register,
   }
 }

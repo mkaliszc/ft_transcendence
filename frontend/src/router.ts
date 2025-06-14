@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from "vue-router";
 import Home from "./components/Home.vue";
+import Home2 from "./components/Home2.vue";
 import Game from "./components/Gameia.vue";
 import Profile from "./components/profile.vue";
 import Signin from "./components/signin.vue";
@@ -9,13 +10,23 @@ import Tournamentgame from "./components/tournamentgame.vue";
 import Tournamentbracket from "./components/tournamentbracket.vue";
 import Tournamentplayer from "./components/tournamentplayer.vue";
 
+// Fonction de vérification d'authentification
+const isAuthenticated = () => {
+  return localStorage.getItem('user-token') !== null || localStorage.getItem('auth_token') !== null;
+};
+
 const routes = [
   {
     path: "/",
     name: "Home",
     component: Home,
   },
-    {
+  {
+    path: "/Home2",
+    name: "Home2",
+    component: Home2,
+  },
+  {
     path: "/touramentgame",
     name: "tournamentgame",
     component: Tournamentgame,
@@ -60,6 +71,23 @@ const routes = [
 const router = createRouter({
   history: createWebHistory(),
   routes,
+});
+
+// Navigation guard
+router.beforeEach((to, _from, next) => {
+  // Liste des routes protégées qui nécessitent une authentification
+  const protectedRoutes = ['/profile', '/Game', '/Gamemulti', '/tournamentgame', '/tournamentbracket', '/tournamentplayer'];
+  
+  // Si la route est protégée et que l'utilisateur n'est pas authentifié
+  if (protectedRoutes.includes(to.path) && !isAuthenticated()) {
+    // Rediriger vers la page de connexion avec une redirection de retour
+    next({ 
+      path: '/signin',
+      query: { redirect: to.fullPath }
+    });
+  } else {
+    next();
+  }
 });
 
 export default router;
