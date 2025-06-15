@@ -258,9 +258,9 @@
   
   <script setup lang="ts">
   import { ref, computed, onMounted, onUnmounted, watch, nextTick } from 'vue'
-  import { useRouter, useRoute } from 'vue-router'
+  import { useRoute } from 'vue-router'
   
-  const router = useRouter()
+//   const router = useRouter()
   const route = useRoute()
   
   interface Team {
@@ -313,10 +313,11 @@
   
   // Navigation et réinitialisation
   const goBack = () => {
+	console.log('🔙 Retour à la configuration des joueurs')
 	localStorage.removeItem('tournament_state')
-	router.push({ 
-	  path: '/tournamentplayer'
-	})
+	
+	// Utiliser window.location.href pour une navigation plus fiable
+	window.location.href = '/tournamentplayer'
   }
   
   const resetTournament = () => {
@@ -598,16 +599,14 @@
   
   // Lancer le jeu Pong
   const launchPongGame = (match: Match) => {
+	console.log('🚀 Lancement du jeu Pong pour:', match.team1.name, 'vs', match.team2.name)
 	saveTournamentState()
 	
-	router.replace({
-	  path: '/tournamentgame',
-	  query: {
-		player1: match.team1.name,
-		player2: match.team2.name,
-		returnTo: 'tournamentbracket'
-	  }
-	})
+	// Utiliser window.location.href pour une navigation plus fiable
+	const gameUrl = `/tournamentgame?player1=${encodeURIComponent(match.team1.name)}&player2=${encodeURIComponent(match.team2.name)}&returnTo=tournamentbracket`
+	console.log('🔗 Navigation vers:', gameUrl)
+	
+	window.location.href = gameUrl
   }
   
   // Avancer le gagnant au tour suivant

@@ -162,7 +162,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted, watch } from 'vue'
+import { ref, onMounted, onUnmounted, watch, nextTick } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
 // Props depuis la route
@@ -172,6 +172,11 @@ const router = useRouter()
 // Noms des joueurs depuis les paramètres de la route
 const player1Name = ref(route.query.player1 as string || 'Joueur 1')
 const player2Name = ref(route.query.player2 as string || 'Joueur 2')
+
+// Debug logging
+console.log('Tournament game route query:', route.query)
+console.log('Player 1:', player1Name.value)
+console.log('Player 2:', player2Name.value)
 
 // Game state
 const gameCanvas = ref<HTMLCanvasElement | null>(null)
@@ -231,16 +236,48 @@ let animationFrameId: number | null = null
 
 // Initialize game
 onMounted(() => {
-  if (gameCanvas.value) {
-    ctx.value = gameCanvas.value.getContext('2d')
-    resetBall()
-    window.addEventListener('keydown', handleKeyDown)
-    window.addEventListener('keyup', handleKeyUp)
-    window.addEventListener('resize', handleResize)
-    handleResize()
-    startGameLoop()
-  }
+  console.log('Component mounted, waiting for DOM to be ready...')
+  // Attendre que le DOM soit complètement rendu avec un délai supplémentaire
+  nextTick(() => {
+    setTimeout(() => {
+      initializeCanvas()
+    }, 150) // Délai de 150ms pour s'assurer que le DOM est prêt
+  })
 })
+
+function initializeCanvas() {
+  console.log('Attempting to initialize canvas...')
+  
+  if (gameCanvas.value) {
+    console.log('Canvas element found:', gameCanvas.value)
+    console.log('Canvas dimensions:', gameCanvas.value.width, 'x', gameCanvas.value.height)
+    
+    ctx.value = gameCanvas.value.getContext('2d')
+    if (ctx.value) {
+      console.log('Canvas context initialized successfully')
+      resetBall()
+      
+      // Forcer un premier rendu pour s'assurer que quelque chose s'affiche
+      setTimeout(() => {
+        drawGame()
+      }, 50)
+      
+      window.addEventListener('keydown', handleKeyDown)
+      window.addEventListener('keyup', handleKeyUp)
+      window.addEventListener('resize', handleResize)
+      handleResize()
+      startGameLoop()
+    } else {
+      console.error('Failed to get canvas context, retrying...')
+      // Retry après un délai si l'initialisation échoue
+      setTimeout(initializeCanvas, 300)
+    }
+  } else {
+    console.error('Canvas element not found, retrying...')
+    // Retry après un délai si l'élément n'est pas trouvé
+    setTimeout(initializeCanvas, 300)
+  }
+}
 
 onUnmounted(() => {
   window.removeEventListener('keydown', handleKeyDown)
@@ -352,77 +389,84 @@ function checkImprovedPaddleCollision(paddle: typeof player1.value) {
 }
 
 function drawGame() {
-  if (!ctx.value || !gameCanvas.value) return
+  if (!ctx.value || !gameCanvas.value) {
+    console.warn('Canvas context or canvas element not available')
+    return
+  }
 
-  // Clear canvas
-  ctx.value.clearRect(0, 0, gameCanvas.value.width, gameCanvas.value.height)
-  
-  // Draw table background
-  const gradient = ctx.value.createLinearGradient(0, 0, gameCanvas.value.width, gameCanvas.value.height)
-  gradient.addColorStop(0, '#1a472a')
-  gradient.addColorStop(0.5, '#2d5a3d')
-  gradient.addColorStop(1, '#1a472a')
-  ctx.value.fillStyle = gradient
-  ctx.value.fillRect(0, 0, gameCanvas.value.width, gameCanvas.value.height)
-  
-  // Draw border
-  ctx.value.strokeStyle = '#d4af37'
-  ctx.value.lineWidth = 4
-  ctx.value.strokeRect(2, 2, gameCanvas.value.width - 4, gameCanvas.value.height - 4)
-  
-  // Draw center line
-  ctx.value.beginPath()
-  ctx.value.setLineDash([])
-  ctx.value.moveTo(gameCanvas.value.width / 2, 0)
-  ctx.value.lineTo(gameCanvas.value.width / 2, gameCanvas.value.height)
-  ctx.value.strokeStyle = '#d4af37'
-  ctx.value.lineWidth = 2
-  ctx.value.stroke()
+  try {
+    // Clear canvas
+    ctx.value.clearRect(0, 0, gameCanvas.value.width, gameCanvas.value.height)
+    
+    // Draw table background
+    const gradient = ctx.value.createLinearGradient(0, 0, gameCanvas.value.width, gameCanvas.value.height)
+    gradient.addColorStop(0, '#1a472a')
+    gradient.addColorStop(0.5, '#2d5a3d')
+    gradient.addColorStop(1, '#1a472a')
+    ctx.value.fillStyle = gradient
+    ctx.value.fillRect(0, 0, gameCanvas.value.width, gameCanvas.value.height)
+    
+    // Draw border
+    ctx.value.strokeStyle = '#d4af37'
+    ctx.value.lineWidth = 4
+    ctx.value.strokeRect(2, 2, gameCanvas.value.width - 4, gameCanvas.value.height - 4)
+    
+    // Draw center line
+    ctx.value.beginPath()
+    ctx.value.setLineDash([])
+    ctx.value.moveTo(gameCanvas.value.width / 2, 0)
+    ctx.value.lineTo(gameCanvas.value.width / 2, gameCanvas.value.height)
+    ctx.value.strokeStyle = '#d4af37'
+    ctx.value.lineWidth = 2
+    ctx.value.stroke()
 
-  // Draw ball with glow effect
-  ctx.value.beginPath()
-  ctx.value.arc(ball.value.x, ball.value.y, ball.value.radius + 2, 0, Math.PI * 2)
-  ctx.value.fillStyle = 'rgba(255, 255, 255, 0.3)'
-  ctx.value.fill()
-  
-  ctx.value.beginPath()
-  ctx.value.arc(ball.value.x, ball.value.y, ball.value.radius, 0, Math.PI * 2)
-  ctx.value.fillStyle = ball.value.color
-  ctx.value.fill()
-  ctx.value.shadowColor = 'rgba(255, 255, 255, 0.5)'
-  ctx.value.shadowBlur = 10
-  ctx.value.fill()
-  ctx.value.shadowBlur = 0
+    // Draw ball with glow effect
+    ctx.value.beginPath()
+    ctx.value.arc(ball.value.x, ball.value.y, ball.value.radius + 2, 0, Math.PI * 2)
+    ctx.value.fillStyle = 'rgba(255, 255, 255, 0.3)'
+    ctx.value.fill()
+    
+    ctx.value.beginPath()
+    ctx.value.arc(ball.value.x, ball.value.y, ball.value.radius, 0, Math.PI * 2)
+    ctx.value.fillStyle = ball.value.color
+    ctx.value.fill()
+    ctx.value.shadowColor = 'rgba(255, 255, 255, 0.5)'
+    ctx.value.shadowBlur = 10
+    ctx.value.fill()
+    ctx.value.shadowBlur = 0
 
-  // Draw paddles with golden color
-  ctx.value.fillStyle = player1.value.color
-  ctx.value.fillRect(
-    player1.value.x, 
-    player1.value.y - player1.value.height / 2, 
-    player1.value.width, 
-    player1.value.height
-  )
-  
-  ctx.value.fillStyle = player2.value.color
-  ctx.value.fillRect(
-    player2.value.x, 
-    player2.value.y - player2.value.height / 2, 
-    player2.value.width, 
-    player2.value.height
-  )
+    // Draw paddles with golden color
+    ctx.value.fillStyle = player1.value.color
+    ctx.value.fillRect(
+      player1.value.x, 
+      player1.value.y - player1.value.height / 2, 
+      player1.value.width, 
+      player1.value.height
+    )
+    
+    ctx.value.fillStyle = player2.value.color
+    ctx.value.fillRect(
+      player2.value.x, 
+      player2.value.y - player2.value.height / 2, 
+      player2.value.width, 
+      player2.value.height
+    )
 
-  // Draw score with player labels
-  ctx.value.font = 'bold 24px Arial'
-  ctx.value.fillStyle = '#d4af37'
-  ctx.value.textAlign = 'center'
-  ctx.value.fillText(player1Score.value.toString(), gameCanvas.value.width * 0.25, 30)
-  ctx.value.fillText(player2Score.value.toString(), gameCanvas.value.width * 0.75, 30)
-  
-  // Draw player labels
-  ctx.value.font = 'bold 16px Arial'
-  ctx.value.fillStyle = '#e0e0e0'
-  ctx.value.fillText(player1Name.value, gameCanvas.value.width * 0.25, 55)
-  ctx.value.fillText(player2Name.value, gameCanvas.value.width * 0.75, 55)
+    // Draw score with player labels
+    ctx.value.font = 'bold 24px Arial'
+    ctx.value.fillStyle = '#d4af37'
+    ctx.value.textAlign = 'center'
+    ctx.value.fillText(player1Score.value.toString(), gameCanvas.value.width * 0.25, 30)
+    ctx.value.fillText(player2Score.value.toString(), gameCanvas.value.width * 0.75, 30)
+    
+    // Draw player labels
+    ctx.value.font = 'bold 16px Arial'
+    ctx.value.fillStyle = '#e0e0e0'
+    ctx.value.fillText(player1Name.value, gameCanvas.value.width * 0.25, 55)
+    ctx.value.fillText(player2Name.value, gameCanvas.value.width * 0.75, 55)
+  } catch (error) {
+    console.error('Error in drawGame:', error)
+  }
 }
 
 function resetBall() {

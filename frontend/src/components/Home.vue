@@ -228,17 +228,15 @@
         // Vérifiez ici si l'utilisateur est connecté
         // Par exemple, vérifier un token dans localStorage ou sessionStorage
         return localStorage.getItem('user-token') !== null
-      }
-  
-      // Navigation
+      }      // Navigation
       const goToSignIn = () => {
         console.log('Navigate to Sign In')
-        window.location.assign('/signin')
+        router.push('/signin')
       }
-  
+
       const goToSignUp = () => {
         console.log('Navigate to Sign Up')
-        window.location.assign('/signup')
+        router.push('/signup')
       }
   
       // Fonctions pour le popup

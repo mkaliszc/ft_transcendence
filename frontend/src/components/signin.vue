@@ -229,7 +229,7 @@ const handleSignIn = async () => {
     } else if (err.response?.status >= 500) {
       error.value = t('serverError')
     } else {
-      error.value = err.response?.data?.message || err.message || t('connectionError')
+      error.value = err.response?.data?.error || err.response?.data?.message || err.message || t('connectionError')
     }
   } finally {
     loading.value = false
@@ -265,7 +265,7 @@ const handle2FAVerification = async () => {
     if (err.response?.status === 401) {
       error.value = t('invalid2FACode')
     } else {
-      error.value = err.response?.data?.message || err.message || t('2FAVerificationError')
+      error.value = err.response?.data?.error || err.response?.data?.message || err.message || t('2FAVerificationError')
     }
   } finally {
     loading.value = false
