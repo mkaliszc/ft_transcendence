@@ -2,8 +2,16 @@
   <div class="tournament-container">
     <!-- Header -->
     <div class="tournament-header">
-      <h1 class="tournament-title">TOURNOI PONG</h1>
-      <p class="tournament-subtitle">Configuration des Joueurs - Bracket 8 Joueurs</p>
+      <button @click="goHome" class="back-home-button">
+        <svg class="back-icon" fill="currentColor" viewBox="0 0 20 20">
+          <path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd"></path>
+        </svg>
+        Retour à l'accueil
+      </button>
+      <div class="header-content">
+        <h1 class="tournament-title">TOURNOI PONG</h1>
+        <p class="tournament-subtitle">Configuration des Joueurs - Bracket 8 Joueurs</p>
+      </div>
     </div>
 
     <!-- Main Content Layout -->
@@ -53,18 +61,15 @@
         <!-- Instructions -->
         <div class="instructions">
           <p>🎮 <strong>Instructions :</strong> Entrez les noms des 8 joueurs pour commencer le tournoi</p>
-          <p>✅ <strong>Validation :</strong> Tous les noms doivent être uniques et non vides</p>
           <p>⚡ <strong>Astuce :</strong> Appuyez sur Entrée dans un champ pour valider rapidement</p>
         </div>
 
         <!-- Validation Status -->
         <div class="validation-status">
           <div class="validation-item" :class="{ 'valid': filledNamesCount === 8 }">
-            <span class="validation-icon">{{ filledNamesCount === 8 ? '✅' : '❌' }}</span>
             <span>Noms remplis : {{ filledNamesCount }}/8</span>
           </div>
           <div class="validation-item" :class="{ 'valid': hasUniqueNames }">
-            <span class="validation-icon">{{ hasUniqueNames ? '✅' : '❌' }}</span>
             <span>Noms uniques : {{ hasUniqueNames ? 'Oui' : 'Non' }}</span>
           </div>
         </div>
@@ -112,6 +117,10 @@ const clearNames = () => {
   playerNames.value = Array(8).fill('')
 }
 
+const goHome = () => {
+  router.push('/')
+}
+
 const startTournament = () => {
   if (!canStartTournament.value) {
     if (filledNamesCount.value !== 8) {
@@ -152,7 +161,9 @@ const startTournament = () => {
 }
 
 .tournament-header {
-  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   margin-bottom: 2rem;
   padding: 2rem;
   border: 3px solid #d4af37;
@@ -160,6 +171,43 @@ const startTournament = () => {
   background: rgba(0, 0, 0, 0.3);
   backdrop-filter: blur(10px);
   flex-shrink: 0;
+  position: relative;
+}
+
+.back-home-button {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(212, 175, 55, 0.1);
+  border: 2px solid #d4af37;
+  border-radius: 0.5rem;
+  color: #d4af37;
+  padding: 0.75rem 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: 600;
+  font-size: 0.9rem;
+  text-decoration: none;
+  position: absolute;
+  left: 2rem;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.back-home-button:hover {
+  background: rgba(212, 175, 55, 0.2);
+  transform: translateY(-50%) translateY(-2px);
+  box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+}
+
+.back-icon {
+  width: 20px;
+  height: 20px;
+}
+
+.header-content {
+  text-align: center;
+  flex: 1;
 }
 
 .main-content {
@@ -359,6 +407,23 @@ const startTournament = () => {
     font-size: 2rem;
   }
   
+  .tournament-header {
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1rem;
+    margin-bottom: 1rem;
+  }
+  
+  .back-home-button {
+    position: static;
+    transform: none;
+    align-self: flex-start;
+  }
+  
+  .back-home-button:hover {
+    transform: translateY(-2px);
+  }
+  
   .main-content {
     flex-direction: column;
     gap: 1rem;
@@ -380,11 +445,6 @@ const startTournament = () => {
   .default-names-btn, .clear-names-btn, .start-tournament-btn {
     width: 100%;
     max-width: 300px;
-  }
-  
-  .tournament-header {
-    padding: 1rem;
-    margin-bottom: 1rem;
   }
   
   .setup-section {

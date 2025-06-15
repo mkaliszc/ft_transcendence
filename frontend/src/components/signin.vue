@@ -206,7 +206,6 @@ const handleSignIn = async () => {
       password: form.value.password
     })
     
-    console.log('Login response:', response)
     
     // Vérifier si la 2FA est requise
     if (response.requires2FA) {
@@ -229,7 +228,7 @@ const handleSignIn = async () => {
     } else if (err.response?.status >= 500) {
       error.value = t('serverError')
     } else {
-      error.value = err.response?.data?.message || err.message || t('connectionError')
+      error.value = err.response?.data?.error || err.response?.data?.message || err.message || t('connectionError')
     }
   } finally {
     loading.value = false
@@ -249,7 +248,6 @@ const handle2FAVerification = async () => {
     // Vérification du code 2FA
     const response = await authApi.check2FA(twoFACode.value)
     
-    console.log('2FA verification response:', response)
     
     // Combiner les données de connexion avec la vérification 2FA
     const loginData = {
@@ -265,7 +263,7 @@ const handle2FAVerification = async () => {
     if (err.response?.status === 401) {
       error.value = t('invalid2FACode')
     } else {
-      error.value = err.response?.data?.message || err.message || t('2FAVerificationError')
+      error.value = err.response?.data?.error || err.response?.data?.message || err.message || t('2FAVerificationError')
     }
   } finally {
     loading.value = false
@@ -274,33 +272,26 @@ const handle2FAVerification = async () => {
 
 const handleSuccessfulLogin = async (loginData) => {
   try {
-    console.log('Login data received:', loginData)
     
     // Sauvegarder le token d'authentification
     if (loginData.token || loginData.accessToken) {
       const token = loginData.token || loginData.accessToken
       localStorage.setItem('auth_token', token)
-      console.log('Auth token saved')
     }
     
     // Sauvegarder le refresh token si disponible
     if (loginData.refreshToken) {
       localStorage.setItem('refresh_token', loginData.refreshToken)
-      console.log('Refresh token saved')
     }
     
     // Sauvegarder les données utilisateur
     if (loginData.user) {
       const userData = loginData.user
-      console.log('User data to save:', userData)
       localStorage.setItem('user_data', JSON.stringify(userData))
-      console.log('User data saved to localStorage')
     } else {
-      console.log('No user data received in login response')
     }
     
     // Vérification du stockage
-    console.log('Stored user data:', localStorage.getItem('user_data'))
     
     successMessage.value = t('loginSuccessful')
     
@@ -316,7 +307,6 @@ const handleSuccessfulLogin = async (loginData) => {
 }
 
 const handleGoogleSignIn = () => {
-  console.log('Google Sign In')
   // Ici vous pourriez implémenter la connexion Google
   alert(t('googleSignInNotImplemented'))
 }
@@ -331,7 +321,6 @@ const goBack = () => {
 
 // Initialisation simple au montage
 onMounted(() => {
-  console.log('SignIn component mounted')
 })
 </script>
 

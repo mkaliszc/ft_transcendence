@@ -585,7 +585,6 @@
   
   // Méthodes
   const updateProfile = () => {
-	console.log('Profil Pong mis à jour:', username.value)
 	localStorage.setItem('pongProfile', JSON.stringify({
 	  username: username.value,
 	  level: level.value,
@@ -663,7 +662,6 @@
   // Hook de cycle de vie
   const savedProfile = ref(null);
   onMounted(() => {
-	console.log('Composant Pong Profile monté')
 	savedProfile.value = localStorage.getItem('pongProfile')
 	if (savedProfile.value) {
 	  const profile = JSON.parse(savedProfile.value)

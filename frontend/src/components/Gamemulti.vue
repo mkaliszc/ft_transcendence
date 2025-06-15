@@ -85,10 +85,10 @@
 		<div class="footer-container">
 		  <div class="controls-info">
 			<div class="player-controls">
-			  <strong>Joueur 1 (Gauche):</strong> Touches W/S ou ↑/↓
+			  <strong>Joueur 1 (Gauche):</strong> Touches W/S
 			</div>
 			<div class="player-controls">
-			  <strong>Joueur 2 (Droite):</strong> Touches I/K ou Numpad 8/2
+			  <strong>Joueur 2 (Droite):</strong> Flèches ↑/↓
 			</div>
 		  </div>
 		  <p class="copyright">Amusez-vous bien !</p>
@@ -112,16 +112,12 @@
   
   // Keyboard state for smooth movement
   const keys = ref({
-	// Joueur 1 (gauche)
-	ArrowUp: false,
-	ArrowDown: false,
+	// Joueur 1 (gauche) - W/S
 	KeyW: false,
 	KeyS: false,
-	// Joueur 2 (droite)
-	KeyI: false,
-	KeyK: false,
-	Numpad8: false,
-	Numpad2: false
+	// Joueur 2 (droite) - Flèches haut/bas
+	ArrowUp: false,
+	ArrowDown: false
   });
   
   // Game elements
@@ -204,7 +200,6 @@
 	  } else {
 		ball.value.y = gameCanvas.value.height - ball.value.radius;
 	  }
-	  playSound('wall');
 	}
   
 	// Paddle collision detection
@@ -234,17 +229,14 @@
 		ball.value.x = paddle.x - ball.value.radius - 1;
 	  }
 	  
-	  playSound('paddle');
 	}
   
 	// Ball out of bounds (scoring)
 	if (ball.value.x - ball.value.radius < 0) {
 	  player2Score.value++;
-	  playSound('score');
 	  resetBall();
 	} else if (ball.value.x + ball.value.radius > gameCanvas.value.width) {
 	  player1Score.value++;
-	  playSound('score');
 	  resetBall();
 	}
   }
@@ -385,7 +377,7 @@
 	  player1.value.y += player1.value.speed;
 	}
 	
-	// Joueur 2 (droite) - I/K ou Numpad 8/2
+	// Joueur 2 (droite) - Flèches haut/bas
 	const player2Up = keys.value.ArrowUp;
 	const player2Down = keys.value.ArrowDown;
 	
@@ -441,11 +433,7 @@
 	  gameCanvas.value.style.transformOrigin = 'top left';
 	}
   }
-  
-  function playSound(type) {
-	console.log(`Playing sound: ${type}`);
-  }
-  </script>
+</script>
   
   <style scoped>
   .game-container {

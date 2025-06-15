@@ -228,17 +228,13 @@
         // Vérifiez ici si l'utilisateur est connecté
         // Par exemple, vérifier un token dans localStorage ou sessionStorage
         return localStorage.getItem('user-token') !== null
-      }
-  
-      // Navigation
+      }      // Navigation
       const goToSignIn = () => {
-        console.log('Navigate to Sign In')
-        window.location.assign('/signin')
+        router.push('/signin')
       }
-  
+
       const goToSignUp = () => {
-        console.log('Navigate to Sign Up')
-        window.location.assign('/signup')
+        router.push('/signup')
       }
   
       // Fonctions pour le popup
@@ -267,23 +263,19 @@
         }
       })      // Fonctions pour les boutons de fonctionnalités
       const goToFeature1 = () => {
-        console.log('Navigate to Feature 1 - Solo Game')
         router.push('/game')
       }
 
       const goToFeature2 = () => {
-        console.log('Navigate to Feature 2 - Multiplayer')
         router.push('/Gamemulti')
       }
 
       const goToFeature3 = () => {
-        console.log('Navigate to Feature 3 - Tournaments')
         router.push('/tournamentplayer')
       }
 
       // Nouvelle Feature 4 pour le profil avec vérification d'authentification
       const goToFeature4 = () => {
-        console.log('Navigate to Feature 4 - Profile')
         // Vérifier si l'utilisateur est connecté avant d'accéder au profil
         if (isUserLoggedIn()) {
           window.location.assign('/profile')
