@@ -84,7 +84,7 @@
   
 	  <footer class="game-footer">
 		<div class="footer-container">
-		  <p>Utilisez votre souris ou les touches ↑/↓ pour déplacer la raquette</p>
+		  <p>Utilisez les touches W/S pour déplacer votre raquette</p>
 		  <p class="copyright">Amusez-vous bien !</p>
 		</div>
 	  </footer>
@@ -106,8 +106,6 @@
   
   // Keyboard state for smooth movement
   const keys = ref({
-	ArrowUp: false,
-	ArrowDown: false,
 	KeyW: false,
 	KeyS: false
   });
@@ -376,8 +374,8 @@
   function handleKeyboardMovement() {
 	if (isPaused.value || gameOver.value) return;
 	
-	const upPressed = keys.value.ArrowUp || keys.value.KeyW;
-	const downPressed = keys.value.ArrowDown || keys.value.KeyS;
+	const upPressed = keys.value.KeyW;
+	const downPressed = keys.value.KeyS;
 	
 	if (upPressed && !downPressed) {
 	  player.value.y -= player.value.speed;

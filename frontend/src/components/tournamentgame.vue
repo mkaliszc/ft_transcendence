@@ -85,10 +85,10 @@
           </p>
           <div class="controls-preview">
             <div class="control-item">
-              <strong>{{ player1Name }}:</strong> W/S ou ↑/↓
+              <strong>{{ player1Name }}:</strong> W/S
             </div>
             <div class="control-item">
-              <strong>{{ player2Name }}:</strong> I/K ou Numpad 8/2
+              <strong>{{ player2Name }}:</strong> Flèches ↑/↓
             </div>
           </div>
         </div>
@@ -143,10 +143,10 @@
       <div class="footer-container">
         <div class="controls-info">
           <div class="player-controls">
-            <strong>{{ player1Name }} (Gauche):</strong> Touches W/S ou ↑/↓
+            <strong>{{ player1Name }} (Gauche):</strong> Touches W/S
           </div>
           <div class="player-controls">
-            <strong>{{ player2Name }} (Droite):</strong> Touches I/K ou Numpad 8/2
+            <strong>{{ player2Name }} (Droite):</strong> Flèches ↑/↓
           </div>
         </div>
         <div class="game-info">
@@ -191,16 +191,12 @@ const winningScore = 5
 
 // Keyboard state for smooth movement
 const keys = ref({
-  // Joueur 1 (gauche)
-  ArrowUp: false,
-  ArrowDown: false,
+  // Joueur 1 (gauche) - W/S
   KeyW: false,
   KeyS: false,
-  // Joueur 2 (droite)
-  KeyI: false,
-  KeyK: false,
-  Numpad8: false,
-  Numpad2: false
+  // Joueur 2 (droite) - Flèches haut/bas
+  ArrowUp: false,
+  ArrowDown: false
 })
 
 // Game elements
@@ -552,9 +548,9 @@ function handleKeyboardMovement() {
     player1.value.y += player1.value.speed
   }
   
-  // Joueur 2 (droite) - I/K ou Numpad 8/2
-  const player2Up = keys.value.KeyI || keys.value.Numpad8
-  const player2Down = keys.value.KeyK || keys.value.Numpad2
+  // Joueur 2 (droite) - Flèches haut/bas
+  const player2Up = keys.value.ArrowUp
+  const player2Down = keys.value.ArrowDown
   
   if (player2Up && !player2Down) {
     player2.value.y -= player2.value.speed

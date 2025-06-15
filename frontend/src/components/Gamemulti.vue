@@ -85,10 +85,10 @@
 		<div class="footer-container">
 		  <div class="controls-info">
 			<div class="player-controls">
-			  <strong>Joueur 1 (Gauche):</strong> Touches W/S ou ↑/↓
+			  <strong>Joueur 1 (Gauche):</strong> Touches W/S
 			</div>
 			<div class="player-controls">
-			  <strong>Joueur 2 (Droite):</strong> Touches I/K ou Numpad 8/2
+			  <strong>Joueur 2 (Droite):</strong> Flèches ↑/↓
 			</div>
 		  </div>
 		  <p class="copyright">Amusez-vous bien !</p>
@@ -112,16 +112,12 @@
   
   // Keyboard state for smooth movement
   const keys = ref({
-	// Joueur 1 (gauche)
-	ArrowUp: false,
-	ArrowDown: false,
+	// Joueur 1 (gauche) - W/S
 	KeyW: false,
 	KeyS: false,
-	// Joueur 2 (droite)
-	KeyI: false,
-	KeyK: false,
-	Numpad8: false,
-	Numpad2: false
+	// Joueur 2 (droite) - Flèches haut/bas
+	ArrowUp: false,
+	ArrowDown: false
   });
   
   // Game elements
@@ -385,7 +381,7 @@
 	  player1.value.y += player1.value.speed;
 	}
 	
-	// Joueur 2 (droite) - I/K ou Numpad 8/2
+	// Joueur 2 (droite) - Flèches haut/bas
 	const player2Up = keys.value.ArrowUp;
 	const player2Down = keys.value.ArrowDown;
 	

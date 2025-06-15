@@ -61,11 +61,26 @@ const messages = {
     and: 'and',
     privacyPolicy: 'Privacy Policy',
     
+    // 2FA / Authentification à deux facteurs
+    twoFactorAuth: 'Two-Factor Authentication',
+    enter2FACode: 'Please enter the 6-digit code from your authenticator app',
+    authCode: 'Authentication Code',
+    sixDigitCode: '000000',
+    verifying: 'Verifying...',
+    verify: 'Verify',
+    twoFARequired: '2FA authentication required',
+    invalid2FACode: 'Invalid 2FA code',
+    twoFAVerificationError: '2FA verification error',
+    loginSuccessful: 'Login successful!',
+    loginProcessingError: 'Error processing login',
+    
     // Messages d'erreur
     invalidCredentials: 'Invalid credentials',
     connectionError: 'Connection error',
     signupError: 'Signup error',
     passwordMismatch: 'Passwords do not match',
+    tooManyAttempts: 'Too many attempts. Please try again later.',
+    serverError: 'Server error. Please try again later.',
     
     // Force du mot de passe
     passwordWeak: 'Weak',
