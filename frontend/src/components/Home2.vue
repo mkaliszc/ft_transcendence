@@ -230,12 +230,10 @@
   
       // Navigation
       const goToSignIn = () => {
-        console.log('Navigate to Sign In')
         window.location.assign('/signin')
       }
   
       const goToSignUp = () => {
-        console.log('Navigate to Sign Up')
         window.location.assign('/signup')
       }
   
@@ -268,15 +266,12 @@
       const getUserData = () => {
         try {
           const userData = localStorage.getItem('user_data')
-          console.log('Raw user data from localStorage:', userData)
           
           if (userData) {
             const parsedUser = JSON.parse(userData)
-            console.log('Parsed user data:', parsedUser)
             
             if (parsedUser.username) {
               username.value = parsedUser.username
-              console.log('Username set to:', username.value)
             } else {
               console.error('Username not found in user data')
               // Si on ne trouve pas username, vérifions d'autres propriétés possibles
@@ -284,7 +279,6 @@
               for (const key of possibleUsernames) {
                 if (parsedUser[key]) {
                   username.value = parsedUser[key]
-                  console.log('Using alternative username field:', key)
                   break
                 }
               }
@@ -309,23 +303,19 @@
         }
       })      // Fonctions pour les boutons de fonctionnalités
       const goToFeature1 = () => {
-        console.log('Navigate to Feature 1 - Solo Game')
         router.push('/game')
       }
 
       const goToFeature2 = () => {
-        console.log('Navigate to Feature 2 - Multiplayer')
         router.push('/Gamemulti')
       }
 
       const goToFeature3 = () => {
-        console.log('Navigate to Feature 3 - Tournaments')
         router.push('/tournamentplayer')
       }
 
       // Nouvelle Feature 4 pour le profil avec vérification d'authentification
       const goToFeature4 = () => {
-        console.log('Navigate to Feature 4 - Profile')
         // L'utilisateur est toujours connecté sur cette page
         router.push('/profile')
       }

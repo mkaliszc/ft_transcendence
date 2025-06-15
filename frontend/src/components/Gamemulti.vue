@@ -200,7 +200,6 @@
 	  } else {
 		ball.value.y = gameCanvas.value.height - ball.value.radius;
 	  }
-	  playSound('wall');
 	}
   
 	// Paddle collision detection
@@ -230,17 +229,14 @@
 		ball.value.x = paddle.x - ball.value.radius - 1;
 	  }
 	  
-	  playSound('paddle');
 	}
   
 	// Ball out of bounds (scoring)
 	if (ball.value.x - ball.value.radius < 0) {
 	  player2Score.value++;
-	  playSound('score');
 	  resetBall();
 	} else if (ball.value.x + ball.value.radius > gameCanvas.value.width) {
 	  player1Score.value++;
-	  playSound('score');
 	  resetBall();
 	}
   }
@@ -437,11 +433,7 @@
 	  gameCanvas.value.style.transformOrigin = 'top left';
 	}
   }
-  
-  function playSound(type) {
-	console.log(`Playing sound: ${type}`);
-  }
-  </script>
+</script>
   
   <style scoped>
   .game-container {

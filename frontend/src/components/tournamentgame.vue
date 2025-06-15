@@ -123,7 +123,6 @@
               🔄 Rejouer
             </button>
             <button @click="confirmWinner" class="btn btn-primary btn-large">
-              ✅ Confirmer et Continuer
             </button>
           </div>
         </div>
@@ -174,9 +173,6 @@ const player1Name = ref(route.query.player1 as string || 'Joueur 1')
 const player2Name = ref(route.query.player2 as string || 'Joueur 2')
 
 // Debug logging
-console.log('Tournament game route query:', route.query)
-console.log('Player 1:', player1Name.value)
-console.log('Player 2:', player2Name.value)
 
 // Game state
 const gameCanvas = ref<HTMLCanvasElement | null>(null)
@@ -232,7 +228,6 @@ let animationFrameId: number | null = null
 
 // Initialize game
 onMounted(() => {
-  console.log('Component mounted, waiting for DOM to be ready...')
   // Attendre que le DOM soit complètement rendu avec un délai supplémentaire
   nextTick(() => {
     setTimeout(() => {
@@ -242,15 +237,11 @@ onMounted(() => {
 })
 
 function initializeCanvas() {
-  console.log('Attempting to initialize canvas...')
   
   if (gameCanvas.value) {
-    console.log('Canvas element found:', gameCanvas.value)
-    console.log('Canvas dimensions:', gameCanvas.value.width, 'x', gameCanvas.value.height)
     
     ctx.value = gameCanvas.value.getContext('2d')
     if (ctx.value) {
-      console.log('Canvas context initialized successfully')
       resetBall()
       
       // Forcer un premier rendu pour s'assurer que quelque chose s'affiche
@@ -315,7 +306,6 @@ function updateGame() {
     } else {
       ball.value.y = gameCanvas.value!.height - ball.value.radius
     }
-    playSound('wall')
   }
 
   // Paddle collision detection
@@ -345,17 +335,14 @@ function updateGame() {
       ball.value.x = paddle.x - ball.value.radius - 1
     }
     
-    playSound('paddle')
   }
 
   // Ball out of bounds (scoring)
   if (ball.value.x - ball.value.radius < 0) {
     player2Score.value++
-    playSound('score')
     resetBall()
   } else if (ball.value.x + ball.value.radius > gameCanvas.value!.width) {
     player1Score.value++
-    playSound('score')
     resetBall()
   }
 }
@@ -606,10 +593,6 @@ function handleResize() {
     gameCanvas.value.style.transform = `scale(${scale})`
     gameCanvas.value.style.transformOrigin = 'top left'
   }
-}
-
-function playSound(type: string) {
-  console.log(`Playing sound: ${type}`)
 }
 </script>
 

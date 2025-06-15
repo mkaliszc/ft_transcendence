@@ -61,18 +61,15 @@
         <!-- Instructions -->
         <div class="instructions">
           <p>🎮 <strong>Instructions :</strong> Entrez les noms des 8 joueurs pour commencer le tournoi</p>
-          <p>✅ <strong>Validation :</strong> Tous les noms doivent être uniques et non vides</p>
           <p>⚡ <strong>Astuce :</strong> Appuyez sur Entrée dans un champ pour valider rapidement</p>
         </div>
 
         <!-- Validation Status -->
         <div class="validation-status">
           <div class="validation-item" :class="{ 'valid': filledNamesCount === 8 }">
-            <span class="validation-icon">{{ filledNamesCount === 8 ? '✅' : '❌' }}</span>
             <span>Noms remplis : {{ filledNamesCount }}/8</span>
           </div>
           <div class="validation-item" :class="{ 'valid': hasUniqueNames }">
-            <span class="validation-icon">{{ hasUniqueNames ? '✅' : '❌' }}</span>
             <span>Noms uniques : {{ hasUniqueNames ? 'Oui' : 'Non' }}</span>
           </div>
         </div>

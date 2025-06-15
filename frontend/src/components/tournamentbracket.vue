@@ -45,7 +45,6 @@
 				  🏓 Jouer Pong
 				</button>
 				<div v-else class="match-completed">
-				  ✅ Match terminé
 				</div>
 			  </div>
 			</div>
@@ -85,7 +84,6 @@
 				  🏓 Jouer Pong
 				</button>
 				<div v-else-if="leftSemiFinal.isCompleted" class="match-completed">
-				  ✅ Match terminé
 				</div>
 				<div v-else-if="!canPlaySemiFinal(leftSemiFinal) && (leftSemiFinal.team1.name || leftSemiFinal.team2.name)" class="waiting-message">
 				  Terminez tous les quarts de finale
@@ -131,7 +129,6 @@
 				  🏓 FINALE PONG
 				</button>
 				<div v-else-if="finalMatch.isCompleted" class="match-completed">
-				  ✅ Finale terminée
 				</div>
 				<div v-else-if="!canPlayFinal() && (finalMatch.team1.name || finalMatch.team2.name)" class="waiting-message">
 				  Terminez toutes les demi-finales
@@ -189,7 +186,6 @@
 				  🏓 Jouer Pong
 				</button>
 				<div v-else-if="rightSemiFinal.isCompleted" class="match-completed">
-				  ✅ Match terminé
 				</div>
 				<div v-else-if="!canPlaySemiFinal(rightSemiFinal) && (rightSemiFinal.team1.name || rightSemiFinal.team2.name)" class="waiting-message">
 				  Terminez tous les quarts de finale
@@ -226,7 +222,6 @@
 				  🏓 Jouer Pong
 				</button>
 				<div v-else class="match-completed">
-				  ✅ Match terminé
 				</div>
 			  </div>
 			</div>
@@ -313,7 +308,6 @@
   
   // Navigation et réinitialisation
   const goBack = () => {
-	console.log('🔙 Retour à la configuration des joueurs')
 	localStorage.removeItem('tournament_state')
 	
 	// Utiliser window.location.href pour une navigation plus fiable
@@ -457,7 +451,6 @@
   
   // Traiter automatiquement le résultat d'un match
   const processMatchResult = (result: MatchResult) => {
-	console.log('Traitement du résultat:', result)
 	
 	// Trouver le match correspondant
 	const allMatches = [
@@ -477,9 +470,9 @@
 	if (match) {
 	  // Déterminer le gagnant
 	  if (result.winner === match.team1.name) {
-		selectWinnerAutomatically(match, 1, result)
+		selectWinnerAutomatically(match, 1)
 	  } else if (result.winner === match.team2.name) {
-		selectWinnerAutomatically(match, 2, result)
+		selectWinnerAutomatically(match, 2)
 	  }
 	  
 	  // Afficher la notification
@@ -495,10 +488,9 @@
   }
   
   // Sélectionner un gagnant automatiquement (sans interaction utilisateur)
-  const selectWinnerAutomatically = (match: Match, teamNumber: 1 | 2, result: MatchResult) => {
+  const selectWinnerAutomatically = (match: Match, teamNumber: 1 | 2) => {
 	if (match.isCompleted) return
   
-	console.log(`Sélection automatique du gagnant: ${result.winner}`)
   
 	match.team1.isWinner = false
 	match.team2.isWinner = false
@@ -526,10 +518,8 @@
   
   // Initialiser le tournoi avec les joueurs
   const initializeTournament = (playerNames: string[]) => {
-    console.log('🚀 Initialisation du tournoi avec:', playerNames)
   
 	if (playerNames.length < 8) {
-      console.log('⚠️ Pas assez de joueurs, utilisation des noms par défaut')
 	  playerNames = ['Alice', 'Bob', 'Charlie', 'Diana', 'Eve', 'Frank', 'Grace', 'Henry']
 	}
   
@@ -537,11 +527,9 @@
     const shouldLoadSaved = route.query.timestamp ? false : loadTournamentState()
     
 	if (shouldLoadSaved) {
-      console.log('✅ État du tournoi chargé depuis localStorage')
 	  return
 	}
     
-    console.log('🆕 Création d\'un nouveau tournoi')
 	
 	leftQuarterFinals.value = [
 	  {
@@ -594,17 +582,14 @@
 	}
 	
 	saveTournamentState()
-    console.log('💾 Nouvel état du tournoi sauvegardé')
   }
   
   // Lancer le jeu Pong
   const launchPongGame = (match: Match) => {
-	console.log('🚀 Lancement du jeu Pong pour:', match.team1.name, 'vs', match.team2.name)
 	saveTournamentState()
 	
 	// Utiliser window.location.href pour une navigation plus fiable
 	const gameUrl = `/tournamentgame?player1=${encodeURIComponent(match.team1.name)}&player2=${encodeURIComponent(match.team2.name)}&returnTo=tournamentbracket`
-	console.log('🔗 Navigation vers:', gameUrl)
 	
 	window.location.href = gameUrl
   }
@@ -677,7 +662,6 @@
   
   // Fonction pour initialiser le tournoi selon les paramètres
   const initializeFromRoute = () => {
-    console.log('🔄 Initialisation depuis la route...')
     const playersParam = route.query.players as string
     let playerNames: string[] = []
     
@@ -685,17 +669,14 @@
     componentKey.value = Date.now()
     
     if (!playersParam) {
-      console.log('⚠️ Aucun paramètre joueurs, utilisation des joueurs par défaut')
       playerNames = ['Alice', 'Bob', 'Charlie', 'Diana', 'Eve', 'Frank', 'Grace', 'Henry']
     } else {
-      console.log('✅ Paramètres joueurs trouvés:', playersParam)
       playerNames = playersParam.split(',').filter(name => name.trim() !== '')
       while (playerNames.length < 8) {
         playerNames.push(`Joueur ${playerNames.length + 1}`)
       }
     }
     
-    console.log('🎮 Joueurs finaux:', playerNames)
     
     // Réinitialiser complètement l'état
     resetTournamentState()
@@ -728,8 +709,7 @@
   // Watcher pour les changements de route avec debounce
   let routeWatchTimeout: ReturnType<typeof setTimeout> | null = null
   
-  watch(() => route.query.players, (newPlayers, oldPlayers) => {
-    console.log('🔍 Changement détecté dans route.query.players:', { newPlayers, oldPlayers })
+  watch(() => route.query.players, () => {
     
     // Nettoyer le timeout précédent
     if (routeWatchTimeout) {
@@ -739,18 +719,15 @@
     // Attendre un peu pour éviter les appels multiples rapides
     routeWatchTimeout = setTimeout(() => {
       nextTick(() => {
-        console.log('🚀 Exécution de initializeFromRoute depuis le watcher')
         initializeFromRoute()
       })
     }, 100)
   }, { immediate: false })
   
   // Watcher pour les changements de route complète (pour détecter toute navigation)
-  watch(() => route.fullPath, (newPath, oldPath) => {
-    console.log('🛣️ Changement de route détecté:', { newPath, oldPath })
+  watch(() => route.fullPath, (newPath) => {
     if (newPath.includes('/tournamentbracket')) {
       nextTick(() => {
-        console.log('🎯 Navigation vers tournamentbracket détectée')
         initializeFromRoute()
       })
     }
@@ -758,9 +735,6 @@
   
   // Initialisation avec vérification de l'état de montage
   onMounted(() => {
-    console.log('🎬 Composant monté, initialisation...')
-    console.log('📍 Route actuelle:', route.fullPath)
-    console.log('👥 Paramètres joueurs:', route.query.players)
     
     nextTick(() => {
       // S'assurer que le composant est complètement monté
@@ -777,7 +751,6 @@
   })
   
   onUnmounted(() => {
-	console.log('🏁 Composant démonté, nettoyage...')
 	if (resultCheckInterval) {
 	  clearInterval(resultCheckInterval)
 	}
