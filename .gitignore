@@ -4,4 +4,8 @@ volumes/logs/*
 volumes/mariadb/*
 
 nginx/certificates/
+<<<<<<< HEAD
 .vscode
+=======
+.vscode/
+>>>>>>> 7244b8f (merge axel charles qui marche)
