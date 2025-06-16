@@ -3,8 +3,8 @@
   <TwoFactorSetup 
     v-if="showTwoFactorSetup"
     :user-token="userToken"
-    @complete="handleTwoFactorComplete"
-    @skip="handleTwoFactorSkip"
+    @setup-complete="handleTwoFactorComplete"
+    @setup-skipped="handleTwoFactorSkip"
   />
   
   <!-- Page d'inscription normale -->
@@ -23,6 +23,7 @@
           <option value="en">🇺🇸 English</option>
           <option value="fr">🇫🇷 Français</option>
           <option value="es">🇪🇸 Español</option>
+          <option value="it">🇮🇹 Italiano</option>
         </select>
       </div>
     </header>
@@ -212,7 +213,7 @@ const userToken = ref('')
 
 // Charger la langue préférée
 const savedLanguage = localStorage.getItem('preferred-language')
-if (savedLanguage && ['en', 'fr', 'es'].includes(savedLanguage)) {
+if (savedLanguage && ['en', 'fr', 'es', 'it'].includes(savedLanguage)) {
   locale.value = savedLanguage
 }
 

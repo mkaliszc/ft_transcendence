@@ -24,6 +24,16 @@ const messages = {
     feature2Description: 'Play against your friends',
     feature3Title: 'Competitive Play',
     feature3Description: 'Participate in tournaments',
+    feature4Title: 'My Profile',
+    feature4Description: 'Manage your account',
+    
+    // Messages pour popup de profil
+    accessRestricted: 'Access Restricted',
+    profileAccessTitle: 'Profile Access',
+    profileLoginRequired: 'You must be logged in to access your profile and manage your game statistics.',
+    profileStatsFeature: 'Game statistics',
+    profileAchievementsFeature: 'Achievements and rewards',
+    profileSettingsFeature: 'Custom settings',
     
     // Boutons d'action
     getStarted: 'Get Started',
@@ -146,7 +156,59 @@ const messages = {
     gamesPlayed: 'Games Played',
     gamesWon: 'Games Won',
     winRate: 'Win Rate',
-    bestScore: 'Best Score'
+    bestScore: 'Best Score',
+    
+    // Profil utilisateur détaillé
+    changeAvatar: 'Change Avatar',
+    rank: 'Rank',
+    enterUsername: 'Enter username',
+    level: 'Level',
+    pongRating: 'Pong Rating',
+    status: 'Status',
+    online: 'Online',
+    memberSince: 'Member Since',
+    title: 'Title',
+    saveProfile: 'Save Profile',
+    
+    // Statistiques Pong
+    pongStatistics: 'Pong Statistics',
+    matchesPlayed: 'Matches Played',
+    victories: 'Victories',
+    rating: 'Rating',
+    winRateEvolution: 'Win Rate Evolution',
+    pongSkills: 'Pong Skills',
+    ballControl: 'Ball Control',
+    defensivePlay: 'Defensive Play',
+    aggressivePlay: 'Aggressive Play',
+    reactionTime: 'Reaction Time',
+    accuracy: 'Accuracy',
+    consistency: 'Consistency',
+    
+    // Historique des matches
+    matchHistory: 'Match History',
+    opponent: 'Opponent',
+    duration: 'Duration',
+    result: 'Result',
+    win: 'Win',
+    loss: 'Loss',
+    points: 'Points',
+    
+    // Activité quotidienne
+    dailyActivity: 'Daily Activity',
+    totalThisWeek: 'Total This Week',
+    avgPerDay: 'Average Per Day',
+    bestDay: 'Best Day',
+    
+    // Boutons d'action profil
+    playGame: 'Play Game',
+    exportStats: 'Export Stats',
+    
+    // États de l'interface
+    loading: 'Loading',
+    current: 'Current',
+    
+    // Boutons de jeu
+    playPong: 'Play Pong'
   },
   fr: {
     // Navigation
@@ -171,6 +233,16 @@ const messages = {
     feature2Description: 'Jouez contre vos amis',
     feature3Title: 'Jeu Compétitif',
     feature3Description: 'Participez à des tournois',
+    feature4Title: 'Mon Profil',
+    feature4Description: 'Gérez votre compte',
+    
+    // Messages pour popup de profil
+    accessRestricted: 'Accès restreint',
+    profileAccessTitle: 'Accès au Profil',
+    profileLoginRequired: 'Vous devez être connecté pour accéder à votre profil et gérer vos statistiques de jeu.',
+    profileStatsFeature: 'Statistiques de jeu',
+    profileAchievementsFeature: 'Succès et récompenses',
+    profileSettingsFeature: 'Paramètres personnalisés',
     
     // Boutons d'action
     getStarted: 'Commencer',
@@ -291,7 +363,59 @@ const messages = {
     gamesPlayed: 'Parties jouées',
     gamesWon: 'Parties gagnées',
     winRate: 'Taux de victoire',
-    bestScore: 'Meilleur score'
+    bestScore: 'Meilleur score',
+    
+    // Profil utilisateur détaillé
+    changeAvatar: 'Changer l\'avatar',
+    rank: 'Rang',
+    enterUsername: 'Entrez le nom d\'utilisateur',
+    level: 'Niveau',
+    pongRating: 'Classement Pong',
+    status: 'Statut',
+    online: 'En ligne',
+    memberSince: 'Membre depuis',
+    title: 'Titre',
+    saveProfile: 'Sauvegarder le profil',
+    
+    // Statistiques Pong
+    pongStatistics: 'Statistiques Pong',
+    matchesPlayed: 'Matches jouées',
+    victories: 'Victoires',
+    rating: 'Classement',
+    winRateEvolution: 'Évolution du taux de victoire',
+    pongSkills: 'Compétences Pong',
+    ballControl: 'Contrôle de balle',
+    defensivePlay: 'Jeu défensif',
+    aggressivePlay: 'Jeu agressif',
+    reactionTime: 'Temps de réaction',
+    accuracy: 'Précision',
+    consistency: 'Régularité',
+    
+    // Historique des matches
+    matchHistory: 'Historique des matches',
+    opponent: 'Adversaire',
+    duration: 'Durée',
+    result: 'Résultat',
+    win: 'Victoire',
+    loss: 'Défaite',
+    points: 'Points',
+    
+    // Activité quotidienne
+    dailyActivity: 'Activité quotidienne',
+    totalThisWeek: 'Total cette semaine',
+    avgPerDay: 'Moyenne par jour',
+    bestDay: 'Meilleur jour',
+    
+    // Boutons d'action profil
+    playGame: 'Jouer',
+    exportStats: 'Exporter les stats',
+    
+    // États de l'interface
+    loading: 'Chargement',
+    current: 'Actuel',
+    
+    // Boutons de jeu
+    playPong: 'Jouer au Pong'
   },
   es: {
     // Navigation
@@ -316,6 +440,16 @@ const messages = {
     feature2Description: 'Juega contra tus amigos',
     feature3Title: 'Juego Competitivo',
     feature3Description: 'Participa en torneos',
+    feature4Title: 'Mi Perfil',
+    feature4Description: 'Gestiona tu cuenta',
+    
+    // Messages pour popup de profil
+    accessRestricted: 'Acceso Restringido',
+    profileAccessTitle: 'Acceso al Perfil',
+    profileLoginRequired: 'Debes estar conectado para acceder a tu perfil y gestionar tus estadísticas de juego.',
+    profileStatsFeature: 'Estadísticas de juego',
+    profileAchievementsFeature: 'Logros y recompensas',
+    profileSettingsFeature: 'Configuración personalizada',
     
     // Boutons d'action
     getStarted: 'Comenzar',
@@ -438,12 +572,64 @@ const messages = {
     gamesPlayed: 'Partidas Jugadas',
     gamesWon: 'Partidas Ganadas',
     winRate: 'Tasa de Victoria',
-    bestScore: 'Mejor Puntuación'
+    bestScore: 'Mejor Puntuación',
+    
+    // Profil utilisateur détaillé
+    changeAvatar: 'Cambiar Avatar',
+    rank: 'Rango',
+    enterUsername: 'Ingresa nombre de usuario',
+    level: 'Nivel',
+    pongRating: 'Clasificación Pong',
+    status: 'Estado',
+    online: 'En línea',
+    memberSince: 'Miembro desde',
+    title: 'Título',
+    saveProfile: 'Guardar perfil',
+    
+    // Statistiques Pong
+    pongStatistics: 'Estadísticas Pong',
+    matchesPlayed: 'Partidas jugadas',
+    victories: 'Victorias',
+    rating: 'Clasificación',
+    winRateEvolution: 'Evolución de la tasa de victoria',
+    pongSkills: 'Habilidades Pong',
+    ballControl: 'Control de pelota',
+    defensivePlay: 'Juego defensivo',
+    aggressivePlay: 'Juego agresivo',
+    reactionTime: 'Tiempo de reacción',
+    accuracy: 'Precisión',
+    consistency: 'Consistencia',
+    
+    // Historique des matches
+    matchHistory: 'Historial de partidas',
+    opponent: 'Oponente',
+    duration: 'Duración',
+    result: 'Resultado',
+    win: 'Victoria',
+    loss: 'Derrota',
+    points: 'Puntos',
+    
+    // Activité quotidienne
+    dailyActivity: 'Actividad diaria',
+    totalThisWeek: 'Total esta semana',
+    avgPerDay: 'Promedio por día',
+    bestDay: 'Mejor día',
+    
+    // Boutons d'action profil
+    playGame: 'Jugar',
+    exportStats: 'Exportar estadísticas',
+    
+    // États de l'interface
+    loading: 'Loading',
+    current: 'Current',
+    
+    // Boutons de jeu
+    playPong: 'Play Pong'
   },
   
   it: {
     // Navigation
-    gameTitle: 'Pong Biliardo',
+    gameTitle: 'ft_transcendence',
     home: 'Home',
     play: 'Gioca',
     profile: 'Profilo',
@@ -464,6 +650,16 @@ const messages = {
     feature2Description: 'Gioca contro i tuoi amici',
     feature3Title: 'Gioco Competitivo',
     feature3Description: 'Partecipa ai tornei',
+    feature4Title: 'Il Mio Profilo',
+    feature4Description: 'Gestisci il tuo account',
+    
+    // Messages pour popup de profil
+    accessRestricted: 'Accesso Limitato',
+    profileAccessTitle: 'Accesso al Profilo',
+    profileLoginRequired: 'Devi essere connesso per accedere al tuo profilo e gestire le tue statistiche di gioco.',
+    profileStatsFeature: 'Statistiche di gioco',
+    profileAchievementsFeature: 'Successi e ricompense',
+    profileSettingsFeature: 'Impostazioni personalizzate',
     
     // Boutons d'action
     getStarted: 'Inizia',
@@ -586,7 +782,59 @@ const messages = {
     gamesPlayed: 'Partite Giocate',
     gamesWon: 'Partite Vinte',
     winRate: 'Tasso di Vittoria',
-    bestScore: 'Miglior Punteggio'
+    bestScore: 'Miglior Punteggio',
+    
+    // Profil utilisateur détaillé
+    changeAvatar: 'Cambia Avatar',
+    rank: 'Rango',
+    enterUsername: 'Inserisci nome utente',
+    level: 'Livello',
+    pongRating: 'Classificazione Pong',
+    status: 'Stato',
+    online: 'Online',
+    memberSince: 'Membro dal',
+    title: 'Titolo',
+    saveProfile: 'Salva profilo',
+    
+    // Statistiques Pong
+    pongStatistics: 'Statistiche Pong',
+    matchesPlayed: 'Partite giocate',
+    victories: 'Vittorie',
+    rating: 'Classificazione',
+    winRateEvolution: 'Evoluzione del tasso di vittoria',
+    pongSkills: 'Abilità Pong',
+    ballControl: 'Controllo palla',
+    defensivePlay: 'Gioco difensivo',
+    aggressivePlay: 'Gioco aggressivo',
+    reactionTime: 'Tempo di reazione',
+    accuracy: 'Precisione',
+    consistency: 'Coerenza',
+    
+    // Historique des matches
+    matchHistory: 'Cronologia partite',
+    opponent: 'Avversario',
+    duration: 'Durata',
+    result: 'Risultato',
+    win: 'Vittoria',
+    loss: 'Sconfitta',
+    points: 'Punti',
+    
+    // Activité quotidienne
+    dailyActivity: 'Attività giornaliera',
+    totalThisWeek: 'Totale questa settimana',
+    avgPerDay: 'Media al giorno',
+    bestDay: 'Miglior giornata',
+    
+    // Boutons d'action profil
+    playGame: 'Gioca',
+    exportStats: 'Esporta statistiche',
+    
+    // États de l'interface
+    loading: 'Loading',
+    current: 'Current',
+    
+    // Boutons de jeu
+    playPong: 'Play Pong'
   }
 }
 

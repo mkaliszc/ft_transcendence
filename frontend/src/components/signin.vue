@@ -14,6 +14,7 @@
           <option value="en">🇺🇸 English</option>
           <option value="fr">🇫🇷 Français</option>
           <option value="es">🇪🇸 Español</option>
+          <option value="it">🇮🇹 Italiano</option>
         </select>
       </div>
     </header>
@@ -181,7 +182,7 @@ const pendingLoginData = ref(null)
 
 // Charger la langue préférée
 const savedLanguage = localStorage.getItem('preferred-language')
-if (savedLanguage && ['en', 'fr', 'es'].includes(savedLanguage)) {
+if (savedLanguage && ['en', 'fr', 'es', 'it'].includes(savedLanguage)) {
   locale.value = savedLanguage
 }
 

@@ -12,6 +12,7 @@
 			<option value="en">🇺🇸 English</option>
 			<option value="fr">🇫🇷 Français</option>
 			<option value="es">🇪🇸 Español</option>
+			<option value="it">🇮🇹 Italiano</option>
 		  </select>
 		</div>
 	  </header>
@@ -160,7 +161,7 @@
   
       // Charger la langue préférée
       const savedLanguage = localStorage.getItem('preferred-language')
-      const initialLocale = savedLanguage && ['en', 'fr', 'es'].includes(savedLanguage) ? savedLanguage : null;
+      const initialLocale = savedLanguage && ['en', 'fr', 'es', 'it'].includes(savedLanguage) ? savedLanguage : null;
       if (initialLocale) {
         locale.value = initialLocale;
       }
