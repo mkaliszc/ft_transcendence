@@ -12,6 +12,7 @@
 			<option value="en">🇺🇸 English</option>
 			<option value="fr">🇫🇷 Français</option>
 			<option value="es">🇪🇸 Español</option>
+			<option value="it">🇮🇹 Italiano</option>
 		  </select>
 		</div>
 	  </header>
@@ -41,7 +42,7 @@
 			  <svg class="btn-icon" fill="currentColor" viewBox="0 0 20 20">
 				<path fill-rule="evenodd" d="M3 3a1 1 0 00-1 1v12a1 1 0 102 0V4a1 1 0 00-1-1zm10.293 9.293a1 1 0 001.414 1.414l3-3a1 1 0 000-1.414l-3-3a1 1 0 10-1.414 1.414L14.586 9H7a1 1 0 100 2h7.586l-1.293 1.293z" clip-rule="evenodd"></path>
 			  </svg>
-			  {{ $t('logout') || 'Déconnexion' }}
+			  {{ $t('logout') }}
 			</button>
 		  </div>
   
@@ -49,30 +50,30 @@
 		<div class="features-buttons">
 		  <button @click="goToFeature1" class="feature-button">
 		    <div class="feature-icon">🏓</div>
-		    <h3>{{ $t('feature1Title') || 'Jeu Solo' }}</h3>
-		    <p>{{ $t('feature1Description') || 'Jouez contre l\'IA' }}</p>
+		    <h3>{{ $t('feature1Title') }}</h3>
+		    <p>{{ $t('feature1Description') }}</p>
 		    <div class="button-arrow">→</div>
 		  </button>
 
 		  <button @click="goToFeature2" class="feature-button">
 		    <div class="feature-icon">🎯</div>
-		    <h3>{{ $t('feature2Title') || 'Multijoueur' }}</h3>
-		    <p>{{ $t('feature2Description') || 'Défiez vos amis' }}</p>
+		    <h3>{{ $t('feature2Title') }}</h3>
+		    <p>{{ $t('feature2Description') }}</p>
 		    <div class="button-arrow">→</div>
 		  </button>
 
 		  <button @click="goToFeature3" class="feature-button">
 		    <div class="feature-icon">🏆</div>
-		    <h3>{{ $t('feature3Title') || 'Tournois' }}</h3>
-		    <p>{{ $t('feature3Description') || 'Compétitions épiques' }}</p>
+		    <h3>{{ $t('feature3Title') }}</h3>
+		    <p>{{ $t('feature3Description') }}</p>
 		    <div class="button-arrow">→</div>
 		  </button>
 
 		  <!-- Nouvelle Feature 4 pour le profil -->
 		  <button @click="goToFeature4" class="feature-button">
 		    <div class="feature-icon">👤</div>
-		    <h3>{{ $t('feature4Title') || 'Mon Profil' }}</h3>
-		    <p>{{ $t('feature4Description') || 'Gérez votre compte' }}</p>
+		    <h3>{{ $t('feature4Title') }}</h3>
+		    <p>{{ $t('feature4Description') }}</p>
 		    <div class="button-arrow">→</div>
 		  </button>
 		</div>
@@ -158,7 +159,7 @@
   
       // Charger la langue préférée
       const savedLanguage = localStorage.getItem('preferred-language')
-      const initialLocale = savedLanguage && ['en', 'fr', 'es'].includes(savedLanguage) ? savedLanguage : null;
+      const initialLocale = savedLanguage && ['en', 'fr', 'es', 'it'].includes(savedLanguage) ? savedLanguage : null;
       if (initialLocale) {
         locale.value = initialLocale;
       }
@@ -307,7 +308,7 @@
       }
 
       const goToFeature2 = () => {
-        router.push('/Gamemulti')
+        router.push('/multiplayer')
       }
 
       const goToFeature3 = () => {
