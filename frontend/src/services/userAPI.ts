@@ -46,7 +46,6 @@ const fetchWithAuth = async (url: string, options: RequestInit = {}) => {
   // API des statistiques utilisateur
   export const userApi = {
 	// Récupérer les informations utilisateur
-<<<<<<< HEAD
 	getUser: async (username?: string) => {
 		const currentUser = JSON.parse(localStorage.getItem("user_data") || '{}');
 		const usernameParam = username || currentUser.username;
@@ -81,30 +80,4 @@ const fetchWithAuth = async (url: string, options: RequestInit = {}) => {
 		return fetchWithAuth(`/profile/history/${usernameParam}`)
 	}
 }
-=======
-	getUser: async () => {
-	  return fetchWithAuth("/stats/user")
-	},
-  
-	// Supprimer un utilisateur
-	deleteUser: async () => {
-	  return fetchWithAuth("/stats/delete", {
-		method: "DELETE",
-	  })
-	},
-  
-	// Mettre à jour les informations utilisateur
-	updateUser: async (userData: Record<string, any>) => {
-	  return fetchWithAuth("/stats/update", {
-		method: "PATCH",
-		body: JSON.stringify(userData),
-	  })
-	},
-  
-	// Récupérer l'historique d'un utilisateur
-	getHistory: async (username: string) => {
-	  return fetchWithAuth(`/stats/history/${username}`)
-	},
-  }
-  
->>>>>>> origin/backend/user
+
