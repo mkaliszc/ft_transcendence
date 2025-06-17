@@ -12,7 +12,7 @@
 			<option value="en">🇺🇸 English</option>
 			<option value="fr">🇫🇷 Français</option>
 			<option value="es">🇪🇸 Español</option>
-			<option value="it">🇮🇹 Italiano</option>
+			<option value="it">🇮🇹 Italien</option>
 		  </select>
 		</div>
 	  </header>
@@ -229,13 +229,17 @@
         // Vérifiez ici si l'utilisateur est connecté
         // Par exemple, vérifier un token dans localStorage ou sessionStorage
         return localStorage.getItem('user-token') !== null
-      }      // Navigation
-      const goToSignIn = () => {
-        router.push('/signin')
       }
-
+  
+      // Navigation
+      const goToSignIn = () => {
+        console.log('Navigate to Sign In')
+        window.location.assign('/signin')
+      }
+  
       const goToSignUp = () => {
-        router.push('/signup')
+        console.log('Navigate to Sign Up')
+        window.location.assign('/signup')
       }
   
       // Fonctions pour le popup
@@ -262,21 +266,28 @@
         if (animationId) {
           cancelAnimationFrame(animationId)
         }
-      })      // Fonctions pour les boutons de fonctionnalités
+      })
+  
+      // Fonctions pour les boutons de fonctionnalités
       const goToFeature1 = () => {
-        router.push('/game')
+        console.log('Navigate to Feature 1 - Solo Game')
+        window.location.assign('/Game')
       }
-
+  
       const goToFeature2 = () => {
-        router.push('/Gamemulti')
+        console.log('Navigate to Feature 2 - Multiplayer')
+        // Feature 2 reste inchangée - accès direct au multijoueur
+        window.location.assign('/multiplayer')
       }
-
+  
       const goToFeature3 = () => {
-        router.push('/tournamentplayer')
+        console.log('Navigate to Feature 3 - Tournaments')
+        window.location.assign('/tournamentplayer')
       }
 
       // Nouvelle Feature 4 pour le profil avec vérification d'authentification
       const goToFeature4 = () => {
+        console.log('Navigate to Feature 4 - Profile')
         // Vérifier si l'utilisateur est connecté avant d'accéder au profil
         if (isUserLoggedIn()) {
           window.location.assign('/profile')

@@ -1,0 +1,12 @@
+https://10.12.1.4:8444
+https://localhost:8444
+
+integrer nom joueur
+qui a gagner
+score 
+
+
+faire le premier a 5 (pour 2 et 4)
+mettre guest + num si joueur pas connecter
+mettre le score a coter du nom 
+

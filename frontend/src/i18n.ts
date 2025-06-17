@@ -450,6 +450,8 @@ const messages = {
     profileStatsFeature: 'Estadísticas de juego',
     profileAchievementsFeature: 'Logros y recompensas',
     profileSettingsFeature: 'Configuración personalizada',
+
+
     
     // Boutons d'action
     getStarted: 'Comenzar',
@@ -630,6 +632,8 @@ const messages = {
   it: {
     // Navigation
     gameTitle: 'ft_transcendence',
+
+
     home: 'Home',
     play: 'Gioca',
     profile: 'Profilo',
@@ -660,6 +664,7 @@ const messages = {
     profileStatsFeature: 'Statistiche di gioco',
     profileAchievementsFeature: 'Successi e ricompense',
     profileSettingsFeature: 'Impostazioni personalizzate',
+
     
     // Boutons d'action
     getStarted: 'Inizia',
@@ -835,6 +840,8 @@ const messages = {
     
     // Boutons de jeu
     playPong: 'Play Pong'
+
+
   }
 }
 
