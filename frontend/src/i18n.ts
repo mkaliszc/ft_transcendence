@@ -416,7 +416,6 @@ const messages = {
     
     // Boutons de jeu
     playPong: 'Jouer au Pong'
-
   },
   es: {
     // Navigation
@@ -451,6 +450,7 @@ const messages = {
     profileStatsFeature: 'Estadísticas de juego',
     profileAchievementsFeature: 'Logros y recompensas',
     profileSettingsFeature: 'Configuración personalizada',
+
 
     
     // Boutons d'action
@@ -627,12 +627,12 @@ const messages = {
     
     // Boutons de jeu
     playPong: 'Play Pong'
-
   },
   
   it: {
     // Navigation
     gameTitle: 'ft_transcendence',
+
 
     home: 'Home',
     play: 'Gioca',
@@ -840,6 +840,7 @@ const messages = {
     
     // Boutons de jeu
     playPong: 'Play Pong'
+
 
   }
 }
