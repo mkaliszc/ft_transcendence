@@ -19,6 +19,7 @@ const start = async () => {
 		await syncDatabase(3, 2000); // 3 retries, 2 second delay
 
 		console.log('🚀 Starting Fastify server...');
+
 		await fastify.listen({ port: 8002, host: '0.0.0.0' });
 		console.log('✅ Server is running on port 8002');
 	}

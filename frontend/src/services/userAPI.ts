@@ -80,3 +80,4 @@ const fetchWithAuth = async (url: string, options: RequestInit = {}) => {
 		return fetchWithAuth(`/profile/history/${usernameParam}`)
 	}
 }
+

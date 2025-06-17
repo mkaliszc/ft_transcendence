@@ -42,9 +42,10 @@ const routes = [
     component: Game,
   },
   {
-    path: "/gamemulti-local",
-    name: "LocalGame",
-    component: Gamemulti
+
+	path: "/Gamemulti",
+	name: "Gamemulti",
+	component: Gamemulti,
   },
   {
     path: "/profile",
@@ -114,6 +115,14 @@ const routes = [
 const router = createRouter({
   history: createWebHistory(),
   routes,
+  // Ajout d'options pour améliorer la navigation
+  scrollBehavior(_to, _from, savedPosition) {
+    if (savedPosition) {
+      return savedPosition;
+    } else {
+      return { top: 0 };
+    }
+  },
 });
 
 // Navigation guard

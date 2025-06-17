@@ -161,7 +161,7 @@
   
       // Charger la langue préférée
       const savedLanguage = localStorage.getItem('preferred-language')
-      const initialLocale = savedLanguage && ['en', 'fr', 'es'].includes(savedLanguage) ? savedLanguage : null;
+      const initialLocale = savedLanguage && ['en', 'fr', 'es', 'it'].includes(savedLanguage) ? savedLanguage : null;
       if (initialLocale) {
         locale.value = initialLocale;
       }
