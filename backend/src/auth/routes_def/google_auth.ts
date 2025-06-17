@@ -81,12 +81,12 @@ export async function googleCallback(request: FastifyRequest, reply: FastifyRepl
             { expiresIn: '7d' }
         );
 
-        const frontendUrl = process.env.FRONTEND_URL || 'https://localhost:8444';
+        const frontendUrl = process.env.FRONTEND_URL || 'https://localhost:5000';
         return reply.redirect(`${frontendUrl}/auth/success?token=${encodeURIComponent(jwtToken)}&refreshToken=${encodeURIComponent(refreshToken)}`);
     }
     catch (error) {
         console.error('❌ Erreur dans le callback Google:', error);
-        const frontendUrl = process.env.FRONTEND_URL || 'https://localhost:8444';
+        const frontendUrl = process.env.FRONTEND_URL || 'https://localhost:5000';
         return reply.redirect(`${frontendUrl}/auth/error`);
     }
 }

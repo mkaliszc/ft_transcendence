@@ -156,6 +156,7 @@ const messages = {
     gamesPlayed: 'Games Played',
     gamesWon: 'Games Won',
     winRate: 'Win Rate',
+<<<<<<< HEAD
     bestScore: 'Best Score',
     
     // Profil utilisateur détaillé
@@ -209,6 +210,9 @@ const messages = {
     
     // Boutons de jeu
     playPong: 'Play Pong'
+=======
+    bestScore: 'Best Score'
+>>>>>>> origin/backend/user
   },
   fr: {
     // Navigation
@@ -233,6 +237,7 @@ const messages = {
     feature2Description: 'Jouez contre vos amis',
     feature3Title: 'Jeu Compétitif',
     feature3Description: 'Participez à des tournois',
+<<<<<<< HEAD
     feature4Title: 'Mon Profil',
     feature4Description: 'Gérez votre compte',
     
@@ -243,6 +248,8 @@ const messages = {
     profileStatsFeature: 'Statistiques de jeu',
     profileAchievementsFeature: 'Succès et récompenses',
     profileSettingsFeature: 'Paramètres personnalisés',
+=======
+>>>>>>> origin/backend/user
     
     // Boutons d'action
     getStarted: 'Commencer',
@@ -363,6 +370,7 @@ const messages = {
     gamesPlayed: 'Parties jouées',
     gamesWon: 'Parties gagnées',
     winRate: 'Taux de victoire',
+<<<<<<< HEAD
     bestScore: 'Meilleur score',
     
     // Profil utilisateur détaillé
@@ -416,6 +424,9 @@ const messages = {
     
     // Boutons de jeu
     playPong: 'Jouer au Pong'
+=======
+    bestScore: 'Meilleur score'
+>>>>>>> origin/backend/user
   },
   es: {
     // Navigation
@@ -440,6 +451,7 @@ const messages = {
     feature2Description: 'Juega contra tus amigos',
     feature3Title: 'Juego Competitivo',
     feature3Description: 'Participa en torneos',
+<<<<<<< HEAD
     feature4Title: 'Mi Perfil',
     feature4Description: 'Gestiona tu cuenta',
     
@@ -450,6 +462,8 @@ const messages = {
     profileStatsFeature: 'Estadísticas de juego',
     profileAchievementsFeature: 'Logros y recompensas',
     profileSettingsFeature: 'Configuración personalizada',
+=======
+>>>>>>> origin/backend/user
     
     // Boutons d'action
     getStarted: 'Comenzar',
@@ -572,6 +586,7 @@ const messages = {
     gamesPlayed: 'Partidas Jugadas',
     gamesWon: 'Partidas Ganadas',
     winRate: 'Tasa de Victoria',
+<<<<<<< HEAD
     bestScore: 'Mejor Puntuación',
     
     // Profil utilisateur détaillé
@@ -625,11 +640,18 @@ const messages = {
     
     // Boutons de jeu
     playPong: 'Play Pong'
+=======
+    bestScore: 'Mejor Puntuación'
+>>>>>>> origin/backend/user
   },
   
   it: {
     // Navigation
+<<<<<<< HEAD
     gameTitle: 'ft_transcendence',
+=======
+    gameTitle: 'Pong Biliardo',
+>>>>>>> origin/backend/user
     home: 'Home',
     play: 'Gioca',
     profile: 'Profilo',
@@ -650,6 +672,7 @@ const messages = {
     feature2Description: 'Gioca contro i tuoi amici',
     feature3Title: 'Gioco Competitivo',
     feature3Description: 'Partecipa ai tornei',
+<<<<<<< HEAD
     feature4Title: 'Il Mio Profilo',
     feature4Description: 'Gestisci il tuo account',
     
@@ -660,6 +683,8 @@ const messages = {
     profileStatsFeature: 'Statistiche di gioco',
     profileAchievementsFeature: 'Successi e ricompense',
     profileSettingsFeature: 'Impostazioni personalizzate',
+=======
+>>>>>>> origin/backend/user
     
     // Boutons d'action
     getStarted: 'Inizia',
@@ -782,6 +807,7 @@ const messages = {
     gamesPlayed: 'Partite Giocate',
     gamesWon: 'Partite Vinte',
     winRate: 'Tasso di Vittoria',
+<<<<<<< HEAD
     bestScore: 'Miglior Punteggio',
     
     // Profil utilisateur détaillé
@@ -835,6 +861,9 @@ const messages = {
     
     // Boutons de jeu
     playPong: 'Play Pong'
+=======
+    bestScore: 'Miglior Punteggio'
+>>>>>>> origin/backend/user
   }
 }
 
