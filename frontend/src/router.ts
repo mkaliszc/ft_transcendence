@@ -12,7 +12,10 @@ import Tournamentplayer from "./components/tournamentplayer.vue";
 
 // Fonction de vérification d'authentification
 const isAuthenticated = () => {
-  return localStorage.getItem('user-token') !== null || localStorage.getItem('auth_token') !== null;
+  const authToken = localStorage.getItem('auth_token');
+  const userToken = localStorage.getItem('user-token');
+  console.log('🔍 Router auth check:', { authToken: !!authToken, userToken: !!userToken });
+  return authToken !== null || userToken !== null;
 };
 
 const routes = [
