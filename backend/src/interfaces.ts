@@ -24,7 +24,6 @@ export interface Pub_User {
 
 export interface UpdateData {
 	username?: string;
-	email_adress?: string;
 	avatar?: string;
 	twoFA?: boolean;
 }

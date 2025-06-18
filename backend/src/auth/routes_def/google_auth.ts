@@ -91,7 +91,3 @@ export async function googleCallback(request: FastifyRequest, reply: FastifyRepl
         return reply.redirect(`${frontendUrl}/auth/error`);
     }
 }
-
-export async function initiateGoogleAuth(request: FastifyRequest, reply: FastifyReply) {
-    return (request.server as any).googleOAuth2.generateAuthorizationUri(request, reply);
-}

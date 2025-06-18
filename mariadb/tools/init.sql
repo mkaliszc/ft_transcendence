@@ -18,7 +18,7 @@ CREATE TABLE IF NOT EXISTS USERS (
     number_of_lose INT DEFAULT 0,
     creation_date DATE DEFAULT CURRENT_DATE,
     last_update DATE DEFAULT CURRENT_DATE,
-    avatar MEDIUMTEXT DEFAULT https://letsenhance.io/static/73136da51c245e80edc6ccfe44888a99/1015f/MainBefore.jpg,
+    avatar MEDIUMTEXT DEFAULT 'https://letsenhance.io/static/73136da51c245e80edc6ccfe44888a99/1015f/MainBefore.jpg',
     twoFA BOOLEAN DEFAULT FALSE,
     twoFA_secret VARCHAR(255) DEFAULT NULL,
     google_user BOOLEAN DEFAULT FALSE
