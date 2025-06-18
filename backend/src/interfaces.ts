@@ -25,7 +25,7 @@ export interface Pub_User {
 export interface UpdateData {
 	username?: string;
 	avatar?: string;
-	twoFA?: boolean;
+	twoFA?: boolean; // ? pas obligatoire mais pour faire propre a retirer
 }
 
 export interface GoogleUserInfo {
