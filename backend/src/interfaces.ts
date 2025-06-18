@@ -11,15 +11,15 @@ export interface SignUpRequest {
 
 export interface Pub_User {
 	username: string;
-	email_adress: string;
+	email_adress?: string;
 	number_of_matches: number;
 	number_of_win: number;
 	number_of_lose: number;
 	ratio: number;
 	created_at: Date;
 	updated_at: Date;
-	avatar?: string;
-	twoFA: boolean;
+	avatar: string;
+	twoFA?: boolean;
 }
 
 export interface UpdateData {
@@ -43,4 +43,13 @@ export interface GoogleUserInfo {
 export interface ChangePasswordRequest {
 	currentPassword: string;
 	newPassword: string;
+}
+
+export interface CreateMatchRequest {
+    Players: Array<{
+        user_id: number;
+        score: number;
+        is_winner: boolean;
+    }>;
+    game_duration: string;
 }

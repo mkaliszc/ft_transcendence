@@ -67,7 +67,8 @@ export async function googleCallback(request: FastifyRequest, reply: FastifyRepl
                 username: finalUsername,
                 email_adress: googleUser.email,
                 hashed_password: 'GOOGLE_OAUTH_USER',
-                avatar: googleUser.picture
+                avatar: googleUser.picture,
+                google_user: true
             });
         }
 
