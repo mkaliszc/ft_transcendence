@@ -72,6 +72,13 @@
 				<span class="label">{{ $t('title') }}:</span>
 				<span class="value title-badge">{{ playerTitle }}</span>
 			  </div>
+
+			  <div class="info-row">
+				<span class="label">{{ $t('security') || 'Sécurité' }}:</span>
+				<span class="value security-status" :class="{ 'secure': twoFactorEnabled }">
+				  {{ twoFactorEnabled ? '🔒 2FA Activée' : '🔓 2FA Désactivée' }}
+				</span>
+			  </div>
 			</div>
 		  </div>
 
@@ -302,6 +309,9 @@ const pongStats = ref({
   totalPlayTime: 0
 })
 
+// État de la 2FA (lecture seule pour l'affichage)
+const twoFactorEnabled = ref(false)
+
 // Computed properties
 const winRatePercentage = computed(() => {
   return pongStats.value.matchesPlayed > 0 ? Math.round((pongStats.value.victories / pongStats.value.matchesPlayed) * 100) : 0
@@ -399,6 +409,9 @@ const loadUserData = async () => {
     username.value = userInfo.username || ''
     memberSince.value = new Date(userInfo.created_at) || new Date()
     avatar.value = userInfo.avatar || DEFAULT_AVATAR // Utilise l'avatar par défaut si null en DB
+    
+    // Mise à jour de l'état 2FA
+    twoFactorEnabled.value = userInfo.twoFA || false
     
     // Calcul des statistiques à partir des vraies données (sera mise à jour par processMatchHistory)
     pongStats.value.matchesPlayed = 0 // Sera calculé avec les matchs en ligne seulement
@@ -584,6 +597,58 @@ const handleProfileUpdated = async (updatedProfile) => {
   
   // Recharger les données utilisateur pour synchroniser avec le backend
   await loadUserData()
+}
+
+// Fonctions pour la gestion de la 2FA
+const toggle2FA = async () => {
+  if (twoFactorEnabled.value) {
+    await disable2FA()
+  } else {
+    await enable2FA()
+  }
+}
+
+const enable2FA = async () => {
+  showTwoFactorSetup.value = true
+}
+
+const disable2FA = async () => {
+  twoFactorLoading.value = true
+  twoFactorError.value = ''
+  
+  try {
+    const token = localStorage.getItem('auth_token')
+    if (!token) {
+      twoFactorError.value = 'Token d\'authentification non trouvé'
+      return
+    }
+    
+    const result = await twoFactorService.disable2FA(token)
+    
+    if (result.success) {
+      twoFactorEnabled.value = false
+      twoFactorError.value = ''
+      console.log('2FA désactivé avec succès')
+    } else {
+      twoFactorError.value = result.message || 'Erreur lors de la désactivation de la 2FA'
+    }
+  } catch (error) {
+    console.error('Erreur lors de la désactivation de la 2FA:', error)
+    twoFactorError.value = 'Erreur de connexion au serveur'
+  } finally {
+    twoFactorLoading.value = false
+  }
+}
+
+const handleTwoFactorSetupComplete = (enabled) => {
+  twoFactorEnabled.value = enabled
+  showTwoFactorSetup.value = false
+  console.log('Setup 2FA terminé:', enabled)
+}
+
+const handleTwoFactorSetupSkipped = () => {
+  showTwoFactorSetup.value = false
+  console.log('Setup 2FA ignoré')
 }
 
 // Hook de cycle de vie pour écouter les matches terminés
@@ -1268,5 +1333,21 @@ onUnmounted(() => {
 .stat-card.interactive:hover .interaction-indicator {
   opacity: 1;
   transform: scale(1.2);
+}
+
+/* Styles pour l'état de sécurité */
+.security-status {
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-weight: 500;
+  background: rgba(239, 68, 68, 0.2);
+  color: #fca5a5;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+.security-status.secure {
+  background: rgba(34, 197, 94, 0.2);
+  color: #86efac;
+  border: 1px solid rgba(34, 197, 94, 0.3);
 }
 </style>

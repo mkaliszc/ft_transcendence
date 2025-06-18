@@ -113,6 +113,17 @@ const routes = [
     name: "MultiplayerLocal",
     component: Gamemulti
   },
+  // Routes pour l'authentification Google
+  {
+    path: "/auth/success",
+    name: "GoogleAuthSuccess",
+    component: () => import("./components/GoogleAuthCallback.vue")
+  },
+  {
+    path: "/auth/error",
+    name: "GoogleAuthError",
+    component: () => import("./components/GoogleAuthCallback.vue")
+  },
 ];
 
 const router = createRouter({

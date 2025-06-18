@@ -161,6 +161,7 @@ import { useRouter } from 'vue-router'
 import { onMounted } from 'vue'
 import { authApi } from '../services/authAPI'
 import { useAuth } from '../composable/useAuths'
+import { googleAuthService } from '../services/googleAuthAPI'
 
 // Utilisation de vue-i18n
 const { t, locale } = useI18n()
@@ -334,8 +335,13 @@ const handleSuccessfulLogin = async (loginData) => {
 }
 
 const handleGoogleSignIn = () => {
-  // Ici vous pourriez implémenter la connexion Google
-  alert(t('googleSignInNotImplemented'))
+  try {
+    // Rediriger vers l'authentification Google
+    googleAuthService.initiateGoogleLogin()
+  } catch (err) {
+    console.error('Erreur lors de l\'initiation de la connexion Google:', err)
+    error.value = t('googleSignInError') || 'Erreur lors de la connexion Google'
+  }
 }
 
 const goToSignUp = () => {

@@ -245,7 +245,7 @@
         localStorage.removeItem('auth_token')
         localStorage.removeItem('refresh_token')
         // Rediriger vers la page de connexion
-        router.push('/signin')
+        router.push('/')
       }
   
       // Fonctions pour le popup
