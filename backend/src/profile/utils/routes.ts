@@ -2,6 +2,7 @@ import fp from 'fastify-plugin';
 import { getUser } from '../routes_def/getUser';
 import { deleteUser } from '../routes_def/deleteUser';
 import { update } from '../routes_def/update';
+import { changePassword } from '../routes_def/changePassword';
 import { getHistory } from '../routes_def/getHistory';
 import { friendrequest } from '../routes_def/friendRequest';
 import { pendingRequest } from '../routes_def/PendingRequest';
@@ -14,6 +15,7 @@ export default fp(async function routes_profile(fastify: any) {
 	fastify.get('/profile/user/:username', { preHandler: fastify.authenticate }, getUser);
 	fastify.delete('/profile/delete', { preHandler: fastify.authenticate }, deleteUser);
 	fastify.patch('/profile/update', { preHandler: fastify.authenticate }, update);
+	fastify.patch('/profile/changePassword', { preHandler: fastify.authenticate }, changePassword);
 	fastify.get('/profile/history/:username', { preHandler: fastify.authenticate }, getHistory);
 	fastify.post('/profile/friendRequest/:username', { preHandler: fastify.authenticate }, friendrequest);
 	fastify.get('/profile/friendRequest/pending', { preHandler: fastify.authenticate }, pendingRequest);

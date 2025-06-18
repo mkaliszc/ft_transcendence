@@ -82,6 +82,7 @@ User.init({
 	avatar: {
 		type: DataTypes.TEXT('medium'),
 		allowNull: true,
+		defaultValue: 'https://cdn.pixabay.com/photo/2020/07/01/12/58/icon-5359553_1280.png'
 	},
 	twoFA: {
 		type: DataTypes.BOOLEAN,
@@ -107,6 +108,10 @@ User.addHook('beforeUpdate', (user: User) => {
 User.addHook('beforeCreate', (user: any) => {
     user.creation_date = new Date();
     user.last_update = new Date();
+    // S'assurer qu'un avatar par défaut est assigné si aucun n'est fourni
+    if (!user.avatar) {
+        user.avatar = 'https://cdn.pixabay.com/photo/2020/07/01/12/58/icon-5359553_1280.png';
+    }
 });
 
 export { User }

@@ -201,14 +201,10 @@ const messages = {
     
     // Boutons d'action profil
     playGame: 'Play Game',
-    exportStats: 'Export Stats',
     
     // États de l'interface
     loading: 'Loading',
-    current: 'Current',
-    
-    // Boutons de jeu
-    playPong: 'Play Pong'
+    current: 'Current'
   },
   fr: {
     // Navigation
@@ -408,15 +404,10 @@ const messages = {
     
     // Boutons d'action profil
     playGame: 'Jouer',
-    exportStats: 'Exporter les stats',
     
     // États de l'interface
     loading: 'Chargement',
-    current: 'Actuel',
-    
-    // Boutons de jeu
-    playPong: 'Jouer au Pong'
-
+    current: 'Actuel'
   },
   es: {
     // Navigation
@@ -451,6 +442,7 @@ const messages = {
     profileStatsFeature: 'Estadísticas de juego',
     profileAchievementsFeature: 'Logros y recompensas',
     profileSettingsFeature: 'Configuración personalizada',
+
 
     
     // Boutons d'action
@@ -619,20 +611,16 @@ const messages = {
     
     // Boutons d'action profil
     playGame: 'Jugar',
-    exportStats: 'Exportar estadísticas',
     
     // États de l'interface
     loading: 'Loading',
-    current: 'Current',
-    
-    // Boutons de jeu
-    playPong: 'Play Pong'
-
+    current: 'Current'
   },
   
   it: {
     // Navigation
     gameTitle: 'ft_transcendence',
+
 
     home: 'Home',
     play: 'Gioca',
@@ -832,15 +820,10 @@ const messages = {
     
     // Boutons d'action profil
     playGame: 'Gioca',
-    exportStats: 'Esporta statistiche',
     
     // États de l'interface
     loading: 'Loading',
-    current: 'Current',
-    
-    // Boutons de jeu
-    playPong: 'Play Pong'
-
+    current: 'Current'
   }
 }
 
