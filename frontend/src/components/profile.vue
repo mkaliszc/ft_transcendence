@@ -514,7 +514,7 @@ import { TwoFactorService } from '../services/twoFactorAPI.ts';
 import { DEFAULT_AVATARS_BASE64, resizeImageToBase64, isValidImageBase64, getBase64Size } from '../utils/imageUtils.ts';
 
 const { t } = useI18n()
-const { user: currentUser, isAuthenticated } = useAuth();
+const { user: currentUser, isAuthenticated, initializeAuth } = useAuth();
 const { fetchUser, fetchHistory, isLoading, error } = useUser();
 const router = useRouter();
 
@@ -1320,6 +1320,10 @@ const handleMatchCompleted = async (event) => {
 // Hook de cycle de vie
 onMounted(async () => {
   console.log('🟢 Profile component mounted!')
+  
+  // Initialiser l'authentification
+  initializeAuth();
+  
   console.log('🟢 Initial state:', {
     showQRCode: showQRCode.value,
     editableProfile: editableProfile.value
@@ -1327,19 +1331,14 @@ onMounted(async () => {
   console.log('Profile component mounted')
   console.log('isAuthenticated:', isAuthenticated.value)
   console.log('currentUser:', currentUser.value)
+  console.log('Auth tokens:', {
+    auth_token: !!localStorage.getItem('auth_token'),
+    user_token: !!localStorage.getItem('user-token')
+  })
   
-  // Vérification de l'authentification
-  if (!isAuthenticated.value) {
-    console.log('User not authenticated, redirecting to signin')
-    router.push({
-      path: '/signin',
-      query: { redirect: '/profile' }
-    });
-    return;
-  }
-
-  console.log('User authenticated, loading data...')
-  // Charger les données utilisateur
+  // Le router guard s'occupe déjà de la vérification d'authentification
+  // Pas besoin de vérifier ici, nous pouvons directement charger les données
+  console.log('Loading user data...')
   await loadUserData()
   
   // Ajouter un écouteur d'événements pour les matches terminés

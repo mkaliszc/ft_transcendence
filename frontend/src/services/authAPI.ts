@@ -77,6 +77,7 @@ const fetchApi = async (url: string, options: RequestInit = {}) => {
 	  const tempToken = localStorage.getItem('temp_2fa_token')
 	  console.log('🔵 check2FA called with code:', code)
 	  console.log('🔵 Temp token found:', !!tempToken)
+	  console.log('🔵 Temp token value:', tempToken ? tempToken.substring(0, 20) + '...' : 'null')
 	  
 	  const response = await fetchApi("/auth/check2FA", {
 		method: "POST",

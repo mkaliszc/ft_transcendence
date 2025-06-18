@@ -159,13 +159,17 @@ import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
 import { onMounted } from 'vue'
-import { authApi } from '../services/api'
+import { authApi } from '../services/authAPI'
+import { useAuth } from '../composable/useAuths'
 
 // Utilisation de vue-i18n
 const { t, locale } = useI18n()
 
 // Props et émissions
 const router = useRouter()
+
+// Utilisation du composable d'authentification
+const { initializeAuth } = useAuth()
 
 // États réactifs
 const form = ref({
@@ -239,13 +243,17 @@ const handleSignIn = async () => {
 }
 
 const handle2FAVerification = async () => {
+  console.log('🔵 handle2FAVerification started');
+  
   if (!twoFACode.value || twoFACode.value.length !== 6) {
     error.value = t('invalid2FACode')
+    console.log('🔴 Invalid 2FA code length');
     return
   }
   
   error.value = ''
   loading.value = true
+  console.log('🔵 About to call check2FA API');
   
   try {
     console.log('🔵 Starting 2FA verification with code:', twoFACode.value)
@@ -263,7 +271,7 @@ const handle2FAVerification = async () => {
     await handleSuccessfulLogin(loginData)
     
   } catch (err) {
-    console.error('2FA verification error:', err)
+    console.error('🔴 2FA verification error:', err)
     
     if (err.response?.status === 401) {
       error.value = t('invalid2FACode')
@@ -272,6 +280,7 @@ const handle2FAVerification = async () => {
     }
   } finally {
     loading.value = false
+    console.log('🔵 handle2FAVerification finished');
   }
 }
 
@@ -287,6 +296,8 @@ const handleSuccessfulLogin = async (loginData) => {
       const token = loginData.token || loginData.accessToken
       localStorage.setItem('auth_token', token)
       console.log('🟢 Token saved:', !!token)
+    } else {
+      console.log('🔴 No token found in loginData:', loginData)
     }
     
     // Sauvegarder le refresh token si disponible
@@ -303,6 +314,9 @@ const handleSuccessfulLogin = async (loginData) => {
     } else {
       console.log('🔴 No user data in loginData')
     }
+    
+    // Mettre à jour le composable useAuth avec les nouveaux tokens
+    initializeAuth();
     
     successMessage.value = t('loginSuccessful')
     console.log('🟢 About to redirect to /Home2')
