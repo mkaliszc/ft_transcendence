@@ -15,7 +15,7 @@ export default fp(async function googleOAuth(fastify: any) {
                 tokenPath: '/token'
             }
         },
-        startRedirectPath: '/auth/google',
+        startRedirectPath: 'auth/google',
         callbackUri: process.env.GOOGLE_REDIRECT_URI as string,
         scope: ['openid', 'profile', 'email']
     });

@@ -30,7 +30,9 @@ export async function googleCallback(request: FastifyRequest, reply: FastifyRepl
             if (!user.avatar && googleUser.picture) {
                 await user.update({ avatar: googleUser.picture });
             }
-        } else {
+        } 
+        else 
+        {
             const baseName = googleUser.name.toLowerCase()
                 .replace(/[^a-z0-9]/g, '')
                 .substring(0, 8);
