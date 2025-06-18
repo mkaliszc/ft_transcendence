@@ -43,5 +43,18 @@ export async function check2FA(request: FastifyRequest, reply: FastifyReply) {
 		{ mail_adress: user.email_adress, user_id: user.user_id },
 		{ expiresIn: '7d' }
 	);
-	return reply.code(200).send({ token: token, refreshToken });
+
+	const userData = {
+		username: user.username,
+		email: user.email_adress,
+		userId: user.user_id,
+		avatar: user.avatar,
+		stats: {
+			matches: user.number_of_matches,
+			wins: user.number_of_win,
+			losses: user.number_of_lose
+		}
+	}
+
+	return reply.code(200).send({ token: token, refreshToken, user: userData });
 }

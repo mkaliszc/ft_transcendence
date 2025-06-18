@@ -26,6 +26,7 @@ export interface UpdateData {
 	username?: string;
 	email_adress?: string;
 	avatar?: string;
+	twoFA?: boolean;
 }
 
 export interface GoogleUserInfo {
@@ -37,4 +38,9 @@ export interface GoogleUserInfo {
     family_name: string;
     picture: string;
     locale: string;
+}
+
+export interface ChangePasswordRequest {
+	currentPassword: string;
+	newPassword: string;
 }
