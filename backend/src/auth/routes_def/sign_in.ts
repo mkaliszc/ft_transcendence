@@ -21,7 +21,7 @@ export async function sign_in(request: FastifyRequest, reply:FastifyReply) {
 
 		if(user.twoFA) {
 			const tmp_token = await reply.jwtSign({
-				email_adress: user.email_adress,
+				mail_adress: user.email_adress,
 				user_id: user.user_id,
 				twoFA: true }, { expiresIn: '2m' });
 			return reply.code(200).send({ 
