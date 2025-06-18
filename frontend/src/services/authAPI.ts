@@ -73,10 +73,22 @@ const fetchApi = async (url: string, options: RequestInit = {}) => {
   
 	// Vérifier 2FA
 	check2FA: async (code: string) => {
-	  return fetchApi("/auth/check2FA", {
+	  // Utiliser le token temporaire pour la vérification 2FA
+	  const tempToken = localStorage.getItem('temp_2fa_token')
+	  console.log('🔵 check2FA called with code:', code)
+	  console.log('🔵 Temp token found:', !!tempToken)
+	  
+	  const response = await fetchApi("/auth/check2FA", {
 		method: "POST",
+		headers: {
+		  "Content-Type": "application/json",
+		  ...(tempToken ? { Authorization: `Bearer ${tempToken}` } : {}),
+		},
 		body: JSON.stringify({ code }),
 	  })
+	  
+	  console.log('🔵 check2FA response:', response)
+	  return response
 	},
   
 	// Désactiver 2FA

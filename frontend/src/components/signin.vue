@@ -211,6 +211,8 @@ const handleSignIn = async () => {
     // Vérifier si la 2FA est requise
     if (response.requires2FA) {
       show2FA.value = true
+      // Stocker le token temporaire pour la vérification 2FA
+      localStorage.setItem('temp_2fa_token', response.tmpToken)
       pendingLoginData.value = response
       successMessage.value = t('2FARequired')
     } else {
@@ -246,15 +248,17 @@ const handle2FAVerification = async () => {
   loading.value = true
   
   try {
+    console.log('🔵 Starting 2FA verification with code:', twoFACode.value)
     // Vérification du code 2FA
     const response = await authApi.check2FA(twoFACode.value)
-    
+    console.log('🔵 2FA verification response:', response)
     
     // Combiner les données de connexion avec la vérification 2FA
     const loginData = {
       ...pendingLoginData.value,
       ...response
     }
+    console.log('🔵 Combined loginData:', loginData)
     
     await handleSuccessfulLogin(loginData)
     
@@ -273,31 +277,39 @@ const handle2FAVerification = async () => {
 
 const handleSuccessfulLogin = async (loginData) => {
   try {
+    console.log('🟢 handleSuccessfulLogin called with:', loginData)
+    
+    // Nettoyer le token temporaire 2FA
+    localStorage.removeItem('temp_2fa_token')
     
     // Sauvegarder le token d'authentification
     if (loginData.token || loginData.accessToken) {
       const token = loginData.token || loginData.accessToken
       localStorage.setItem('auth_token', token)
+      console.log('🟢 Token saved:', !!token)
     }
     
     // Sauvegarder le refresh token si disponible
     if (loginData.refreshToken) {
       localStorage.setItem('refresh_token', loginData.refreshToken)
+      console.log('🟢 Refresh token saved')
     }
     
     // Sauvegarder les données utilisateur
     if (loginData.user) {
       const userData = loginData.user
       localStorage.setItem('user_data', JSON.stringify(userData))
+      console.log('🟢 User data saved:', userData)
     } else {
+      console.log('🔴 No user data in loginData')
     }
     
-    // Vérification du stockage
-    
     successMessage.value = t('loginSuccessful')
+    console.log('🟢 About to redirect to /Home2')
     
     // Redirection après un court délai pour montrer le message de succès
     setTimeout(() => {
+      console.log('🟢 Redirecting to /Home2')
       router.push('/Home2')
     }, 1500)
     

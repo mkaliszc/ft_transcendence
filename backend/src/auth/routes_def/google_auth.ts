@@ -67,7 +67,8 @@ export async function googleCallback(request: FastifyRequest, reply: FastifyRepl
                 username: finalUsername,
                 email_adress: googleUser.email,
                 hashed_password: 'GOOGLE_OAUTH_USER',
-                avatar: googleUser.picture
+                avatar: googleUser.picture,
+                google_user: true
             });
         }
 
@@ -89,8 +90,4 @@ export async function googleCallback(request: FastifyRequest, reply: FastifyRepl
         const frontendUrl = process.env.FRONTEND_URL || 'https://localhost:5000';
         return reply.redirect(`${frontendUrl}/auth/error`);
     }
-}
-
-export async function initiateGoogleAuth(request: FastifyRequest, reply: FastifyReply) {
-    return (request.server as any).googleOAuth2.generateAuthorizationUri(request, reply);
 }

@@ -25,15 +25,6 @@ export async function update(request: FastifyRequest<{ Body: UpdateData }>, repl
 			}
 		}
 
-		if (update_payload.email_adress) {
-			const existingEmail = await User.findOne({
-				where: { email_adress: update_payload.email_adress },
-			});
-			if (existingEmail && existingEmail.user_id !== userId) {
-				return reply.status(400).send({ error: 'Email address already exists' });
-			}
-		}
-
 		const updatedFields = await user.update(update_payload);
 		if (!updatedFields) {
 			return reply.status(400).send({ error: 'No fields updated' });
