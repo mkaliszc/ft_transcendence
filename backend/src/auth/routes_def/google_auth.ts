@@ -73,7 +73,7 @@ export async function googleCallback(request: FastifyRequest, reply: FastifyRepl
                 google_user: true
             });
         }
-
+		console.log('✅ Utilisateur connecté ou créé:', user.username);
         const jwtToken = await reply.jwtSign(
             { email_adress: user.email_adress, user_id: user.user_id },
             { expiresIn: '15min' }
@@ -85,11 +85,16 @@ export async function googleCallback(request: FastifyRequest, reply: FastifyRepl
         );
 
         const frontendUrl = process.env.FRONTEND_URL || 'https://localhost:5000';
-        return reply.redirect(`${frontendUrl}/auth/success?token=${encodeURIComponent(jwtToken)}&refreshToken=${encodeURIComponent(refreshToken)}`);
+		return reply.code(200).send({
+			message: 'Connexion réussie',
+			token: jwtToken,
+			refreshToken: refreshToken,
+			redirectTo: `${frontendUrl}/Home2`
+		});
     }
     catch (error) {
         console.error('❌ Erreur dans le callback Google:', error);
         const frontendUrl = process.env.FRONTEND_URL || 'https://localhost:5000';
-        return reply.redirect(`${frontendUrl}/auth/error`);
+        return reply.code(400).redirect(`${frontendUrl}/signin`);
     }
 }
