@@ -711,58 +711,5 @@
 	50% { transform: translateY(-20px) rotate(180deg); }
   }
   
-  /* Responsive */
-  @media (max-width: 768px) {
-	.game-header {
-	  flex-direction: column;
-	  gap: 1rem;
-	  padding: 1rem;
-	}
-	
-	.header-container {
-	  flex-direction: column;
-	  gap: 1rem;
-	}
-	
-	.header-controls {
-	  flex-direction: column;
-	  gap: 0.5rem;
-	}
-	
-	.controls-info {
-	  flex-direction: column;
-	  gap: 0.5rem;
-	}
-	
-	.pong-table {
-	  transform: scale(0.8);
-	}
-	
-	.overlay-title {
-	  font-size: 2rem;
-	}
-	
-	.btn {
-	  padding: 0.5rem 1rem;
-	  font-size: 0.8rem;
-	}
-  }
-  
-  @media (max-width: 480px) {
-	.game-main {
-	  padding: 1rem;
-	}
-	
-	.pong-table {
-	  transform: scale(0.7);
-	}
-	
-	.overlay-title {
-	  font-size: 1.5rem;
-	}
-	
-	.final-score {
-	  font-size: 1.5rem;
-	}
-  }
+
   </style>
