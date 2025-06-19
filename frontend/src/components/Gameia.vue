@@ -38,7 +38,7 @@
 				width="800" 
 				height="400" 
 				class="game-canvas"
-				@touchmove="handleTouchMove"
+
 			  ></canvas>
 			</div>
 		  </div>
@@ -409,21 +409,7 @@
   }
   
 
-  function handleTouchMove(e) {
-	if (isPaused.value || gameOver.value) return;
-	e.preventDefault();
-	
-	const rect = gameCanvas.value.getBoundingClientRect();
-	const touchY = e.touches[0].clientY - rect.top;
-	
-	player.value.y = touchY;
-	
-	if (player.value.y - player.value.height / 2 < 0) {
-	  player.value.y = player.value.height / 2;
-	} else if (player.value.y + player.value.height / 2 > gameCanvas.value.height) {
-	  player.value.y = gameCanvas.value.height - player.value.height / 2;
-	}
-  }
+
   
   function handleResize() {
 	if (gameContainer.value && gameCanvas.value) {
@@ -697,53 +683,5 @@
 	50% { transform: translateY(-20px) rotate(180deg); }
   }
   
-  /* Responsive */
-  @media (max-width: 768px) {
-	.game-header {
-	  flex-direction: column;
-	  gap: 1rem;
-	  padding: 1rem;
-	}
-	
-	.header-container {
-	  flex-direction: column;
-	  gap: 1rem;
-	}
-	
-	.header-controls {
-	  flex-direction: column;
-	  gap: 0.5rem;
-	}
-	
-	.pong-table {
-	  transform: scale(0.8);
-	}
-	
-	.overlay-title {
-	  font-size: 2rem;
-	}
-	
-	.btn {
-	  padding: 0.5rem 1rem;
-	  font-size: 0.8rem;
-	}
-  }
-  
-  @media (max-width: 480px) {
-	.game-main {
-	  padding: 1rem;
-	}
-	
-	.pong-table {
-	  transform: scale(0.7);
-	}
-	
-	.overlay-title {
-	  font-size: 1.5rem;
-	}
-	
-	.final-score {
-	  font-size: 1.5rem;
-	}
-  }
+
   </style>

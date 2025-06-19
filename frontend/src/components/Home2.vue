@@ -682,55 +682,9 @@ html, body {
 }
   
   @keyframes float {
-	0%, 100% { transform: translateY(0px) rotate(0deg); }
-	50% { transform: translateY(-20px) rotate(180deg); }
+	0%, 100% { transform: translateY(0px) rotate(0deg); }  50% { transform: translateY(-20px) rotate(180deg); }
   }
   
-  /* Responsive */
-  @media (max-width: 768px) {
-  .main-title {
-    font-size: 2rem; /* Réduction pour mobile */
-  }
-  
-  .hero-section {
-    padding: 0.5rem 1rem; /* Réduction du padding mobile */
-    height: calc(100vh - 60px); /* Ajustement pour mobile */
-  }
-  
-	.main-title {
-	  font-size: 2.5rem;
-	}
-	
-	.pong-table-container {
-	  margin: 1.5rem 0;
-	}
-	
-	.pong-table {
-	  transform: scale(0.7); /* Réduction de 0.8 à 0.7 */
-	}
-	
-	.action-buttons {
-	  flex-direction: column;
-	  align-items: center;
-	}
-	
-	.header {
-	  flex-direction: column;
-	  gap: 1rem;
-	}
-  
-  .features-buttons {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 0.5rem; /* Réduction pour mobile */
-    margin-top: 1rem;
-  }
-  
-  .feature-button {
-    padding: 1rem; /* Réduction pour mobile */
-    min-height: 140px; /* Réduction pour mobile */
-  }
-}
-
   /* Styles pour les 4 boutons de fonctionnalités */
   .features-buttons {
   display: grid;
@@ -808,31 +762,6 @@ html, body {
     font-weight: bold;
     opacity: 0;
     transition: all 0.3s ease;
-  }
-
-  /* Responsive pour les boutons de fonctionnalités */
-  @media (max-width: 768px) {
-    .features-buttons {
-      grid-template-columns: repeat(2, 1fr);
-      gap: 0.5rem;
-    }
-    
-    .feature-button {
-      padding: 1rem;
-      min-height: 140px;
-    }
-  }
-
-  @media (max-width: 480px) {
-    .features-buttons {
-      grid-template-columns: 1fr;
-      gap: 0.5rem;
-    }
-    
-    .feature-button {
-      padding: 1rem;
-      min-height: 120px; /* Réduction pour très petit écran */
-    }
   }
 
   /* Styles pour le popup de connexion */
@@ -969,39 +898,6 @@ html, body {
     }
     60% {
       transform: translateY(-5px);
-    }
-  }
-
-  @media (max-width: 480px) {
-    .popup-buttons {
-      flex-direction: column;
-      gap: 0.75rem;
-    }
-    
-    .popup-btn {
-      width: 100%;
-    }
-    
-    .popup-content {
-      padding: 1.5rem;
-    }
-    
-    .popup-icon {
-      font-size: 3rem;
-      margin-bottom: 1rem;
-    }
-    
-    .popup-content p {
-      font-size: 1rem;
-      margin-bottom: 1.5rem;
-    }
-
-    .popup-features {
-      gap: 0.75rem;
-    }
-
-    .popup-feature {
-      padding: 0.5rem;
     }
   }
   </style>

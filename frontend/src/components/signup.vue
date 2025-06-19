@@ -602,23 +602,6 @@ watch(() => form.value.password, (newPassword) => {
   50% { transform: translateY(-20px) rotate(180deg); }
 }
 
-/* Responsive */
-@media (max-width: 768px) {
-  .header {
-    flex-direction: column;
-    gap: 1rem;
-  }
-  
-  .signup-content {
-    padding: 2rem;
-    margin: 1rem;
-  }
-  
-  .title {
-    font-size: 1.75rem;
-  }
-}
-
 .password-strength-container {
   margin-top: 0.5rem;
 }

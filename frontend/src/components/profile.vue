@@ -1244,26 +1244,6 @@ onUnmounted(() => {
 .flex { display: flex; }
 .justify-center { justify-content: center; }
 
-/* Responsivité */
-@media (max-width: 768px) {
-  .profile-container {
-    flex-direction: column;
-    gap: 20px;
-  }
-  
-  .avatar-section {
-    min-width: auto;
-  }
-  
-  .charts-section {
-    grid-template-columns: 1fr;
-  }
-  
-  .stats-grid {
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-  }
-}
-
 /* Styles pour l'interactivité des cartes de statistiques */
 .stat-card.interactive {
   cursor: pointer;
