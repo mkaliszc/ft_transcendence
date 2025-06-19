@@ -294,8 +294,62 @@
         }
       }
 
+      // Fonction pour extraire et traiter les tokens Google depuis l'URL
+      const extractGoogleTokens = () => {
+        console.log('🔍 Vérification des paramètres URL pour les tokens Google...')
+        console.log('URL actuelle:', window.location.href)
+        
+        const urlParams = new URLSearchParams(window.location.search)
+        const token = urlParams.get('token')
+        const refreshToken = urlParams.get('refreshToken')
+        const userData = urlParams.get('userData')
+        
+        console.log('Token trouvé:', token ? 'Oui' : 'Non')
+        console.log('RefreshToken trouvé:', refreshToken ? 'Oui' : 'Non')
+        console.log('UserData trouvé:', userData ? 'Oui' : 'Non')
+        
+        if (token && refreshToken) {
+          console.log('✅ Tokens Google détectés, sauvegarde en cours...')
+          
+          // Sauvegarder les tokens Google
+          localStorage.setItem('google_token', token)
+          localStorage.setItem('google_refresh_token', refreshToken)
+          localStorage.setItem('auth_token', token) // Pour compatibilité
+          localStorage.setItem('refresh_token', refreshToken)
+          
+          // Sauvegarder les données utilisateur si disponibles
+          if (userData) {
+            try {
+              const parsedUserData = JSON.parse(decodeURIComponent(userData))
+              localStorage.setItem('user_data', JSON.stringify(parsedUserData))
+              username.value = parsedUserData.username
+              console.log('✅ Données utilisateur Google sauvegardées:', parsedUserData.username)
+            } catch (err) {
+              console.warn('⚠️ Erreur lors du parsing des données utilisateur:', err)
+            }
+          }
+          
+          // Nettoyer l'URL
+          const url = new URL(window.location.href)
+          url.search = ''
+          window.history.replaceState({}, document.title, url.toString())
+          
+          // Réinitialiser l'authentification
+          initializeAuth()
+          
+          console.log('✅ Tokens Google sauvegardés avec succès')
+          return true
+        }
+        
+        console.log('ℹ️ Aucun token Google trouvé dans l\'URL')
+        return false
+      }
+
       // Lifecycle hooks
       onMounted(() => {
+        // Vérifier et extraire les tokens Google en premier
+        extractGoogleTokens()
+        
         // Initialiser l'authentification au démarrage
         initializeAuth()
         animatePong()
@@ -324,13 +378,15 @@
         // Vérifier s'il y a des tokens d'authentification
         const authToken = localStorage.getItem('auth_token')
         const userToken = localStorage.getItem('user-token')
+        const googleToken = localStorage.getItem('google_token')
+        const googleRefreshToken = localStorage.getItem('google_refresh_token')
         
-        // Si aucun token n'existe, créer un token temporaire pour permettre l'accès
-        if (!authToken && !userToken) {
+        // Si aucun token n'existe (ni classique ni Google), créer un token temporaire pour permettre l'accès
+        if (!authToken && !userToken && !googleToken) {
           localStorage.setItem('auth_token', 'temporary_session_token')
         }
         
-        // L'utilisateur est toujours connecté sur cette page
+        // L'utilisateur est toujours connecté sur cette page (authentification classique ou Google)
         router.push('/profile')
       }
 
