@@ -389,7 +389,8 @@ const editProfileData = computed(() => {
   return {
     username: username.value,
     twoFA: userProfile.value?.twoFA || false,
-    avatar: avatar.value || DEFAULT_AVATAR
+    avatar: avatar.value || DEFAULT_AVATAR,
+    google_user: userProfile.value?.google_user || false
   }
 })
 

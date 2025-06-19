@@ -1320,4 +1320,31 @@ const saveProfile = async () => {
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
 }
+
+/* Responsive */
+@media (max-width: 768px) {
+  .modal-overlay {
+    padding: 1rem;
+  }
+  
+  .edit-profile-modal {
+    padding: 1.5rem;
+    max-height: 95vh;
+  }
+  
+  .modal-title {
+    font-size: 1.5rem;
+  }
+  
+  .edit-actions {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .btn-save,
+  .btn-reset {
+    width: 100%;
+    justify-content: center;
+  }
+}
 </style>
