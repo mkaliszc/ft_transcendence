@@ -85,12 +85,13 @@ export async function googleCallback(request: FastifyRequest, reply: FastifyRepl
         );
 
         const frontendUrl = process.env.FRONTEND_URL || 'https://localhost:5000';
-		return reply.code(200).send({
-			message: 'Connexion réussie',
-			token: jwtToken,
-			refreshToken: refreshToken,
-			redirectTo: `${frontendUrl}/Home2`
-		});
+        return reply.redirect(`${frontendUrl}/Home2?token=${encodeURIComponent(jwtToken)}&refreshToken=${encodeURIComponent(refreshToken)}`);
+		// return reply.code(200).send({
+		// 	message: 'Connexion réussie',
+		// 	token: jwtToken,
+		// 	refreshToken: refreshToken,
+		// 	redirectTo: `${frontendUrl}/Home2`
+		// });
     }
     catch (error) {
         console.error('❌ Erreur dans le callback Google:', error);

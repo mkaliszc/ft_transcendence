@@ -20,7 +20,7 @@ export const fetchWithAuth = async (url: string, options: RequestInit = {}) => {
 	  if (response.status === 401) {
 		localStorage.removeItem("auth_token")
 		window.location.href = "/signin"
-		throw new Error("Session expirée. Veuillez vous reconnecter.")
+		throw new Error("Session expirée. Veuillez vous reconnecter.") // ! a changer pour demander un refresh token
 	  }
 	  
 	  // Vérifier si la réponse est OK
