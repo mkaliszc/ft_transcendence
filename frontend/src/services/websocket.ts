@@ -8,17 +8,17 @@ let onMessageCallback: ((data: any) => void) | null = null;
 export function connectSocket(url: string): WebSocket {
   socket = new WebSocket(url);
   socket.addEventListener('open', () => {
-    // WebSocket connecté
+    console.log('[WS] connecté à', url);
   });
   socket.addEventListener('message', (evt: MessageEvent) => {
     const data = JSON.parse(evt.data);
     onMessageCallback?.(data);
   });
   socket.addEventListener('close', () => {
-    // WebSocket déconnecté
+    console.log('[WS] déconnecté');
   });
-  socket.addEventListener('error', () => {
-    // Erreur WebSocket
+  socket.addEventListener('error', err => {
+    console.error('[WS] erreur', err);
   });
   return socket;
 }
@@ -48,6 +48,6 @@ export function sendMessage(type: string, payload: any) {
   if (socket && socket.readyState === WebSocket.OPEN) {
     socket.send(JSON.stringify({ type, payload }));
   } else {
-    // Socket non ouverte
+    console.warn('[WS] envoi annulé : socket non ouverte');
   }
 }

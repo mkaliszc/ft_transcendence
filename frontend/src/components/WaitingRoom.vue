@@ -24,6 +24,8 @@
 import { ref, onMounted, onUnmounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { connectSocket, sendMessage, setOnMessage } from '../services/websocket';
+// import { useI18n } from 'vue-i18n'
+// const { t } = useI18n()
 
 const route = useRoute();
 const router = useRouter();
