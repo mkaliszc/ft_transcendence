@@ -306,8 +306,6 @@ const handleSignUp = async () => {
     }
     
   } catch (err) {
-    console.error('Registration error:', err)
-    
     // Simplified error handling
     error.value = err?.message || t('registrationError')
   } finally {

@@ -34,10 +34,8 @@ import {
   sendMessage,
   setOnMessage
 } from '../services/websocket';
-//import { useI18n } from 'vue-i18n';
 
 const router = useRouter();
-//const { t } = useI18n();
 
 const gameIdValue = ref<string>("");
 const isJoining = ref<boolean>(false);
@@ -46,19 +44,15 @@ let assignedPlayerId: string|null = null;
 
 // 1) À la montée, on connecte la WS
 onMounted(() => {
-  console.log('[JoinGame] onMounted : connexion WS…');
   const protocol = window.location.protocol === 'https:' ? 'wss' : 'ws';
   const host     = window.location.host;        // localhost:5000
   connectSocket(`${protocol}://${host}/ws/`);
 
-
   setOnMessage((data: any) => {
-    console.log('[JoinGame] WS onMessage →', data);
     switch (data.type) {
       case 'join-success': {
         // data.payload = { assignedPlayerId, players, playersCount, maxPlayers, gameState }
         const { assignedPlayerId: pid } = data.payload;
-        console.log('[JoinGame] join-success reçu, assignedPlayerId =', pid);
         assignedPlayerId = pid;
         // Redirection dans la waiting room (host=player2 ou player1 déjà en place)
         router.replace({
@@ -71,19 +65,16 @@ onMounted(() => {
         break;
       }
       case 'game-not-found': {
-        console.warn('[JoinGame] game-not-found');
         errorMessage.value = 'Partie introuvable.';
         isJoining.value = false;
         break;
       }
       case 'game-full': {
-        console.warn('[JoinGame] game-full');
         errorMessage.value = 'La partie est déjà pleine.';
         isJoining.value = false;
         break;
       }
       default:
-        console.warn('[JoinGame] message WS non géré :', data.type);
         break;
     }
   });
@@ -91,13 +82,11 @@ onMounted(() => {
 
 // 2) Quand le composant est détruit, on ferme la connexion (facultatif)
 onUnmounted(() => {
-  console.log('[JoinGame] onUnmounted : fermeture WS (pas implémentée)');
   // Si vous voulez vraiment fermer la socket à la sortie, il faut exposer
   // une fonction closeSocket() dans websocket.ts. Ici on ne fait rien.
 });
 
 function tryJoin() {
-  console.log('[JoinGame] tryJoin() appelé, gameIdValue =', gameIdValue.value);
   if (!gameIdValue.value.trim()) return;
 
   errorMessage.value = null;

@@ -253,9 +253,8 @@
   
   <script setup lang="ts">
   import { ref, computed, onMounted, onUnmounted, watch, nextTick } from 'vue'
-  import { useRoute } from 'vue-router'
+    import { useRoute } from 'vue-router'
   
-//   const router = useRouter()
   const route = useRoute()
   
   interface Team {
@@ -370,7 +369,6 @@
 		  return true
 		}
 	  } catch (e) {
-		console.error('Erreur lors du chargement de l\'état du tournoi:', e)
 		localStorage.removeItem('tournament_state')
 	  }
 	}
@@ -424,7 +422,6 @@
 		  localStorage.removeItem('tournamentMatchResult')
 		}
 	  } catch (e) {
-		console.error('Erreur lors de la lecture du résultat:', e)
 		localStorage.removeItem('tournamentMatchResult')
 	  }
 	}

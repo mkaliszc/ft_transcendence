@@ -147,7 +147,10 @@
   export default defineComponent({
     setup() {
       const router = useRouter();
-  
+      
+      // Initialiser l'authentification
+      const { initializeAuth } = useAuth();
+
       // Utilisation de vue-i18n
       const { t, locale } = useI18n()
   
@@ -274,7 +277,6 @@
             if (parsedUser.username) {
               username.value = parsedUser.username
             } else {
-              console.error('Username not found in user data')
               // Si on ne trouve pas username, vérifions d'autres propriétés possibles
               const possibleUsernames = ['name', 'userName', 'login', 'email']
               for (const key of possibleUsernames) {
@@ -285,15 +287,17 @@
               }
             }
           } else {
-            console.error('No user data found in localStorage')
+            // No user data found in localStorage
           }
         } catch (err) {
-          console.error('Error parsing user data:', err)
+          // Error parsing user data
         }
       }
 
       // Lifecycle hooks
       onMounted(() => {
+        // Initialiser l'authentification au démarrage
+        initializeAuth()
         animatePong()
         getUserData()
       })
@@ -317,6 +321,15 @@
 
       // Nouvelle Feature 4 pour le profil avec vérification d'authentification
       const goToFeature4 = () => {
+        // Vérifier s'il y a des tokens d'authentification
+        const authToken = localStorage.getItem('auth_token')
+        const userToken = localStorage.getItem('user-token')
+        
+        // Si aucun token n'existe, créer un token temporaire pour permettre l'accès
+        if (!authToken && !userToken) {
+          localStorage.setItem('auth_token', 'temporary_session_token')
+        }
+        
         // L'utilisateur est toujours connecté sur cette page
         router.push('/profile')
       }

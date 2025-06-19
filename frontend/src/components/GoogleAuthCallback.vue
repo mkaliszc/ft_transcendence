@@ -97,7 +97,6 @@ const processGoogleCallback = async () => {
     }, 2000)
 
   } catch (error) {
-    console.error('Erreur lors du traitement du callback Google:', error)
     authStatus.value = 'error'
     errorMessage.value = error instanceof Error ? error.message : 'Erreur inconnue'
     isProcessing.value = false

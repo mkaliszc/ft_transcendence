@@ -281,7 +281,7 @@ import EditProfileModal from './EditProfileModal.vue';
 
 const { t } = useI18n()
 const { user: currentUser, isAuthenticated, initializeAuth } = useAuth();
-const { fetchUser, fetchHistory, isLoading, error } = useUser();
+const { fetchUser, isLoading, error } = useUser();
 const router = useRouter();
 
 // État local avec la Composition API
@@ -396,13 +396,10 @@ const editProfileData = computed(() => {
 // Fonction pour charger les données utilisateur depuis le backend
 const loadUserData = async () => {
   try {
-    console.log('Starting loadUserData...')
     isLoadingData.value = true
     
     // Récupérer les informations du profil utilisateur
-    console.log('Fetching user data...')
     const userInfo = await fetchUser()
-    console.log('User info received:', userInfo)
     userProfile.value = userInfo
     
     // Mise à jour des données de base
@@ -424,11 +421,8 @@ const loadUserData = async () => {
     const ratio = userInfo.ratio || 0
     pongStats.value.rating = Math.round(1000 + (ratio * 800))
     
-    console.log('Stats calculated:', pongStats.value)
-    
     // Récupérer l'historique des matches depuis le serveur
     try {
-      console.log('Fetching match history from server...')
       const history = await userApi.getHistory(userInfo.username)
       if (history && history.matches) {
         matchHistory.value = history.matches
@@ -436,19 +430,15 @@ const loadUserData = async () => {
         processMatchHistory(history.matches)
       }
     } catch (historyError) {
-      console.log('Aucun historique de matches trouvé:', historyError)
+      // Utiliser des données par défaut si pas d'historique
       // Utiliser des données par défaut si pas d'historique
       generateDefaultData()
     }
     
-    console.log('User data loaded successfully')
-    
   } catch (err) {
-    console.error('Erreur lors du chargement des données utilisateur:', err)
     // Utiliser des données par défaut en cas d'erreur
     generateDefaultData()
   } finally {
-    console.log('Setting isLoadingData to false')
     isLoadingData.value = false
   }
 }
@@ -578,19 +568,15 @@ const formatShortDate = (date) => {
 
 // Fonctions pour l'édition du profil (simplifiées pour le composant)
 const openEditProfile = () => {
-  console.log('🟢 Opening edit profile modal')
   showEditProfile.value = true
 }
 
 const closeEditProfile = () => {
-  console.log('🟢 Closing edit profile modal')
   showEditProfile.value = false
 }
 
 // Fonction pour gérer la mise à jour du profil depuis le composant
 const handleProfileUpdated = async (updatedProfile) => {
-  console.log('🟢 Profile updated from modal:', updatedProfile)
-  
   // Mettre à jour les données locales
   username.value = updatedProfile.username
   avatar.value = updatedProfile.avatar
@@ -628,12 +614,10 @@ const disable2FA = async () => {
     if (result.success) {
       twoFactorEnabled.value = false
       twoFactorError.value = ''
-      console.log('2FA désactivé avec succès')
     } else {
       twoFactorError.value = result.message || 'Erreur lors de la désactivation de la 2FA'
     }
   } catch (error) {
-    console.error('Erreur lors de la désactivation de la 2FA:', error)
     twoFactorError.value = 'Erreur de connexion au serveur'
   } finally {
     twoFactorLoading.value = false
@@ -643,56 +627,39 @@ const disable2FA = async () => {
 const handleTwoFactorSetupComplete = (enabled) => {
   twoFactorEnabled.value = enabled
   showTwoFactorSetup.value = false
-  console.log('Setup 2FA terminé:', enabled)
 }
 
 const handleTwoFactorSetupSkipped = () => {
   showTwoFactorSetup.value = false
-  console.log('Setup 2FA ignoré')
 }
 
 // Hook de cycle de vie pour écouter les matches terminés
 const handleMatchCompleted = async (event) => {
-  console.log('Match completed event received:', event.detail)
   try {
     // Recharger les données utilisateur après le match
     await loadUserData()
-    console.log('User data refreshed after match completion')
   } catch (error) {
-    console.error('Error refreshing data after match:', error)
+    // Erreur silencieuse
   }
 }
 
 // Hook de cycle de vie
 onMounted(async () => {
-  console.log('🟢 Profile component mounted!')
-  
   // Initialiser l'authentification
   initializeAuth();
   
-  console.log('Profile component mounted')
-  console.log('isAuthenticated:', isAuthenticated.value)
-  console.log('currentUser:', currentUser.value)
-  console.log('Auth tokens:', {
-    auth_token: !!localStorage.getItem('auth_token'),
-    user_token: !!localStorage.getItem('user-token')
-  })
-  
   // Le router guard s'occupe déjà de la vérification d'authentification
   // Pas besoin de vérifier ici, nous pouvons directement charger les données
-  console.log('Loading user data...')
   await loadUserData()
   
   // Ajouter un écouteur d'événements pour les matches terminés
   window.addEventListener('matchCompleted', handleMatchCompleted)
-  console.log('Match completed event listener added')
 })
 
 // Nettoyage lors du démontage
 onUnmounted(() => {
   // Supprimer l'écouteur d'événements
   window.removeEventListener('matchCompleted', handleMatchCompleted)
-  console.log('Match completed event listener removed')
 })
 </script>
 

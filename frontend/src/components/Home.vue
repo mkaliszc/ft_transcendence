@@ -233,12 +233,10 @@
   
       // Navigation
       const goToSignIn = () => {
-        console.log('Navigate to Sign In')
         window.location.assign('/signin')
       }
   
       const goToSignUp = () => {
-        console.log('Navigate to Sign Up')
         window.location.assign('/signup')
       }
   
@@ -270,24 +268,20 @@
   
       // Fonctions pour les boutons de fonctionnalités
       const goToFeature1 = () => {
-        console.log('Navigate to Feature 1 - Solo Game')
         window.location.assign('/Game')
       }
   
       const goToFeature2 = () => {
-        console.log('Navigate to Feature 2 - Multiplayer')
         // Feature 2 reste inchangée - accès direct au multijoueur
         window.location.assign('/multiplayer')
       }
   
       const goToFeature3 = () => {
-        console.log('Navigate to Feature 3 - Tournaments')
         window.location.assign('/tournamentplayer')
       }
 
       // Nouvelle Feature 4 pour le profil avec vérification d'authentification
       const goToFeature4 = () => {
-        console.log('Navigate to Feature 4 - Profile')
         // Vérifier si l'utilisateur est connecté avant d'accéder au profil
         if (isUserLoggedIn()) {
           window.location.assign('/profile')

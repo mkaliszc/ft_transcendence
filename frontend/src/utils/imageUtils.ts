@@ -1,29 +1,6 @@
 // Utilitaires pour la gestion des images
 
 /**
- * Convertit une URL d'image en base64
- */
-export async function urlToBase64(url: string): Promise<string> {
-  try {
-    const response = await fetch(url);
-    const blob = await response.blob();
-    
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onload = () => {
-        const base64 = reader.result as string;
-        resolve(base64);
-      };
-      reader.onerror = reject;
-      reader.readAsDataURL(blob);
-    });
-  } catch (error) {
-    console.error('Erreur lors de la conversion URL vers base64:', error);
-    throw error;
-  }
-}
-
-/**
  * Redimensionne et convertit un fichier image en base64
  */
 export function resizeImageToBase64(file: File, maxWidth: number = 150, maxHeight: number = 150, quality: number = 0.8): Promise<string> {
