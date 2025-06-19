@@ -11,9 +11,10 @@ class User extends Model {
 	number_of_lose!: number
 	creation_date!: Date
 	last_update!: Date
-	avatar?: string
+	avatar!: string
 	twoFA!: boolean
 	twoFA_secret?: string
+	google_user!: boolean
 }
 
 User.init({
@@ -81,7 +82,8 @@ User.init({
 	},
 	avatar: {
 		type: DataTypes.TEXT('medium'),
-		allowNull: true,
+		allowNull: false,
+		defaultValue: 'https://letsenhance.io/static/73136da51c245e80edc6ccfe44888a99/1015f/MainBefore.jpg'
 	},
 	twoFA: {
 		type: DataTypes.BOOLEAN,
@@ -92,6 +94,11 @@ User.init({
 		type: DataTypes.STRING(255),
 		allowNull: true,
 		defaultValue: null
+	},
+	google_user : {
+		type: DataTypes.BOOLEAN,
+		allowNull: false,
+		defaultValue: false
 	}
 }, {
 	sequelize,
@@ -107,6 +114,10 @@ User.addHook('beforeUpdate', (user: User) => {
 User.addHook('beforeCreate', (user: any) => {
     user.creation_date = new Date();
     user.last_update = new Date();
+    // S'assurer qu'un avatar par défaut est assigné si aucun n'est fourni
+    if (!user.avatar) {
+        user.avatar = 'https://cdn.pixabay.com/photo/2020/07/01/12/58/icon-5359553_1280.png';
+    }
 });
 
 export { User }

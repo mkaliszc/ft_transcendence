@@ -12,7 +12,9 @@ import Tournamentplayer from "./components/tournamentplayer.vue";
 
 // Fonction de vérification d'authentification
 const isAuthenticated = () => {
-  return localStorage.getItem('user-token') !== null || localStorage.getItem('auth_token') !== null;
+  const authToken = localStorage.getItem('auth_token');
+  const userToken = localStorage.getItem('user-token');
+  return authToken !== null || userToken !== null;
 };
 
 const routes = [
@@ -69,7 +71,7 @@ const routes = [
   },
   {
     path: "/Gamemulti",
-    redirect: { name: "LocalGame" }
+    redirect: { name: "MultiplayerLocal" }
   },
   // 5) Hub multijoueur
   {
@@ -109,6 +111,17 @@ const routes = [
     path: "/multiplayer/local",
     name: "MultiplayerLocal",
     component: Gamemulti
+  },
+  // Routes pour l'authentification Google
+  {
+    path: "/auth/success",
+    name: "GoogleAuthSuccess",
+    component: () => import("./components/GoogleAuthCallback.vue")
+  },
+  {
+    path: "/auth/error",
+    name: "GoogleAuthError",
+    component: () => import("./components/GoogleAuthCallback.vue")
   },
 ];
 

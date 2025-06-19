@@ -38,7 +38,6 @@ const fetchWithAuth = async (url: string, options: RequestInit = {}) => {
   
 	  return {}
 	} catch (error) {
-	  console.error("API request error:", error)
 	  throw error
 	}
   }
@@ -78,6 +77,14 @@ const fetchWithAuth = async (url: string, options: RequestInit = {}) => {
 			throw new Error("Nom d'utilisateur requis");
 		}
 		return fetchWithAuth(`/profile/history/${usernameParam}`)
+	},
+
+	// Changer le mot de passe
+	changePassword: async (passwordData: { currentPassword: string; newPassword: string }) => {
+		return fetchWithAuth("/profile/changePassword", {
+			method: "PATCH",
+			body: JSON.stringify(passwordData),
+		})
 	}
 }
 

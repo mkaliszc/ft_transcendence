@@ -30,7 +30,9 @@ export async function googleCallback(request: FastifyRequest, reply: FastifyRepl
             if (!user.avatar && googleUser.picture) {
                 await user.update({ avatar: googleUser.picture });
             }
-        } else {
+        } 
+        else 
+        {
             const baseName = googleUser.name.toLowerCase()
                 .replace(/[^a-z0-9]/g, '')
                 .substring(0, 8);
@@ -67,30 +69,46 @@ export async function googleCallback(request: FastifyRequest, reply: FastifyRepl
                 username: finalUsername,
                 email_adress: googleUser.email,
                 hashed_password: 'GOOGLE_OAUTH_USER',
-                avatar: googleUser.picture
+                avatar: googleUser.picture,
+                google_user: true
             });
         }
-
+		console.log('✅ Utilisateur connecté ou créé:', user.username);
         const jwtToken = await reply.jwtSign(
-            { email_adress: user.email_adress, user_id: user.user_id },
+            { mail_adress: user.email_adress, user_id: user.user_id },
             { expiresIn: '15min' }
         );
         
         const refreshToken = await reply.jwtSign(
-            { email_adress: user.email_adress, user_id: user.user_id },
+            { mail_adress: user.email_adress, user_id: user.user_id },
             { expiresIn: '7d' }
         );
-
+		
+		// Préparer les données utilisateur au format attendu par le frontend
+		const userData = {
+			username: user.username,
+			userId: user.user_id,
+			avatar: user.avatar,
+			stats: {
+				matches: user.number_of_matches,
+				wins: user.number_of_win,
+				losses: user.number_of_lose
+			}
+		}
+		
+		console.log('✅ Utilisateur Google connecté:', user.username);
         const frontendUrl = process.env.FRONTEND_URL || 'https://localhost:5000';
-        return reply.redirect(`${frontendUrl}/auth/success?token=${encodeURIComponent(jwtToken)}&refreshToken=${encodeURIComponent(refreshToken)}`);
+        return reply.redirect(`${frontendUrl}/Home2?token=${encodeURIComponent(jwtToken)}&refreshToken=${encodeURIComponent(refreshToken)}&userData=${encodeURIComponent(JSON.stringify(userData))}`);
+		// return reply.code(200).send({
+		// 	message: 'Connexion réussie',
+		// 	token: jwtToken,
+		// 	refreshToken: refreshToken,
+		// 	redirectTo: `${frontendUrl}/Home2`
+		// });
     }
     catch (error) {
         console.error('❌ Erreur dans le callback Google:', error);
         const frontendUrl = process.env.FRONTEND_URL || 'https://localhost:5000';
-        return reply.redirect(`${frontendUrl}/auth/error`);
+        return reply.code(400).redirect(`${frontendUrl}/signin`);
     }
-}
-
-export async function initiateGoogleAuth(request: FastifyRequest, reply: FastifyReply) {
-    return (request.server as any).googleOAuth2.generateAuthorizationUri(request, reply);
 }

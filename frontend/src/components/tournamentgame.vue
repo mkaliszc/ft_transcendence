@@ -255,12 +255,10 @@ function initializeCanvas() {
       handleResize()
       startGameLoop()
     } else {
-      console.error('Failed to get canvas context, retrying...')
       // Retry après un délai si l'initialisation échoue
       setTimeout(initializeCanvas, 300)
     }
   } else {
-    console.error('Canvas element not found, retrying...')
     // Retry après un délai si l'élément n'est pas trouvé
     setTimeout(initializeCanvas, 300)
   }
@@ -373,7 +371,6 @@ function checkImprovedPaddleCollision(paddle: typeof player1.value) {
 
 function drawGame() {
   if (!ctx.value || !gameCanvas.value) {
-    console.warn('Canvas context or canvas element not available')
     return
   }
 
@@ -448,7 +445,7 @@ function drawGame() {
     ctx.value.fillText(player1Name.value, gameCanvas.value.width * 0.25, 55)
     ctx.value.fillText(player2Name.value, gameCanvas.value.width * 0.75, 55)
   } catch (error) {
-    console.error('Error in drawGame:', error)
+    // Error in drawGame
   }
 }
 
@@ -1025,74 +1022,6 @@ function handleResize() {
   }
   60% {
     transform: translateY(-5px);
-  }
-}
-
-/* Responsive */
-@media (max-width: 768px) {
-  .game-header {
-    flex-direction: column;
-    gap: 1rem;
-    padding: 1rem;
-  }
-  
-  .header-container {
-    flex-direction: column;
-    gap: 1rem;
-  }
-  
-  .header-controls {
-    flex-direction: column;
-    gap: 0.5rem;
-  }
-  
-  .match-info {
-    flex-direction: column;
-    gap: 1rem;
-  }
-  
-  .controls-info {
-    flex-direction: column;
-    gap: 0.5rem;
-  }
-  
-  .pong-table {
-    transform: scale(0.8);
-  }
-  
-  .overlay-title {
-    font-size: 2rem;
-  }
-  
-  .btn {
-    padding: 0.5rem 1rem;
-    font-size: 0.8rem;
-  }
-  
-  .game-over-actions {
-    flex-direction: column;
-  }
-}
-
-@media (max-width: 480px) {
-  .game-main {
-    padding: 1rem;
-  }
-  
-  .pong-table {
-    transform: scale(0.7);
-  }
-  
-  .overlay-title {
-    font-size: 1.5rem;
-  }
-  
-  .final-score {
-    font-size: 1.5rem;
-  }
-  
-  .player-score {
-    font-size: 1.5rem;
   }
 }
 </style>
