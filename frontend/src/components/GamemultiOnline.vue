@@ -319,18 +319,13 @@ function goHome() {
 }
 
 onMounted(() => {
-  console.log(`[GameMultiOnline] Démarrage pour ${playerId} dans ${gameId}`);
-  
   const proto = window.location.protocol === 'https:' ? 'wss' : 'ws';
   connectSocket(`${proto}://${window.location.host}/ws/`);
 
   setOnMessage((data: any) => {
-    console.log(`[GameMultiOnline] Message WS reçu:`, data.type, data.payload);
-    
     switch (data.type) {
       case 'player-joined': {
         const { maxPlayers, gameState: srv } = data.payload;
-        console.log(`[GameMultiOnline] État du jeu reçu:`, srv);
         Object.assign(gameState, srv);
         
         if (maxPlayers === 4) {
@@ -338,18 +333,15 @@ onMounted(() => {
         }
         
         isHost = (playerId === gameState.host);
-        console.log(`[GameMultiOnline] isHost: ${isHost}, gameStarted: ${gameState.gameStarted}`);
         break;
       }
       
       case 'all-ready': {
-        console.log(`[GameMultiOnline] Tous les joueurs sont prêts !`);
         if (data.payload.gameState) {
           Object.assign(gameState, data.payload.gameState);
         }
         gameState.gameStarted = true;
         isHost = (playerId === gameState.host);
-        console.log(`[GameMultiOnline] Jeu démarré - isHost: ${isHost}`);
         break;
       }
       
@@ -380,7 +372,6 @@ onMounted(() => {
   
   // Se déclare prêt automatiquement
   setTimeout(() => {
-    console.log(`[GameMultiOnline] ${playerId} se déclare prêt`);
     sendMessage('player-ready', { gameId, playerId });
   }, 100);
 

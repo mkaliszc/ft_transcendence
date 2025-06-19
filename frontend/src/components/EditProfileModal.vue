@@ -272,7 +272,7 @@
 </template>
 
 <script setup>
-import { ref, computed, watch } from 'vue'
+import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { userApi } from '../services/userAPI.ts'
 import { TwoFactorService } from '../services/twoFactorAPI.ts'
@@ -467,7 +467,6 @@ const toggle2FA = async () => {
     }, 3000)
     
   } catch (error) {
-    console.error('Error toggling 2FA:', error)
     updateMessage.value = {
       type: 'error',
       text: error.message || 'Erreur lors de la modification de la 2FA'
@@ -524,7 +523,6 @@ const verify2FASetup = async () => {
     }
     
   } catch (error) {
-    console.error('Error verifying 2FA setup:', error)
     updateMessage.value = {
       type: 'error',
       text: error.message || 'Erreur lors de la vérification du code'
@@ -576,7 +574,6 @@ const changePassword = async () => {
       newPassword: passwordChange.value.new
     })
     
-    console.log('Password changed successfully:', response)
     
     // Réinitialiser les champs de mot de passe
     passwordChange.value = {
@@ -596,7 +593,6 @@ const changePassword = async () => {
     }, 3000)
     
   } catch (error) {
-    console.error('Error changing password:', error)
     updateMessage.value = {
       type: 'error',
       text: error.message || 'Erreur lors du changement de mot de passe'
@@ -661,7 +657,6 @@ const handleAvatarUpload = async (event) => {
     }, 3000)
     
   } catch (error) {
-    console.error('Error uploading avatar:', error)
     updateMessage.value = {
       type: 'error',
       text: error.message || 'Erreur lors du téléchargement de l\'avatar'
@@ -714,7 +709,6 @@ const saveProfile = async () => {
     }
     
     const response = await userApi.updateUser(updateData)
-    console.log('Profile updated successfully:', response)
     
     // Mettre à jour les données originales
     originalProfile.value = { ...editableProfile.value }
@@ -733,7 +727,6 @@ const saveProfile = async () => {
     }, 1500)
     
   } catch (error) {
-    console.error('Error updating profile:', error)
     updateMessage.value = {
       type: 'error',
       text: error.message || 'Erreur lors de la mise à jour du profil'

@@ -255,12 +255,10 @@ function initializeCanvas() {
       handleResize()
       startGameLoop()
     } else {
-      console.error('Failed to get canvas context, retrying...')
       // Retry après un délai si l'initialisation échoue
       setTimeout(initializeCanvas, 300)
     }
   } else {
-    console.error('Canvas element not found, retrying...')
     // Retry après un délai si l'élément n'est pas trouvé
     setTimeout(initializeCanvas, 300)
   }
@@ -373,7 +371,6 @@ function checkImprovedPaddleCollision(paddle: typeof player1.value) {
 
 function drawGame() {
   if (!ctx.value || !gameCanvas.value) {
-    console.warn('Canvas context or canvas element not available')
     return
   }
 
@@ -448,7 +445,7 @@ function drawGame() {
     ctx.value.fillText(player1Name.value, gameCanvas.value.width * 0.25, 55)
     ctx.value.fillText(player2Name.value, gameCanvas.value.width * 0.75, 55)
   } catch (error) {
-    console.error('Error in drawGame:', error)
+    // Error in drawGame
   }
 }
 

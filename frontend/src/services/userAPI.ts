@@ -38,7 +38,6 @@ const fetchWithAuth = async (url: string, options: RequestInit = {}) => {
   
 	  return {}
 	} catch (error) {
-	  console.error("API request error:", error)
 	  throw error
 	}
   }

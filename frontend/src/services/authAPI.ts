@@ -31,7 +31,6 @@ const fetchApi = async (url: string, options: RequestInit = {}) => {
   
 	  return {}
 	} catch (error: any) {
-	  console.error("API request error:", error)
 	  throw error
 	}
   }
@@ -75,8 +74,6 @@ const fetchApi = async (url: string, options: RequestInit = {}) => {
 	check2FA: async (code: string) => {
 	  // Utiliser le token temporaire pour la vérification 2FA
 	  const tempToken = localStorage.getItem('temp_2fa_token')
-	  console.log('🔵 check2FA called with code:', code)
-	  console.log('🔵 Temp token found:', !!tempToken)
 	  
 	  const response = await fetchApi("/auth/check2FA", {
 		method: "POST",
@@ -87,7 +84,6 @@ const fetchApi = async (url: string, options: RequestInit = {}) => {
 		body: JSON.stringify({ code }),
 	  })
 	  
-	  console.log('🔵 check2FA response:', response)
 	  return response
 	},
   

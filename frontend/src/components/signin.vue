@@ -158,9 +158,9 @@
 import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
-import { onMounted } from 'vue'
 import { authApi } from '../services/authAPI'
 import { useAuth } from '../composable/useAuths'
+import { googleAuthService } from '../services/googleAuthAPI'
 
 // Utilisation de vue-i18n
 const { t, locale } = useI18n()
@@ -225,8 +225,6 @@ const handleSignIn = async () => {
     }
     
   } catch (err) {
-    console.error('Login error:', err)
-    
     // Gestion des erreurs spécifiques
     if (err.response?.status === 401) {
       error.value = t('invalidCredentials')
@@ -243,36 +241,27 @@ const handleSignIn = async () => {
 }
 
 const handle2FAVerification = async () => {
-  console.log('🔵 handle2FAVerification started');
-  
   if (!twoFACode.value || twoFACode.value.length !== 6) {
     error.value = t('invalid2FACode')
-    console.log('🔴 Invalid 2FA code length');
     return
   }
   
   error.value = ''
   loading.value = true
-  console.log('🔵 About to call check2FA API');
   
   try {
-    console.log('🔵 Starting 2FA verification with code:', twoFACode.value)
     // Vérification du code 2FA
     const response = await authApi.check2FA(twoFACode.value)
-    console.log('🔵 2FA verification response:', response)
     
     // Combiner les données de connexion avec la vérification 2FA
     const loginData = {
       ...pendingLoginData.value,
       ...response
     }
-    console.log('🔵 Combined loginData:', loginData)
     
     await handleSuccessfulLogin(loginData)
     
   } catch (err) {
-    console.error('🔴 2FA verification error:', err)
-    
     if (err.response?.status === 401) {
       error.value = t('invalid2FACode')
     } else {
@@ -280,14 +269,11 @@ const handle2FAVerification = async () => {
     }
   } finally {
     loading.value = false
-    console.log('🔵 handle2FAVerification finished');
   }
 }
 
 const handleSuccessfulLogin = async (loginData) => {
   try {
-    console.log('🟢 handleSuccessfulLogin called with:', loginData)
-    
     // Nettoyer le token temporaire 2FA
     localStorage.removeItem('temp_2fa_token')
     
@@ -295,47 +281,41 @@ const handleSuccessfulLogin = async (loginData) => {
     if (loginData.token || loginData.accessToken) {
       const token = loginData.token || loginData.accessToken
       localStorage.setItem('auth_token', token)
-      console.log('🟢 Token saved:', !!token)
-    } else {
-      console.log('🔴 No token found in loginData:', loginData)
     }
     
     // Sauvegarder le refresh token si disponible
     if (loginData.refreshToken) {
       localStorage.setItem('refresh_token', loginData.refreshToken)
-      console.log('🟢 Refresh token saved')
     }
     
     // Sauvegarder les données utilisateur
     if (loginData.user) {
       const userData = loginData.user
       localStorage.setItem('user_data', JSON.stringify(userData))
-      console.log('🟢 User data saved:', userData)
-    } else {
-      console.log('🔴 No user data in loginData')
     }
     
     // Mettre à jour le composable useAuth avec les nouveaux tokens
     initializeAuth();
     
     successMessage.value = t('loginSuccessful')
-    console.log('🟢 About to redirect to /Home2')
     
     // Redirection après un court délai pour montrer le message de succès
     setTimeout(() => {
-      console.log('🟢 Redirecting to /Home2')
       router.push('/Home2')
     }, 1500)
     
   } catch (err) {
-    console.error('Error handling successful login:', err)
     error.value = t('loginProcessingError')
   }
 }
 
 const handleGoogleSignIn = () => {
-  // Ici vous pourriez implémenter la connexion Google
-  alert(t('googleSignInNotImplemented'))
+  try {
+    // Rediriger vers l'authentification Google
+    googleAuthService.initiateGoogleLogin()
+  } catch (err) {
+    error.value = t('googleSignInError') || 'Erreur lors de la connexion Google'
+  }
 }
 
 const goToSignUp = () => {
@@ -345,10 +325,6 @@ const goToSignUp = () => {
 const goBack = () => {
   router.push('/')
 }
-
-// Initialisation simple au montage
-onMounted(() => {
-})
 </script>
 
 <style scoped>

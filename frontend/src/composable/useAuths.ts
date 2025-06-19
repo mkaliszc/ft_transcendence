@@ -25,7 +25,6 @@ if (typeof window !== 'undefined') {
 export function useAuth() {
   const isAuthenticated = computed(() => !!token.value)
   const isLoading = computed(() => loading.value)
-  const hasError = computed(() => !!error.value)
 
   const register = async (userData: { username: string; email_adress: string; password: string }) => {
     loading.value = true
@@ -88,33 +87,6 @@ export function useAuth() {
     localStorage.removeItem("user_email")
   }
 
-  const refreshAuthToken = async () => {
-    if (!refreshToken.value) {
-      throw new Error("Aucun token de rafraîchissement disponible")
-    }
-
-    loading.value = true
-    error.value = ""
-
-    try {
-      const response = await authApi.refreshToken(refreshToken.value)
-
-      if (response.token || response.accessToken) {
-        const newToken = response.token || response.accessToken
-        token.value = newToken
-        localStorage.setItem("auth_token", newToken)
-      }
-
-      return response
-    } catch (err: any) {
-      error.value = err.message || "Erreur de rafraîchissement du token"
-      logout() // Déconnecter l'utilisateur si le refresh échoue
-      throw err
-    } finally {
-      loading.value = false
-    }
-  }
-
   const initializeAuth = () => {
     // Mettre à jour le token depuis localStorage
     token.value = getCurrentToken();
@@ -124,14 +96,9 @@ export function useAuth() {
       try {
         user.value = JSON.parse(savedUser)
       } catch (error) {
-        console.error("Error parsing saved user data:", error)
         localStorage.removeItem("user_data")
       }
     }
-  }
-
-  const clearError = () => {
-    error.value = ""
   }
 
   return {
@@ -140,12 +107,9 @@ export function useAuth() {
     isAuthenticated,
     isLoading,
     error: computed(() => error.value),
-    hasError,
     login,
     logout,
-    refreshAuthToken,
     initializeAuth,
-    clearError,
     register,
   }
 }
