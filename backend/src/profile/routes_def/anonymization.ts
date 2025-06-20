@@ -17,7 +17,6 @@ export async function anonymization(request: FastifyRequest, reply: FastifyReply
 			email_adress: null,
 			twoFA: false,
 			twoFA_secret: null,
-			avatar: null,
 		});
 
 		return reply.status(200).send({ message: 'User anonymized successfully' });

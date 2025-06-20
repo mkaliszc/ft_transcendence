@@ -1,5 +1,5 @@
 export interface JWTpayload {
-	email_adress: string;
+	username: string;
 	user_id: number;
 }
 
@@ -25,7 +25,7 @@ export interface Pub_User {
 export interface UpdateData {
 	username?: string;
 	avatar?: string;
-	twoFA?: boolean; // ? pas obligatoire mais pour faire propre a retirer
+	email_adress?: string;
 }
 
 export interface GoogleUserInfo {

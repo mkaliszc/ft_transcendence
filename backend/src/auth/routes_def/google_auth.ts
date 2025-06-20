@@ -70,12 +70,12 @@ export async function googleCallback(request: FastifyRequest, reply: FastifyRepl
 		}
 		console.log('✅ Utilisateur connecté ou créé:', user.username);
 		const jwtToken = await reply.jwtSign(
-			{ mail_adress: user.email_adress, user_id: user.user_id },
+			{ username: user.username, user_id: user.user_id },
 			{ expiresIn: '15min' }
 		);
 
 		const refreshToken = await reply.jwtSign(
-			{ mail_adress: user.email_adress, user_id: user.user_id },
+			{ username: user.username, user_id: user.user_id },
 			{ expiresIn: '7d' }
 		);
 		
