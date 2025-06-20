@@ -84,7 +84,6 @@ export async function googleCallback(request: FastifyRequest, reply: FastifyRepl
             { expiresIn: '7d' }
         );
 		
-		// Préparer les données utilisateur au format attendu par le frontend
 		const userData = {
 			username: user.username,
 			userId: user.user_id,
@@ -99,12 +98,6 @@ export async function googleCallback(request: FastifyRequest, reply: FastifyRepl
 		console.log('✅ Utilisateur Google connecté:', user.username);
         const frontendUrl = process.env.FRONTEND_URL || 'https://localhost:5000';
         return reply.redirect(`${frontendUrl}/Home2?token=${encodeURIComponent(jwtToken)}&refreshToken=${encodeURIComponent(refreshToken)}&userData=${encodeURIComponent(JSON.stringify(userData))}`);
-		// return reply.code(200).send({
-		// 	message: 'Connexion réussie',
-		// 	token: jwtToken,
-		// 	refreshToken: refreshToken,
-		// 	redirectTo: `${frontendUrl}/Home2`
-		// });
     }
     catch (error) {
         console.error('❌ Erreur dans le callback Google:', error);

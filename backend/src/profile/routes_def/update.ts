@@ -25,6 +25,10 @@ export async function update(request: FastifyRequest<{ Body: UpdateData }>, repl
 			}
 		}
 
+		if (update_payload.twoFA && user.google_user) { // ? templorary check
+			return reply.status(400).send({ error: 'Cannot enable 2FA for Google-authenticated users' });
+		}
+
 		const updatedFields = await user.update(update_payload);
 		if (!updatedFields) {
 			return reply.status(400).send({ error: 'No fields updated' });
