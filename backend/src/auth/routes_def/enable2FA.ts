@@ -20,6 +20,7 @@ export async function enable2FA(request: FastifyRequest, reply: FastifyReply) {
 		if (!generatedSecret) {
 			return reply.code(400).send({ error: 'Internal ERROR' });
 		}
+
 		await user.update({ twoFA_secret: generatedSecret.base32 });
 		if (generatedSecret.otpauth_url) {
 			const qrCode = await QRCode.toDataURL(generatedSecret.otpauth_url);
