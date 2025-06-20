@@ -11,6 +11,7 @@ import { deleteFriendship } from '../routes_def/deleteFriendship';
 import { declineRequest } from '../routes_def/declineRequest';
 import { friendList } from '../routes_def/friendList';
 import { anonymization } from '../routes_def/anonymization';
+import { getPersoData } from '../routes_def/getPersoData';
 
 export default fp(async function routes_profile(fastify: any) {
 	fastify.get('/profile/user/:username', { preHandler: fastify.authenticate }, getUser);
@@ -25,4 +26,5 @@ export default fp(async function routes_profile(fastify: any) {
 	fastify.patch('/profile/friendRequest/decline', { preHandler: fastify.authenticate }, declineRequest);
 	fastify.get('/profile/friendList', { preHandler: fastify.authenticate }, friendList );
 	fastify.patch('/profile/anonymization', { preHandler: fastify.authenticate }, anonymization);
+	fastify.get('/profile/data', { preHandler: fastify.authenticate }, getPersoData);
 });

@@ -25,7 +25,6 @@ export interface Pub_User {
 export interface UpdateData {
 	username?: string;
 	avatar?: string;
-	email_adress?: string;
 }
 
 export interface GoogleUserInfo {

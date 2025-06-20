@@ -7,7 +7,7 @@ export async function update(request: FastifyRequest<{ Body: UpdateData }>, repl
 		const payload = request.user as JWTpayload;
 		const userId = payload.user_id;
 		const update_payload = request.body as UpdateData;
-		
+
 		const user = await User.findByPk(userId);
 		if (!user) {
 			return reply.status(404).send({ error: 'User not found' });
@@ -23,25 +23,16 @@ export async function update(request: FastifyRequest<{ Body: UpdateData }>, repl
 			if (existingUser && existingUser.user_id !== userId) {
 				return reply.status(400).send({ error: 'Username already exists' });
 			}
-		}
-
-		if (update_payload.email_adress && !user.google_user) {
-			const existingEmailUser = await User.findOne({
-				where: { email_adress: update_payload.email_adress },
-			});
-			if (existingEmailUser && existingEmailUser.user_id !== userId) {
-				return reply.status(400).send({ error: 'Email address already exists' });
+			else {
+				user.username = update_payload.username;
 			}
 		}
-		else if (update_payload.email_adress && user.google_user) {
-			return reply.status(400).send({ error: 'Cannot change email for Google-authenticated users' });
+
+		if (update_payload.avatar) {
+			user.avatar = update_payload.avatar;
 		}
 
-		const updatedFields = await user.update(update_payload);
-		if (!updatedFields) {
-			return reply.status(400).send({ error: 'No fields updated' });
-		}
-
+		await user.save();
 		return reply.status(200).send({ message: 'User updated successfully'});
 	}
 	catch (error) {
