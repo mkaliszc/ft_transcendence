@@ -21,6 +21,9 @@ export async function changePassword(request: FastifyRequest<{ Body: ChangePassw
 		if (!user) {
 			return reply.status(404).send({ error: 'User not found' });
 		}
+		if (user.google_user) {
+			return reply.status(400).send({ error: 'Cannot change password for Google-authenticated users' });
+		}
 		
 		const isCurrentPasswordValid = await bcrypt.compare(currentPassword, user.hashed_password);
 		if (!isCurrentPasswordValid) {
@@ -28,8 +31,7 @@ export async function changePassword(request: FastifyRequest<{ Body: ChangePassw
 		}
 		
 		const hashedNewPassword = await bcrypt.hash(newPassword, 13);
-		
-		// Mettre à jour le mot de passe
+
 		await user.update({ hashed_password: hashedNewPassword });
 		
 		return reply.status(200).send({ message: 'Password changed successfully' });
