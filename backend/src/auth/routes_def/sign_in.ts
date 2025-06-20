@@ -31,7 +31,7 @@ export async function sign_in(request: FastifyRequest, reply:FastifyReply) {
 			})
 		}
 
-		const token = await reply.jwtSign({ mail_adress: user.email_adress, user_id: user.user_id }, { expiresIn: '15min'})
+		const token = await reply.jwtSign({ mail_adress: user.email_adress, user_id: user.user_id }, { expiresIn: '1min'})
 		const refreshToken = await reply.jwtSign({ mail_adress: user.email_adress, user_id: user.user_id }, { expiresIn: '7d' })
 
 		if (!token || !refreshToken) {
