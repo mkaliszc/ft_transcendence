@@ -83,6 +83,10 @@
 		  </div>
 
 		  <!-- Composant pour l'édition du profil -->
+		  <!-- Debug: showEditProfile = {{ showEditProfile }} -->
+		  <div v-if="showEditProfile" style="color: red; text-align: center; padding: 10px; background: rgba(255,0,0,0.1);">
+			DEBUG: Modal devrait être visible (showEditProfile = {{ showEditProfile }})
+		  </div>
 		  <EditProfileModal 
 			:show="showEditProfile"
 			:userProfile="editProfileData"
@@ -518,6 +522,10 @@ const formatDuration = (seconds) => {
 // Computed pour les graphiques winrate
 const winrateLinePoints = computed(() => {
   if (winrateHistory.value.length === 0) return ''
+  if (winrateHistory.value.length === 1) {
+    // Si un seul point, placer au centre
+    return `200,${180 - ((winrateHistory.value[0].winrate / 100) * 160)}`
+  }
   return winrateHistory.value.map((item, index) => {
     const x = (index / (winrateHistory.value.length - 1)) * 380 + 10
     const y = 180 - ((item.winrate / 100) * 160)
@@ -527,6 +535,11 @@ const winrateLinePoints = computed(() => {
 
 const winrateAreaPath = computed(() => {
   if (winrateHistory.value.length === 0) return ''
+  if (winrateHistory.value.length === 1) {
+    // Si un seul point, créer une petite aire autour de ce point
+    const y = 180 - ((winrateHistory.value[0].winrate / 100) * 160)
+    return `M 190 180 L 190 ${y} L 210 ${y} L 210 180 Z`
+  }
   const points = winrateHistory.value.map((item, index) => {
     const x = (index / (winrateHistory.value.length - 1)) * 380 + 10
     const y = 180 - ((item.winrate / 100) * 160)
@@ -544,6 +557,11 @@ const winrateAreaPath = computed(() => {
 
 const winratePoints = computed(() => {
   if (winrateHistory.value.length === 0) return []
+  if (winrateHistory.value.length === 1) {
+    // Si un seul point, placer au centre
+    const y = 180 - ((winrateHistory.value[0].winrate / 100) * 160)
+    return [{ x: 200, y }]
+  }
   return winrateHistory.value.map((item, index) => {
     const x = (index / (winrateHistory.value.length - 1)) * 380 + 10
     const y = 180 - ((item.winrate / 100) * 160)
@@ -569,10 +587,13 @@ const formatShortDate = (date) => {
 
 // Fonctions pour l'édition du profil (simplifiées pour le composant)
 const openEditProfile = () => {
+  console.log('openEditProfile appelé - Avant:', showEditProfile.value)
   showEditProfile.value = true
+  console.log('openEditProfile appelé - Après:', showEditProfile.value)
 }
 
 const closeEditProfile = () => {
+  console.log('closeEditProfile appelé')
   showEditProfile.value = false
 }
 
