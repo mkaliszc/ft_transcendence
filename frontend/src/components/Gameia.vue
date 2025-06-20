@@ -7,10 +7,12 @@
 			<span class="brand-text">Pong Billard</span>
 		  </div>
 		  <div class="header-controls">
-			<div class="score-display">
-			  <span class="score-label">Score:</span>
-			  <span class="score-value">{{ playerScore }} - {{ aiScore }}</span>
-			</div>
+			<button @click="goHome" class="btn btn-secondary">
+			  <svg class="btn-icon" fill="currentColor" viewBox="0 0 20 20">
+				<path fill-rule="evenodd" d="M3 3a1 1 0 011 1v12a1 1 0 11-2 0V4a1 1 0 011-1zm7.707 3.293a1 1 0 010 1.414L9.414 9H17a1 1 0 110 2H9.414l1.293 1.293a1 1 0 01-1.414 1.414l-3-3a1 1 0 010-1.414l3-3a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+			  </svg>
+			  Accueil
+			</button>
 			<button @click="resetGame" class="btn btn-primary">
 			  <svg class="btn-icon" fill="currentColor" viewBox="0 0 20 20">
 				<path fill-rule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z" clip-rule="evenodd"></path>
@@ -93,6 +95,12 @@
   
   <script setup>
   import { ref, onMounted, onUnmounted, watch } from 'vue';
+  import { useRouter } from 'vue-router';
+  import { useAuth } from '../composable/useAuths';
+  
+  // Router et auth
+  const router = useRouter();
+  const { isAuthenticated } = useAuth();
   
   // Game state
   const gameCanvas = ref(null);
@@ -420,6 +428,15 @@
 	  gameCanvas.value.style.transformOrigin = 'top left';
 	}
   }
+  
+  // Fonction pour retourner à l'accueil
+  function goHome() {
+    if (isAuthenticated.value) {
+      router.push('/Home2');
+    } else {
+      router.push('/');
+    }
+  }
 </script>
   
   <style scoped>
@@ -467,25 +484,6 @@
 	display: flex;
 	align-items: center;
 	gap: 1.5rem;
-  }
-  
-  .score-display {
-	padding: 0.5rem 1rem;
-	background: rgba(212, 175, 55, 0.1);
-	border: 1px solid rgba(212, 175, 55, 0.3);
-	border-radius: 0.5rem;
-	color: #d4af37;
-	font-weight: 600;
-  }
-  
-  .score-label {
-	color: #e0e0e0;
-	margin-right: 0.5rem;
-  }
-  
-  .score-value {
-	color: #d4af37;
-	font-size: 1.1rem;
   }
   
   .btn {

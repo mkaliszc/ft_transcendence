@@ -81,8 +81,10 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
+import { useAuth } from '../composable/useAuths'
 
 const router = useRouter()
+const { isAuthenticated } = useAuth()
 
 // État de configuration
 const playerNames = ref<string[]>(Array(8).fill(''))
@@ -118,7 +120,11 @@ const clearNames = () => {
 }
 
 const goHome = () => {
-  router.push('/')
+  if (isAuthenticated.value) {
+    router.push('/home2')
+  } else {
+    router.push('/')
+  }
 }
 
 const startTournament = () => {

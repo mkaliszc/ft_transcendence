@@ -252,14 +252,6 @@
               💾 {{ $t('saveChanges') || 'Sauvegarder' }}
             </span>
           </button>
-          
-          <button 
-            @click="resetProfile" 
-            :disabled="isUpdating"
-            class="btn-reset"
-          >
-            🔄 {{ $t('reset') || 'Annuler' }}
-          </button>
         </div>
 
         <!-- Messages de feedback -->
@@ -272,7 +264,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, watch, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { userApi } from '../services/userAPI.ts'
 import { TwoFactorService } from '../services/twoFactorAPI.ts'
@@ -291,6 +283,11 @@ const props = defineProps({
     required: true
   }
 })
+
+// Debug: surveiller les changements de la prop show
+watch(() => props.show, (newValue, oldValue) => {
+  console.log('EditProfileModal - prop show changed:', { oldValue, newValue })
+}, { immediate: true })
 
 // Émissions
 const emit = defineEmits(['close', 'profile-updated'])
@@ -382,7 +379,6 @@ const initializeEditableProfile = () => {
 
 const close = () => {
   emit('close')
-  resetProfile()
   reset2FAState()
 }
 
@@ -392,21 +388,6 @@ const reset2FAState = () => {
   twoFASecret.value = ''
   verificationCode.value = ''
   is2FABeingSetup.value = false
-}
-
-const resetProfile = () => {
-  editableProfile.value = { ...originalProfile.value }
-  passwordChange.value = {
-    current: '',
-    new: '',
-    confirm: ''
-  }
-  showPasswords.value = {
-    current: false,
-    new: false,
-    confirm: false
-  }
-  updateMessage.value = null
 }
 
 const togglePasswordVisibility = (field) => {
@@ -1112,7 +1093,7 @@ const saveProfile = async () => {
   margin-top: 0.8rem;
 }
 
-.btn-save, .btn-reset {
+.btn-save {
   padding: 0.8rem 1.5rem;
   border: none;
   border-radius: 8px;
@@ -1125,9 +1106,6 @@ const saveProfile = async () => {
   gap: 0.5rem;
   text-transform: uppercase;
   letter-spacing: 0.5px;
-}
-
-.btn-save {
   background: linear-gradient(135deg, #d4af37, #c19b2e);
   color: #1a1a1a;
 }
@@ -1142,17 +1120,6 @@ const saveProfile = async () => {
   opacity: 0.6;
   cursor: not-allowed;
   transform: none;
-}
-
-.btn-reset {
-  background: linear-gradient(135deg, #6b7280, #4b5563);
-  color: white;
-}
-
-.btn-reset:hover:not(:disabled) {
-  background: linear-gradient(135deg, #4b5563, #374151);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(107, 114, 128, 0.3);
 }
 
 .spinner {
@@ -1319,5 +1286,26 @@ const saveProfile = async () => {
   background: linear-gradient(135deg, #dc2626, #b91c1c);
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .modal-overlay {
+    padding: 1rem;
+  }
+  
+  .edit-profile-modal {
+    padding: 1.5rem;
+    max-height: 95vh;
+  }
+  
+  .modal-title {
+    font-size: 1.5rem;
+  }
+  
+  .btn-save {
+    width: 100%;
+    justify-content: center;
+  }
 }
 </style>
