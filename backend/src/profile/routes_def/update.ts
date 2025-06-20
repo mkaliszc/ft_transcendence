@@ -25,8 +25,16 @@ export async function update(request: FastifyRequest<{ Body: UpdateData }>, repl
 			}
 		}
 
-		if (update_payload.twoFA && user.google_user) { // ? templorary check
-			return reply.status(400).send({ error: 'Cannot enable 2FA for Google-authenticated users' });
+		if (update_payload.email_adress && !user.google_user) {
+			const existingEmailUser = await User.findOne({
+				where: { email_adress: update_payload.email_adress },
+			});
+			if (existingEmailUser && existingEmailUser.user_id !== userId) {
+				return reply.status(400).send({ error: 'Email address already exists' });
+			}
+		}
+		else if (update_payload.email_adress && user.google_user) {
+			return reply.status(400).send({ error: 'Cannot change email for Google-authenticated users' });
 		}
 
 		const updatedFields = await user.update(update_payload);
