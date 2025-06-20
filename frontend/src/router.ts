@@ -86,11 +86,11 @@ const routes = [
     component: () => import("./components/CreateOrJoin.vue")
   },
   // 7) Flux en ligne : créer, rejoindre, waiting-room, jeu en ligne
-  {
-    path: "/multiplayer/create",
-    name: "CreateGame",
-    component: () => import("./components/CreateGame.vue")
-  },
+//   {
+//     path: "/multiplayer/create",
+//     name: "CreateGame",
+//     component: () => import("./components/CreateGame.vue")
+//   },
   {
     path: "/multiplayer/join",
     name: "JoinGame",
