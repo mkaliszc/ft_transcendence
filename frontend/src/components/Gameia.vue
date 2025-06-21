@@ -112,6 +112,15 @@
   const aiScore = ref(0);
   const winningScore = 5;
   
+  // AI state for human-like behavior
+  const aiKeyState = ref({
+    up: false,
+    down: false
+  });
+  const aiLastUpdate = ref(0);
+  const aiUpdateInterval = 1000; // 1 second as required
+  const aiPredictedBallY = ref(200);
+  
   // Keyboard state for smooth movement
   const keys = ref({
 	KeyW: false,
@@ -186,6 +195,7 @@
   
   function updateGame() {
 	handleKeyboardMovement();
+	handleAIMovement(); // Process AI keyboard simulation
 	
 	ball.value.x += ball.value.speedX;
 	ball.value.y += ball.value.speedY;
@@ -332,23 +342,159 @@
   }
   
   function moveAI() {
-	const aiCenter = ai.value.y;
-	const ballCenter = ball.value.y;
+	const currentTime = Date.now();
 	
-	if (ball.value.speedX > 0) {
-	  if (aiCenter < ballCenter - 10) {
-		ai.value.y += ai.value.speed;
-	  } else if (aiCenter > ballCenter + 10) {
-		ai.value.y -= ai.value.speed;
-	  }
-	} else {
-	  if (aiCenter < gameCanvas.value.height / 2 - 30) {
-		ai.value.y += ai.value.speed * 0.5;
-	  } else if (aiCenter > gameCanvas.value.height / 2 + 30) {
-		ai.value.y -= ai.value.speed * 0.5;
-	  }
+	// AI can only update its "view" once per second
+	if (currentTime - aiLastUpdate.value >= aiUpdateInterval) {
+	  aiLastUpdate.value = currentTime;
+	  
+	  // Predict where ball will be when it reaches AI paddle
+	  aiPredictedBallY.value = predictBallPosition();
+	  
+	  // Make decision based on prediction (simulate human thinking)
+	  makeAIDecision();
 	}
+  }
   
+  // Advanced ball trajectory prediction with multiple bounces
+  function predictBallPosition() {
+	if (ball.value.speedX <= 0) {
+	  // Ball moving away, use strategic positioning
+	  return getStrategicPosition();
+	}
+	
+	// Simulate ball trajectory to AI paddle with accurate physics
+	let simX = ball.value.x;
+	let simY = ball.value.y;
+	let simSpeedX = ball.value.speedX;
+	let simSpeedY = ball.value.speedY;
+	const paddleX = ai.value.x;
+	let bounceCount = 0;
+	const maxBounces = 5; // Limit simulation for performance
+	
+	// Step through trajectory until ball reaches AI paddle X position
+	while (simX < paddleX && simX < gameCanvas.value.width && bounceCount < maxBounces) {
+	  const nextX = simX + simSpeedX;
+	  const nextY = simY + simSpeedY;
+	  
+	  // Check for wall collisions
+	  if (nextY <= 0 || nextY >= gameCanvas.value.height) {
+		// Wall bounce
+		simSpeedY = -simSpeedY;
+		simY = nextY <= 0 ? -nextY : 2 * gameCanvas.value.height - nextY;
+		bounceCount++;
+	  } else {
+		simY = nextY;
+	  }
+	  
+	  simX = nextX;
+	}
+	
+	// Add some uncertainty based on distance (further = less accurate)
+	const distance = Math.abs(simX - ball.value.x);
+	const uncertainty = Math.min(distance * 0.1, 50); // Max 50px uncertainty
+	const predictionError = (Math.random() - 0.5) * uncertainty;
+	
+	return Math.max(ai.value.height / 2, 
+		   Math.min(gameCanvas.value.height - ai.value.height / 2, 
+					simY + predictionError));
+  }
+  
+  // Strategic positioning when ball is moving away
+  function getStrategicPosition() {
+	const centerY = gameCanvas.value.height / 2;
+	const currentScore = aiScore.value - playerScore.value;
+	
+	// Adapt strategy based on score difference
+	if (currentScore > 0) {
+	  // Leading: play more defensively (stay center)
+	  return centerY + (Math.random() - 0.5) * 40;
+	} else if (currentScore < -2) {
+	  // Losing badly: play more aggressively (anticipate player moves)
+	  return player.value.y + (Math.random() - 0.5) * 60;
+	} else {
+	  // Even game: balanced positioning
+	  return centerY + (Math.random() - 0.5) * 80;
+	}
+  }
+  
+  // AI decision making based on prediction
+  function makeAIDecision() {
+	const aiCenter = ai.value.y;
+	const targetY = aiPredictedBallY.value;
+	const ballSpeed = Math.sqrt(ball.value.speedX ** 2 + ball.value.speedY ** 2);
+	
+	// Dynamic tolerance based on ball speed and game difficulty
+	const baseTolerance = 15;
+	const speedMultiplier = Math.min(ballSpeed / 6, 2); // Harder with faster balls
+	const tolerance = baseTolerance * speedMultiplier;
+	
+	// Reset AI keys
+	aiKeyState.value.up = false;
+	aiKeyState.value.down = false;
+	
+	// Human-like reaction time and error simulation
+	const reactionError = getHumanLikeError();
+	const adjustedTarget = targetY + reactionError;
+	
+	// Make decision with situational awareness
+	const urgency = getUrgency();
+	const finalTolerance = tolerance * (2 - urgency); // More precise when urgent
+	
+	if (aiCenter < adjustedTarget - finalTolerance) {
+	  aiKeyState.value.down = true;
+	} else if (aiCenter > adjustedTarget + finalTolerance) {
+	  aiKeyState.value.up = true;
+	}
+	
+	// Occasionally make a "mistake" (human-like behavior)
+	if (Math.random() < 0.05) { // 5% chance of mistake
+	  aiKeyState.value.up = !aiKeyState.value.up;
+	  aiKeyState.value.down = !aiKeyState.value.down;
+	}
+  }
+  
+  // Calculate human-like error based on various factors
+  function getHumanLikeError() {
+	const distance = Math.abs(ball.value.x - ai.value.x);
+	const speed = Math.abs(ball.value.speedX);
+	const pressure = Math.max(0, 3 - Math.abs(aiScore.value - playerScore.value));
+	
+	// Error increases with distance, speed, and pressure
+	const baseError = 15;
+	const distanceError = distance * 0.02;
+	const speedError = speed * 1.5;
+	const pressureError = pressure * 3;
+	
+	const totalError = baseError + distanceError + speedError + pressureError;
+	return (Math.random() - 0.5) * totalError;
+  }
+  
+  // Calculate urgency level (0-1) based on ball position and speed
+  function getUrgency() {
+	const distanceToPaddle = Math.abs(ball.value.x - ai.value.x);
+	const maxDistance = gameCanvas.value.width;
+	const distanceRatio = distanceToPaddle / maxDistance;
+	
+	// More urgent when ball is closer and moving towards AI
+	const proximityUrgency = 1 - distanceRatio;
+	const speedUrgency = ball.value.speedX > 0 ? 1 : 0.3;
+	
+	return Math.min(1, proximityUrgency * speedUrgency);
+  }
+  
+  // Process AI keyboard simulation (human-like movement)
+  function handleAIMovement() {
+	if (isPaused.value || gameOver.value) return;
+	
+	// Simulate keyboard input like a human player
+	if (aiKeyState.value.up && !aiKeyState.value.down) {
+	  ai.value.y -= ai.value.speed;
+	} else if (aiKeyState.value.down && !aiKeyState.value.up) {
+	  ai.value.y += ai.value.speed;
+	}
+	
+	// Apply boundary constraints
 	if (ai.value.y - ai.value.height / 2 < 0) {
 	  ai.value.y = ai.value.height / 2;
 	} else if (ai.value.y + ai.value.height / 2 > gameCanvas.value.height) {
