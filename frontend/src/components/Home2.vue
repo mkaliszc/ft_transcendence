@@ -6,6 +6,15 @@
 		  <div class="billiard-ball ball-8-small"></div>
 		  <h1 class="logo-text">{{ $t('gameTitle') }}</h1>
 		</div>
+
+		<div class="header-nav">
+		  <!-- Lien vers les amis -->
+		  <router-link to="/friends" class="nav-link friends-link">
+			<i class="fas fa-users"></i>
+			<span>Amis</span>
+			<span v-if="friendRequestsCount > 0" class="notification-badge">{{ friendRequestsCount }}</span>
+		  </router-link>
+		</div>
 		
 		<div class="language-switcher-header">
 		  <select v-model="$i18n.locale" @change="saveLanguagePreference" class="language-select">
@@ -143,6 +152,7 @@
   import { useRouter } from 'vue-router'
   import { defineComponent } from 'vue';
   import { useAuth } from '../composable/useAuths';
+  import { getPendingRequests } from '../services/friendsAPI';
 
   export default defineComponent({
     setup() {
@@ -159,6 +169,9 @@
       
       // État pour le nom d'utilisateur
       const username = ref('')
+
+      // État pour les notifications d'amis
+      const friendRequestsCount = ref(0)
   
       // Charger la langue préférée
       const savedLanguage = localStorage.getItem('preferred-language')
@@ -294,23 +307,26 @@
         }
       }
 
+      // Charger le nombre de demandes d'amis
+      const loadFriendRequestsCount = async () => {
+        try {
+          const response = await getPendingRequests();
+          if (response.success && response.data) {
+            friendRequestsCount.value = response.data.length;
+          }
+        } catch (error) {
+          // Erreur silencieuse lors du chargement des demandes d'amis
+        }
+      }
+
       // Fonction pour extraire et traiter les tokens Google depuis l'URL
       const extractGoogleTokens = () => {
-        console.log('🔍 Vérification des paramètres URL pour les tokens Google...')
-        console.log('URL actuelle:', window.location.href)
-        
         const urlParams = new URLSearchParams(window.location.search)
         const token = urlParams.get('token')
         const refreshToken = urlParams.get('refreshToken')
         const userData = urlParams.get('userData')
         
-        console.log('Token trouvé:', token ? 'Oui' : 'Non')
-        console.log('RefreshToken trouvé:', refreshToken ? 'Oui' : 'Non')
-        console.log('UserData trouvé:', userData ? 'Oui' : 'Non')
-        
         if (token && refreshToken) {
-          console.log('✅ Tokens Google détectés, sauvegarde en cours...')
-          
           // Sauvegarder les tokens Google
           localStorage.setItem('google_token', token)
           localStorage.setItem('google_refresh_token', refreshToken)
@@ -323,9 +339,8 @@
               const parsedUserData = JSON.parse(decodeURIComponent(userData))
               localStorage.setItem('user_data', JSON.stringify(parsedUserData))
               username.value = parsedUserData.username
-              console.log('✅ Données utilisateur Google sauvegardées:', parsedUserData.username)
             } catch (err) {
-              console.warn('⚠️ Erreur lors du parsing des données utilisateur:', err)
+              // Erreur silencieuse lors du parsing des données utilisateur
             }
           }
           
@@ -337,11 +352,9 @@
           // Réinitialiser l'authentification
           initializeAuth()
           
-          console.log('✅ Tokens Google sauvegardés avec succès')
           return true
         }
         
-        console.log('ℹ️ Aucun token Google trouvé dans l\'URL')
         return false
       }
 
@@ -354,6 +367,7 @@
         initializeAuth()
         animatePong()
         getUserData()
+        loadFriendRequestsCount()
       })
   
       onUnmounted(() => {
@@ -395,6 +409,7 @@
         locale,
         showLoginPopup,
         username,
+        friendRequestsCount,
         ballX,
         ballY,
         ballSpeedX,
@@ -954,6 +969,71 @@ html, body {
     }
     60% {
       transform: translateY(-5px);
+    }
+  }
+
+  /* Styles pour la navigation des amis */
+  .header-nav {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .nav-link {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    text-decoration: none;
+    color: #f8f9fa;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 0.5rem;
+    border: 1px solid rgba(212, 175, 55, 0.3);
+    transition: all 0.2s ease-in-out;
+    position: relative;
+    font-weight: 500;
+  }
+
+  .nav-link:hover {
+    background: rgba(212, 175, 55, 0.1);
+    border-color: #d4af37;
+    transform: translateY(-1px);
+  }
+
+  .friends-link i {
+    font-size: 1.1rem;
+  }
+
+  .notification-badge {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    background: linear-gradient(135deg, #ff4757, #ff6b7a);
+    color: white;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+    font-weight: bold;
+    box-shadow: 0 2px 8px rgba(255, 71, 87, 0.3);
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0% {
+      transform: scale(1);
+      box-shadow: 0 2px 8px rgba(255, 71, 87, 0.3);
+    }
+    50% {
+      transform: scale(1.1);
+      box-shadow: 0 4px 12px rgba(255, 71, 87, 0.5);
+    }
+    100% {
+      transform: scale(1);
+      box-shadow: 0 2px 8px rgba(255, 71, 87, 0.3);
     }
   }
   </style>

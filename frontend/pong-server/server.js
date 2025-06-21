@@ -58,11 +58,8 @@ function handlePlayerDisconnection(gameId, playerId) {
   const room = games[gameId];
   if (!room) return;
   
-  console.log(`[Server] Joueur ${playerId} déconnecté de ${gameId}`);
-  
   // Si le jeu a commencé, renvoyer tout le monde au menu
   if (room.gameState.gameStarted) {
-    console.log(`[Server] Partie en cours, renvoi de tous les joueurs au menu`);
     broadcastToGame(gameId, {
       type: 'player-disconnected',
       payload: { disconnectedPlayer: playerId }
@@ -71,7 +68,6 @@ function handlePlayerDisconnection(gameId, playerId) {
     // Supprimer la partie après un délai pour laisser le temps aux clients de traiter
     setTimeout(() => {
       if (games[gameId]) {
-        console.log(`[Server] Suppression de la partie ${gameId} après déconnexion`);
         delete games[gameId];
       }
     }, 5000);
@@ -86,7 +82,6 @@ function handlePlayerDisconnection(gameId, playerId) {
   
   // Si plus de joueurs, supprimer la partie
   if (room.players.length === 0) {
-    console.log(`[Server] Suppression de la partie vide ${gameId}`);
     delete games[gameId];
     return;
   }
@@ -94,7 +89,6 @@ function handlePlayerDisconnection(gameId, playerId) {
   // Réassigner l'host si nécessaire
   if (room.gameState.host === playerId && room.players.length > 0) {
     room.gameState.host = room.players[0].id;
-    console.log(`[Server] Nouveau host: ${room.gameState.host}`);
   }
   
   // Notifier les autres joueurs de la mise à jour
@@ -141,9 +135,6 @@ wss.on('connection', ws => {
         ws.gameId = gameId;
         ws.username = creatorName;
 
-        console.log(`[Server] Partie créée: ${gameId} par player1 (${creatorName}) - ${maxPlayers} joueurs max`);
-        console.log(`[Server] Noms initiaux:`, games[gameId].playerNames);
-
         // Ack création
         ws.send(JSON.stringify({
           type: 'game-created',
@@ -181,11 +172,8 @@ wss.on('connection', ws => {
         const joinerName = username || `Joueur ${assigned.slice(-1)}`;
         
         // CRITIQUE: Vérifier que le nom n'écrase pas un nom existant
-        if (room.playerNames[assigned]) {
-          console.log(`[Server] ATTENTION: ${assigned} avait déjà le nom ${room.playerNames[assigned]}, conservation`);
-        } else {
+        if (!room.playerNames[assigned]) {
           room.playerNames[assigned] = joinerName;
-          console.log(`[Server] ${assigned} reçoit le nom: ${joinerName}`);
         }
         
         room.players.push({ id: assigned, ws, username: joinerName });
@@ -193,9 +181,6 @@ wss.on('connection', ws => {
         ws.playerId = assigned;
         ws.gameId = joinId;
         ws.username = joinerName;
-
-        console.log(`[Server] ${assigned} (${joinerName}) rejoint la partie ${joinId}`);
-        console.log(`[Server] Noms après join:`, room.playerNames);
 
         // Ack join - Envoyer une COPIE des noms pour éviter la référence
         ws.send(JSON.stringify({
@@ -231,10 +216,6 @@ wss.on('connection', ws => {
         const room = games[gpId];
         if (!room) return;
         
-        console.log(`[Server] get-players pour ${gpId}`);
-        console.log(`[Server] Noms à envoyer:`, room.playerNames);
-        console.log(`[Server] Joueurs prêts:`, room.readyPlayers);
-        
         ws.send(JSON.stringify({
           type: 'player-joined',
           payload: {
@@ -254,19 +235,10 @@ wss.on('connection', ws => {
         const room = games[prId];
         if (!room) return;
         
-        console.log(`[Server] ${pid} (${room.playerNames[pid]}) se déclare prêt`);
-        
         // SIMPLE AJOUT (pas de toggle) - si pas déjà prêt, l'ajouter
         if (!room.readyPlayers.includes(pid)) {
           room.readyPlayers.push(pid);
-          console.log(`[Server] ${pid} est maintenant prêt`);
-        } else {
-          console.log(`[Server] ${pid} était déjà prêt`);
         }
-        
-        console.log(`[Server] Joueurs prêts: ${room.readyPlayers.length}/${room.players.length}`);
-        console.log(`[Server] MaxPlayers requis: ${room.maxPlayers}`);
-        console.log(`[Server] Liste des prêts:`, room.readyPlayers);
         
         // AJOUT: Broadcast l'état des joueurs prêts
         broadcastToGame(prId, {
@@ -281,17 +253,10 @@ wss.on('connection', ws => {
         const allPlayersReady = room.readyPlayers.length === room.players.length;
         const minPlayersForStart = room.readyPlayers.length >= 2; // Au moins 2 pour démarrer
         
-        console.log(`[Server] CONDITIONS DE DÉMARRAGE:`);
-        console.log(`[Server] - Joueurs connectés: ${room.players.length}/${room.maxPlayers} → ${allPlayersConnected ? '✅' : '❌'}`);
-        console.log(`[Server] - Tous prêts: ${room.readyPlayers.length}/${room.players.length} → ${allPlayersReady ? '✅' : '❌'}`);
-        console.log(`[Server] - Au moins 2 prêts: ${room.readyPlayers.length} ≥ 2 → ${minPlayersForStart ? '✅' : '❌'}`);
-        
         // 🎯 LOGIQUE CORRIGÉE:
         // Pour partie à 2: démarre quand 2 connectés ET tous prêts
         // Pour partie à 4: démarre quand 4 connectés ET tous prêts
         if (allPlayersConnected && allPlayersReady && minPlayersForStart) {
-          console.log(`[Server] 🚀 DÉMARRAGE - Tous les ${room.players.length} joueurs sont connectés et prêts !`);
-          console.log(`[Server] Noms finaux:`, room.playerNames);
           
           room.gameState.gameStarted = true;
           
@@ -312,12 +277,7 @@ wss.on('connection', ws => {
             }
           });
         } else {
-          // Message d'attente spécifique
-          if (!allPlayersConnected) {
-            console.log(`[Server] ⏳ En attente de ${room.maxPlayers - room.players.length} joueur(s) supplémentaire(s)`);
-          } else if (!allPlayersReady) {
-            console.log(`[Server] ⏳ En attente que ${room.players.length - room.readyPlayers.length} joueur(s) se déclare(nt) prêt(s)`);
-          }
+          // Message d'attente spécifique - pas de debug console
         }
         break;
       }
@@ -375,7 +335,6 @@ wss.on('connection', ws => {
 
       case 'player-leave': {
         const { gameId: leaveId, playerId: leavePid } = payload;
-        console.log(`[Server] ${leavePid} quitte volontairement la partie ${leaveId}`);
         
         // Utiliser la même logique que pour une déconnexion
         handlePlayerDisconnection(leaveId, leavePid);
@@ -383,7 +342,6 @@ wss.on('connection', ws => {
       }
 
       default:
-        console.log(`[Server] Type de message non géré: ${type}`);
         break;
     }
   });
@@ -396,12 +354,9 @@ wss.on('connection', ws => {
   });
 
   ws.on('error', (error) => {
-    console.log(`[Server] Erreur WebSocket: ${error.message}`);
     const { gameId, playerId } = ws;
     if (gameId && playerId) {
       handlePlayerDisconnection(gameId, playerId);
     }
   });
 });
-
-console.log(`[Server] WebSocket server démarré sur le port ${PORT}`);

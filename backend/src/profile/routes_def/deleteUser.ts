@@ -16,7 +16,6 @@ export async function deleteUser(request: FastifyRequest, reply: FastifyReply) {
 
 		return reply.status(200).send({ message: 'User deleted successfully' });
 	} catch (error) {
-		console.error('Error deleting user:', error);
 		return reply.status(500).send({ error: 'Internal server error while deleting user' });
 	}
 }

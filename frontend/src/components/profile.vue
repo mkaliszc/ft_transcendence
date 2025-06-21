@@ -12,12 +12,21 @@
 		  <h1 class="text-4xl font-bold text-white mb-8 text-center flex items-center justify-center gap-3">
 			{{ $t('profileTitle') }} {{ username }}
 		  </h1>
-		  
+
 		  <!-- Section principale du profil -->
 		  <div class="profile-container bg-black/40 backdrop-blur-sm p-8 rounded-xl border border-yellow-500/30 shadow-2xl">
 			<div class="avatar-section">
 			  <div class="avatar-wrapper">
 				<img :src="displayAvatar" alt="Avatar" class="avatar" />
+				<!-- Bouton d'édition de l'avatar (uniquement pour son propre profil) -->
+				<button 
+				  v-if="isOwnProfile"
+				  @click="openEditProfile"
+				  class="edit-avatar-btn"
+				  title="Modifier l'avatar"
+				>
+				  ✏️
+				</button>
 			  </div>
 			  <div class="player-rank">
 				<span class="rank-label">{{ $t('rank') }}</span>
@@ -28,13 +37,24 @@
 			<div class="info-section">
 			  <div class="info-row">
 				<span class="label">{{ $t('username') }}:</span>
-				<input 
-				  v-model="username" 
-				  type="text" 
-				  class="input-field"
-				  :placeholder="$t('enterUsername')"
-				  readonly
-				/>
+				<div class="username-field">
+				  <input 
+					v-model="username" 
+					type="text" 
+					class="input-field"
+					:placeholder="$t('enterUsername')"
+					readonly
+				  />
+				  <!-- Bouton d'édition du profil (uniquement pour son propre profil) -->
+				  <button 
+					v-if="isOwnProfile"
+					@click="openEditProfile"
+					class="edit-btn"
+					title="Modifier le profil"
+				  >
+					✏️ {{ $t('edit') || 'Modifier' }}
+				  </button>
+				</div>
 			  </div>
 			  
 			  <div class="info-row">
@@ -73,20 +93,11 @@
 				<span class="value title-badge">{{ playerTitle }}</span>
 			  </div>
 
-			  <div class="info-row">
-				<span class="label">{{ $t('security') || 'Sécurité' }}:</span>
-				<span class="value security-status" :class="{ 'secure': twoFactorEnabled }">
-				  {{ twoFactorEnabled ? '🔒 2FA Activée' : '🔓 2FA Désactivée' }}
-				</span>
-			  </div>
+
 			</div>
 		  </div>
 
 		  <!-- Composant pour l'édition du profil -->
-		  <!-- Debug: showEditProfile = {{ showEditProfile }} -->
-		  <div v-if="showEditProfile" style="color: red; text-align: center; padding: 10px; background: rgba(255,0,0,0.1);">
-			DEBUG: Modal devrait être visible (showEditProfile = {{ showEditProfile }})
-		  </div>
 		  <EditProfileModal 
 			:show="showEditProfile"
 			:userProfile="editProfileData"
@@ -253,14 +264,30 @@
 			</div>
 		  </div>
 
-		  <!-- Boutons d'action -->
-		  <div class="flex justify-center gap-4 mt-8">
+		  <!-- Boutons d'action - seulement pour son propre profil -->
+		  <div v-if="isOwnProfile" class="flex justify-center gap-4 mt-8">
 			<button 
 			  @click="openEditProfile" 
 			  class="bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-lg transition-colors flex items-center gap-2"
 			>
 			  ⚙️ {{ $t('editProfile') || 'Modifier le profil' }}
 			</button>
+			<router-link 
+			  to="/Home2" 
+			  class="bg-gray-600 hover:bg-gray-700 text-white font-bold py-3 px-6 rounded-lg transition-colors flex items-center gap-2"
+			>
+			  🏠 {{ $t('backToHome') }}
+			</router-link>
+		  </div>
+
+		  <!-- Boutons d'action pour les profils d'autres utilisateurs -->
+		  <div v-else class="flex justify-center gap-4 mt-8">
+			<router-link 
+			  to="/friends" 
+			  class="bg-gray-600 hover:bg-gray-700 text-white font-bold py-3 px-6 rounded-lg transition-colors flex items-center gap-2"
+			>
+			  👥 {{ $t('backToFriends') || 'Retour aux amis' }}
+			</router-link>
 			<router-link 
 			  to="/Home2" 
 			  class="bg-gray-600 hover:bg-gray-700 text-white font-bold py-3 px-6 rounded-lg transition-colors flex items-center gap-2"
@@ -278,7 +305,7 @@ import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useAuth } from '../composable/useAuths';
 import { useUser } from '../composable/useUser';
-import { useRouter } from 'vue-router';
+import { useRouter, useRoute } from 'vue-router';
 import { userApi } from '../services/userAPI.ts';
 import { DEFAULT_AVATARS_BASE64 } from '../utils/imageUtils.ts';
 import EditProfileModal from './EditProfileModal.vue';
@@ -287,6 +314,11 @@ const { t } = useI18n()
 const { user: currentUser, isAuthenticated, initializeAuth } = useAuth();
 const { fetchUser, isLoading, error } = useUser();
 const router = useRouter();
+const route = useRoute();
+
+// Détermine si on affiche son propre profil ou celui d'un autre utilisateur
+const targetUsername = ref(route.params.username || '');
+const isOwnProfile = computed(() => !targetUsername.value || targetUsername.value === currentUser.value?.username);
 
 // État local avec la Composition API
 const username = ref('')
@@ -313,7 +345,7 @@ const pongStats = ref({
   totalPlayTime: 0
 })
 
-// État de la 2FA (lecture seule pour l'affichage)
+// État de la 2FA (lecture seule pour l'affichage, uniquement dans EditProfile)
 const twoFactorEnabled = ref(false)
 
 // Computed properties
@@ -403,8 +435,11 @@ const loadUserData = async () => {
   try {
     isLoadingData.value = true
     
+    // Détermine quel utilisateur charger
+    const usernameToLoad = targetUsername.value || currentUser.value?.username;
+    
     // Récupérer les informations du profil utilisateur
-    const userInfo = await fetchUser()
+    const userInfo = await userApi.getUser(usernameToLoad);
     userProfile.value = userInfo
     
     // Mise à jour des données de base
@@ -412,8 +447,10 @@ const loadUserData = async () => {
     memberSince.value = new Date(userInfo.created_at) || new Date()
     avatar.value = userInfo.avatar || DEFAULT_AVATAR // Utilise l'avatar par défaut si null en DB
     
-    // Mise à jour de l'état 2FA
-    twoFactorEnabled.value = userInfo.twoFA || false
+    // Mise à jour de l'état 2FA (seulement pour son propre profil)
+    if (isOwnProfile.value) {
+      twoFactorEnabled.value = userInfo.twoFA || false
+    }
     
     // Calcul des statistiques à partir des vraies données (sera mise à jour par processMatchHistory)
     pongStats.value.matchesPlayed = 0 // Sera calculé avec les matchs en ligne seulement
@@ -428,14 +465,13 @@ const loadUserData = async () => {
     
     // Récupérer l'historique des matches depuis le serveur
     try {
-      const history = await userApi.getHistory(userInfo.username)
+      const history = await userApi.getHistory(usernameToLoad)
       if (history && history.matches) {
         matchHistory.value = history.matches
         // Traiter les données d'historique pour les graphiques
         processMatchHistory(history.matches)
       }
     } catch (historyError) {
-      // Utiliser des données par défaut si pas d'historique
       // Utiliser des données par défaut si pas d'historique
       generateDefaultData()
     }
@@ -587,13 +623,10 @@ const formatShortDate = (date) => {
 
 // Fonctions pour l'édition du profil (simplifiées pour le composant)
 const openEditProfile = () => {
-  console.log('openEditProfile appelé - Avant:', showEditProfile.value)
   showEditProfile.value = true
-  console.log('openEditProfile appelé - Après:', showEditProfile.value)
 }
 
 const closeEditProfile = () => {
-  console.log('closeEditProfile appelé')
   showEditProfile.value = false
 }
 
@@ -605,54 +638,6 @@ const handleProfileUpdated = async (updatedProfile) => {
   
   // Recharger les données utilisateur pour synchroniser avec le backend
   await loadUserData()
-}
-
-// Fonctions pour la gestion de la 2FA
-const toggle2FA = async () => {
-  if (twoFactorEnabled.value) {
-    await disable2FA()
-  } else {
-    await enable2FA()
-  }
-}
-
-const enable2FA = async () => {
-  showTwoFactorSetup.value = true
-}
-
-const disable2FA = async () => {
-  twoFactorLoading.value = true
-  twoFactorError.value = ''
-  
-  try {
-    const token = localStorage.getItem('auth_token')
-    if (!token) {
-      twoFactorError.value = 'Token d\'authentification non trouvé'
-      return
-    }
-    
-    const result = await twoFactorService.disable2FA(token)
-    
-    if (result.success) {
-      twoFactorEnabled.value = false
-      twoFactorError.value = ''
-    } else {
-      twoFactorError.value = result.message || 'Erreur lors de la désactivation de la 2FA'
-    }
-  } catch (error) {
-    twoFactorError.value = 'Erreur de connexion au serveur'
-  } finally {
-    twoFactorLoading.value = false
-  }
-}
-
-const handleTwoFactorSetupComplete = (enabled) => {
-  twoFactorEnabled.value = enabled
-  showTwoFactorSetup.value = false
-}
-
-const handleTwoFactorSetupSkipped = () => {
-  showTwoFactorSetup.value = false
 }
 
 // Hook de cycle de vie pour écouter les matches terminés
@@ -718,6 +703,26 @@ onUnmounted(() => {
   position: relative;
 }
 
+.edit-avatar-btn {
+  position: absolute;
+  bottom: 5px;
+  right: 5px;
+  background: rgba(212, 175, 55, 0.9);
+  border: none;
+  border-radius: 50%;
+  width: 35px;
+  height: 35px;
+  cursor: pointer;
+  font-size: 0.9em;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.edit-avatar-btn:hover {
+  background: #d4af37;
+  transform: scale(1.1);
+}
+
 .avatar {
   width: 150px;
   height: 150px;
@@ -761,6 +766,37 @@ onUnmounted(() => {
   display: flex;
   align-items: center;
   gap: 15px;
+}
+
+.username-field {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  flex: 1;
+}
+
+.security-field {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  flex: 1;
+}
+
+.edit-btn {
+  padding: 8px 16px;
+  background: rgba(212, 175, 55, 0.9);
+  color: #1a1a1a;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 0.9em;
+}
+
+.edit-btn:hover {
+  background: #d4af37;
+  transform: translateY(-1px);
 }
 
 .label {

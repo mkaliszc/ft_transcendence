@@ -153,15 +153,12 @@ export async function getPersoData(request: FastifyRequest, reply: FastifyReply)
             }
         };
 
-        // 5. Optionnel : Log de l'export pour audit
-        console.log(`GDPR export requested by user ${payload.user_id} at ${new Date().toISOString()}`);
-
+        // GDPR export requested
         return reply.status(200)
             .header('Content-Type', 'application/json')
             .header('Content-Disposition', `attachment; filename="gdpr_export_user_${payload.user_id}_${Date.now()}.json"`)
             .send(gdprExport);
 	} catch (error) {
-		console.error('Error fetching personal data:', error);
 		return reply.status(500).send({ error: 'Internal server error' });
 	}
 }

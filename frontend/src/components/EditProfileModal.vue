@@ -284,9 +284,9 @@ const props = defineProps({
   }
 })
 
-// Debug: surveiller les changements de la prop show
+// Watch for prop changes
 watch(() => props.show, (newValue, oldValue) => {
-  console.log('EditProfileModal - prop show changed:', { oldValue, newValue })
+  // Modal visibility changed
 }, { immediate: true })
 
 // Émissions
