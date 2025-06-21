@@ -85,72 +85,71 @@ export async function getPersoData(request: FastifyRequest, reply: FastifyReply)
 			},
 
 			match_history: userMatches.map(userMatch => {
-			    const match = (userMatch as any).match;
-			    const opponents = match.userMatches
-			        .filter((um: any) => um.user_id !== payload.user_id)
-			        .map((opponent: any) => ({
-			            opponent_id: opponent.user.user_id,
-			            opponent_username: opponent.user.username,
-			            opponent_email: opponent.user.email_adress,
-			            opponent_score: opponent.user_score,
-			            opponent_won: opponent.winner
-			        }));
+				const match = (userMatch as any).match;
+				const opponents = match.userMatches
+					.filter((um: any) => um.user_id !== payload.user_id)
+					.map((opponent: any) => ({
+						opponent_id: opponent.user.user_id,
+						opponent_username: opponent.user.username,
+						opponent_email: opponent.user.email_adress,
+						opponent_score: opponent.user_score,
+						opponent_won: opponent.winner
+					}));
 
-                return {
-                    match_id: match.match_id,
-                    match_date: match.match_date,
-                    game_duration: match.game_duration,
-                    my_score: userMatch.user_score,
-                    i_won: userMatch.winner,
-                    opponents: opponents
-                };
-            }),
+				return {
+					match_id: match.match_id,
+					match_date: match.match_date,
+					game_duration: match.game_duration,
+					my_score: userMatch.user_score,
+					i_won: userMatch.winner,
+					opponents: opponents
+				};
+			}),
 
-            friendship_data: {
-                sent_friend_requests: sentFriendships.map(friendship => ({
-                    friendship_id: friendship.friendship_id,
-                    sent_to_user_id: (friendship as any).receiver.user_id,
-                    sent_to_username: (friendship as any).receiver.username,
-                    sent_to_email: (friendship as any).receiver.email_adress,
-                    status: friendship.status,
-                    request_date: friendship.creation_date,
-                    last_update: friendship.last_update
-                })),
+			friendship_data: {
+				sent_friend_requests: sentFriendships.map(friendship => ({
+					friendship_id: friendship.friendship_id,
+					sent_to_user_id: (friendship as any).receiver.user_id,
+					sent_to_username: (friendship as any).receiver.username,
+					sent_to_email: (friendship as any).receiver.email_adress,
+					status: friendship.status,
+					request_date: friendship.creation_date,
+					last_update: friendship.last_update
+				})),
 
-                received_friend_requests: receivedFriendships.map(friendship => ({
-                    friendship_id: friendship.friendship_id,
-                    received_from_user_id: (friendship as any).sender.user_id,
-                    received_from_username: (friendship as any).sender.username,
-                    received_from_email: (friendship as any).sender.email_adress,
-                    status: friendship.status,
-                    request_date: friendship.creation_date,
-                    last_update: friendship.last_update
-                }))
-            },
+				received_friend_requests: receivedFriendships.map(friendship => ({
+					friendship_id: friendship.friendship_id,
+					received_from_user_id: (friendship as any).sender.user_id,
+					received_from_username: (friendship as any).sender.username,
+					received_from_email: (friendship as any).sender.email_adress,
+					status: friendship.status,
+					request_date: friendship.creation_date,
+					last_update: friendship.last_update
+				}))
+			},
 
-            data_summary: {
-                total_matches_played: userMatches.length,
-                total_friendships: sentFriendships.length + receivedFriendships.length,
-                active_friendships: [
-                    ...sentFriendships.filter(f => f.status === 'accepted'),
-                    ...receivedFriendships.filter(f => f.status === 'accepted')
-                ].length,
-                pending_sent_requests: sentFriendships.filter(f => f.status === 'pending').length,
-                pending_received_requests: receivedFriendships.filter(f => f.status === 'pending').length
-            },
+			data_summary: {
+				total_matches_played: userMatches.length,
+				total_friendships: sentFriendships.length + receivedFriendships.length,
+				active_friendships: [
+					...sentFriendships.filter(f => f.status === 'accepted'),
+					...receivedFriendships.filter(f => f.status === 'accepted')
+				].length,
+				pending_sent_requests: sentFriendships.filter(f => f.status === 'pending').length,
+				pending_received_requests: receivedFriendships.filter(f => f.status === 'pending').length
+			},
 
-            data_retention_info: {
-                notice: "Your data is retained as long as your account is active. You can request deletion at any time.",
-                deletion_procedure: "Contact support or use the account deletion feature in your profile settings.",
-                data_sharing: "Your data is not shared with third parties except as required by law."
-            }
-        };
+			data_retention_info: {
+				notice: "Your data is retained as long as your account is active. You can request deletion at any time.",
+				deletion_procedure: "Contact support or use the account deletion feature in your profile settings.",
+				data_sharing: "Your data is not shared with third parties except as required by law."
+			}
+		};
 
-        // GDPR export requested
-        return reply.status(200)
-            .header('Content-Type', 'application/json')
-            .header('Content-Disposition', `attachment; filename="gdpr_export_user_${payload.user_id}_${Date.now()}.json"`)
-            .send(gdprExport);
+		return reply.status(200)
+			.header('Content-Type', 'application/json')
+			.header('Content-Disposition', `attachment; filename="gdpr_export_user_${payload.username}_${Date.now()}.json"`)
+			.send(gdprExport);
 	} catch (error) {
 		return reply.status(500).send({ error: 'Internal server error' });
 	}
