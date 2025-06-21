@@ -5,23 +5,23 @@ import { UserMatch } from '../../db_models/user_match_model';
 import { CreateMatchRequest } from '../../interfaces';
 
 export async function SaveMatch(request: FastifyRequest<{ Body: CreateMatchRequest}>, reply: FastifyReply) {
-const { Players, game_duration } = request.body as CreateMatchRequest;
-if (!Players || Players.length === 0) {
-return reply.code(400).send({ error: 'Players are required' });
-}
-if (!game_duration) {
-return reply.code(400).send({ error: 'Game duration is required' });
-}
-// if (Players.length < 2) {
-// return reply.code(400).send({ error: 'At least two Players are required' });
-// }
-try {
-	console.log('Saving match with data');
-const match = await Matches.create({ game_duration: game_duration });
-if (!match) {
-return reply.code(400).send({ error: 'Failed to create match' });
-}
-console.log('Match created with ID:', match.match_id);
+	const { Players, game_duration } = request.body as CreateMatchRequest;
+	if (!Players || Players.length === 0) {
+	return reply.code(400).send({ error: 'Players are required' });
+	}
+	if (!game_duration) {
+	return reply.code(400).send({ error: 'Game duration is required' });
+	}
+	// if (Players.length < 2) {
+	// return reply.code(400).send({ error: 'At least two Players are required' });
+	// }
+	try {
+		console.log('Saving match with data');
+		const match = await Matches.create({ game_duration: game_duration });
+		if (!match) {
+			return reply.code(400).send({ error: 'Failed to create match' });
+		}
+		console.log('Match created with ID:', match.match_id);
 
 		for (let i = 0; i < Players.length; i++) {
 			const player = Players[i];
