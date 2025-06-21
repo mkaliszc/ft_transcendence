@@ -1,8 +1,7 @@
 // Service pour l'authentification Google
 export class GoogleAuthService {
   private static instance: GoogleAuthService
-  private baseURL = '/api'
-
+  
   static getInstance(): GoogleAuthService {
     if (!GoogleAuthService.instance) {
       GoogleAuthService.instance = new GoogleAuthService()
@@ -10,19 +9,19 @@ export class GoogleAuthService {
     return GoogleAuthService.instance
   }
 
-  // Rediriger vers Google OAuth
+  // Initier la connexion Google
   initiateGoogleLogin(): void {
-    const googleAuthUrl = `${this.baseURL}/auth/google`
-    window.location.href = googleAuthUrl
+    // Rediriger vers l'endpoint Google OAuth du backend
+    window.location.href = '/api/auth/google'
   }
 
-  // Extraire les tokens depuis l'URL après redirect
-  extractTokensFromUrl(): { token: string | null; refreshToken: string | null } {
+  // Extraire les tokens de l'URL (après redirection depuis Google)
+  extractTokensFromUrl(): { token: string | null, refreshToken: string | null } {
     const urlParams = new URLSearchParams(window.location.search)
-    const token = urlParams.get('token')
-    const refreshToken = urlParams.get('refreshToken')
-    
-    return { token, refreshToken }
+    return {
+      token: urlParams.get('token'),
+      refreshToken: urlParams.get('refreshToken')
+    }
   }
 
   // Nettoyer l'URL après extraction des tokens
@@ -30,6 +29,12 @@ export class GoogleAuthService {
     const url = new URL(window.location.href)
     url.search = ''
     window.history.replaceState({}, document.title, url.toString())
+  }
+
+  // Vérifier si l'authentification Google a échoué
+  isAuthenticationError(): boolean {
+    const urlParams = new URLSearchParams(window.location.search)
+    return urlParams.has('error') || window.location.pathname.includes('error')
   }
 }
 
