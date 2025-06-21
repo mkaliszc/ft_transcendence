@@ -8,13 +8,15 @@ export async function update(request: FastifyRequest<{ Body: UpdateData }>, repl
 		const userId = payload.user_id;
 		const update_payload = request.body as UpdateData;
 
+		if (!update_payload) {
+			return reply.status(400).send({ error: 'No update data provided' });
+		}
+
 		const user = await User.findByPk(userId);
 		if (!user) {
 			return reply.status(404).send({ error: 'User not found' });
 		}
 
-		if (!update_payload)
-			return reply.status(400).send({ error: 'No update data provided' });
 
 		if (update_payload.username){
 			const existingUser = await User.findOne({
