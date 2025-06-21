@@ -26,18 +26,37 @@ const refreshTokenDirect = async (refreshToken: string) => {
 export const fetchWithAuth = async (url: string, options: RequestInit = {}, isRetry = false): Promise<any> => {
 	// Récupérer le token d'authentification
 	const token = localStorage.getItem("auth_token")
-	// Préparer les headers avec le token
-	const headers = {
-	  "Content-Type": "application/json",
+	
+	// Préparer les headers de base
+	const baseHeaders: Record<string, string> = {
 	  ...(token ? { Authorization: `Bearer ${token}` } : {}),
-	  ...options.headers,
+	}
+	
+	// Ajouter les headers existants de façon sûre
+	if (options.headers) {
+	  if (options.headers instanceof Headers) {
+		options.headers.forEach((value, key) => {
+		  baseHeaders[key] = value;
+		});
+	  } else if (Array.isArray(options.headers)) {
+		options.headers.forEach(([key, value]) => {
+		  baseHeaders[key] = value;
+		});
+	  } else {
+		Object.assign(baseHeaders, options.headers);
+	  }
+	}
+	
+	// Ajouter Content-Type seulement si on a un body
+	if (options.body) {
+	  baseHeaders["Content-Type"] = "application/json";
 	}
 	
 	try {
 	  // Effectuer la requête
 	  const response = await fetch(`/api${url}`, {
 		...options,
-		headers,
+		headers: baseHeaders,
 	  })
 	  
 	  // Si le token a expiré (401) et qu'on n'a pas encore essayé de le rafraîchir
@@ -83,7 +102,19 @@ export const fetchWithAuth = async (url: string, options: RequestInit = {}, isRe
 	  // Vérifier si la réponse est OK
 	  if (!response.ok) {
 		const errorData = await response.json().catch(() => ({}))
-		throw new Error(errorData.error || errorData.message || `Erreur ${response.status}: ${response.statusText}`)
+		// Essayer d'extraire un message d'erreur plus spécifique
+		let errorMessage = errorData.error || errorData.message || `Erreur ${response.status}: ${response.statusText}`
+		
+		// Messages d'erreur spécifiques pour les codes de statut courants
+		if (response.status === 400) {
+		  errorMessage = errorData.error || errorData.message || 'Requête invalide'
+		} else if (response.status === 404) {
+		  errorMessage = errorData.error || errorData.message || 'Ressource non trouvée'
+		} else if (response.status === 500) {
+		  errorMessage = errorData.error || errorData.message || 'Erreur serveur interne'
+		}
+		
+		throw new Error(errorMessage)
 	  }
 	  
 	  // Vérifier si la réponse est vide

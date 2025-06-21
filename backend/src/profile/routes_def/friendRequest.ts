@@ -57,7 +57,6 @@ export async function friendrequest(request: FastifyRequest<{Params: { username 
 		return reply.status(200).send({ message: 'Friend request processed successfully' });
 	}
 	catch (error) {
-		console.error('Error processing friend request:', error);
 		return reply.status(500).send({ error: 'Internal server error' });
 	}
 }

@@ -55,6 +55,12 @@ const routes = [
     component: Profile,
   },
   {
+    path: "/profile/:username",
+    name: "UserProfile", 
+    component: Profile,
+    props: true
+  },
+  {
     path: "/signin",
     name: "Signin",
     component: Signin,
@@ -123,6 +129,13 @@ const routes = [
     name: "GoogleAuthError",
     component: () => import("./components/GoogleAuthCallback.vue")
   },
+  // Route pour la page de gestion des amis
+  {
+    path: "/friends",
+    name: "Friends",
+    component: () => import("./components/friendsview.vue"),
+    meta: { requiresAuth: true }
+  },
 ];
 
 const router = createRouter({
@@ -141,7 +154,7 @@ const router = createRouter({
 // Navigation guard
 router.beforeEach((to, _from, next) => {
   // Liste des routes protégées qui nécessitent une authentification
-  const protectedRoutes = ['/profile'];
+  const protectedRoutes = ['/profile', '/friends'];
   
   // Si la route est protégée et que l'utilisateur n'est pas authentifié
   if (protectedRoutes.includes(to.path) && !isAuthenticated()) {

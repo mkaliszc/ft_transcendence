@@ -62,7 +62,6 @@ export async function sign_in(request: FastifyRequest, reply:FastifyReply) {
 	}
 	catch (error) 
 	{
-		console.error('Error during sign-in:', error)
 		return reply.code(500).send({ error: 'Internal server error' })
 	}
 }

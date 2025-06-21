@@ -24,7 +24,6 @@ export async function anonymization(request: FastifyRequest, reply: FastifyReply
 		return reply.status(200).send({ message: 'User anonymized successfully' });
 	}
 	catch (error) {
-		console.error('Error anonymizing user:', error);
 		return reply.status(500).send({ error: 'Internal server error while anonymizing user' });
 	}
 }

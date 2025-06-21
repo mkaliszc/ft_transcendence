@@ -287,7 +287,6 @@
 	  
 	  // Ne sauvegarder que le match du joueur actuel
 	  if (!currentUsername) {
-		console.warn('[GameMultiOnline] Pas de nom d\'utilisateur pour le joueur actuel');
 		return;
 	  }
 	  
@@ -340,31 +339,16 @@
 		}
 	  ];
 	  
-	  console.log('[GameMultiOnline] Données du match à sauvegarder:', {
-		Players: players,
-		game_duration: gameDuration,
-		currentPlayer: playerId,
-		currentPlayerScore,
-		opponentUsername,
-		opponentScore,
-		isWinner: playerId === winner.player,
-		serverPlayerNames: serverPlayerNames.value,
-		opponents: opponents,
-		bestOpponent: opponents.length > 0 ? opponents.reduce((max, current) => current.score > max.score ? current : max) : null
-	  });
-	  
 	  await matchApi.saveMatch({
 		Players: players,
 		game_duration: gameDuration
 	  });
 	  
-	  console.log('[GameMultiOnline] Match sauvegardé avec succès pour', getPlayerName(playerId));
-	  
 	  // Déclencher l'événement pour mettre à jour le profil
 	  window.dispatchEvent(new CustomEvent('matchCompleted'));
 	  
 	} catch (error) {
-	  console.error('[GameMultiOnline] Erreur lors de la sauvegarde du match:', error);
+	  // Erreur silencieuse lors de la sauvegarde du match
 	}
   }
   
@@ -749,7 +733,6 @@
 	
 	// 🆕 AJOUT: Notifier le serveur avant de quitter
 	if (gameId && playerId) {
-	  console.log(`[GameMultiOnline] ${playerId} quitte volontairement la partie`);
 	  sendMessage('player-leave', { gameId, playerId });
 	}
 	
@@ -768,14 +751,10 @@
   }
   
   onMounted(() => {
-	console.log(`[GameMultiOnline] Démarrage pour ${playerId} dans ${gameId}`);
-	console.log(`[GameMultiOnline] Mon nom: ${myUsername.value}`);
-	
 	const proto = window.location.protocol === 'https:' ? 'wss' : 'ws';
 	connectSocket(`${proto}://${window.location.host}/ws/`);
   
 	setOnMessage((data: any) => {
-	  console.log(`[GameMultiOnline] Message WS reçu:`, data.type, data.payload);
 	  
 	  switch (data.type) {
 		case 'player-joined': {
@@ -808,7 +787,6 @@
 		  // Démarrer le chronomètre de la partie
 		  if (!gameStartTime) {
 			gameStartTime = new Date();
-			console.log('[GameMultiOnline] Partie démarrée à:', gameStartTime);
 		  }
 		  break;
 		}
@@ -851,7 +829,6 @@
 		}
   
 		case 'player-disconnected': {
-		  console.log('[GameMultiOnline] Un joueur s\'est déconnecté');
 		  handlePlayerDisconnection();
 		  break;
 		}
@@ -861,7 +838,6 @@
 	sendMessage('get-players', { gameId });
 	
 	setTimeout(() => {
-	  console.log(`[GameMultiOnline] ${playerId} se déclare prêt`);
 	  sendMessage('player-ready', { gameId, playerId });
 	}, 100);
   
@@ -876,7 +852,6 @@
   onUnmounted(() => {
 	// 🆕 AJOUT: Notifier le serveur lors du démontage du composant
 	if (gameId && playerId) {
-	  console.log(`[GameMultiOnline] ${playerId} démonte le composant`);
 	  sendMessage('player-leave', { gameId, playerId });
 	}
 	

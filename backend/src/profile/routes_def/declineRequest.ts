@@ -28,7 +28,6 @@ export async function declineRequest(request: FastifyRequest<{ Body: { friendshi
 		return reply.status(200).send({ message: 'Friend request declined successfully', });
 	}
 	catch (error) {
-		console.error('Error accepting friend request:', error);
 		return reply.status(500).send({ error: 'Internal server error while accepting friend request' });
 	}
 }

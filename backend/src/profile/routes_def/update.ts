@@ -38,7 +38,6 @@ export async function update(request: FastifyRequest<{ Body: UpdateData }>, repl
 		return reply.status(200).send({ message: 'User updated successfully'});
 	}
 	catch (error) {
-		console.error('Error updating user:', error);
 		return reply.status(500).send({ error: 'Internal server error while updating user' });
 	}
 }

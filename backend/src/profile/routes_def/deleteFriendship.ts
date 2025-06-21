@@ -30,7 +30,6 @@ export async function deleteFriendship(request: FastifyRequest<{ Body: { friends
 		return reply.status(200).send({ message: 'Friend request deleted successfully', });
 	}
 	catch (error) {
-		console.error('Error accepting friend request:', error);
 		return reply.status(500).send({ error: 'Internal server error while accepting friend request' });
 	}
 }

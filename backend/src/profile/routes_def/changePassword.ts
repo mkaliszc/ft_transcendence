@@ -37,7 +37,6 @@ export async function changePassword(request: FastifyRequest<{ Body: ChangePassw
 		return reply.status(200).send({ message: 'Password changed successfully' });
 		
 	} catch (error) {
-		console.error('Error changing password:', error);
 		return reply.status(500).send({ error: 'Internal server error while changing password' });
 	}
 }
