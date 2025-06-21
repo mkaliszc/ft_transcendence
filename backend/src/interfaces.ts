@@ -45,7 +45,7 @@ export interface ChangePasswordRequest {
 
 export interface CreateMatchRequest {
     Players: Array<{
-        user_id: number;
+        username: string;
         score: number;
         is_winner: boolean;
     }>;

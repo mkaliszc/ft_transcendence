@@ -145,6 +145,7 @@
   import { ref, reactive, onMounted, onUnmounted, watch, computed } from 'vue';
   import { useRoute, useRouter } from 'vue-router';
   import { connectSocket, sendMessage, setOnMessage, closeSocket } from '../services/websocket';
+  import { matchApi } from '../services/matchAPI';
   
   const route = useRoute();
   const router = useRouter();
@@ -239,6 +240,8 @@
   let animationId = 0;
   let lastPaddlePositions: Record<string, number> = {};
   let disconnectTimer: NodeJS.Timeout | null = null;
+  let gameStartTime: Date | null = null;
+  let matchSaved = false;
   
   // Watch for game over condition
   watch([() => gameState.score.player1, () => gameState.score.player2, () => gameState.score.player3, () => gameState.score.player4], 
@@ -246,9 +249,124 @@
 	  if (newPlayer1Score >= winningScore || newPlayer2Score >= winningScore || 
 		  newPlayer3Score >= winningScore || newPlayer4Score >= winningScore) {
 		gameOver.value = true;
+		// Sauvegarder le match uniquement par l'hôte
+		if (isHost && !matchSaved) {
+		  saveMatchToDatabase();
+		  matchSaved = true;
+		}
 	  }
 	}
   );
+
+  // Fonction pour obtenir le nom d'utilisateur actuel
+  function getCurrentUsername(): string | null {
+	const currentUser = JSON.parse(localStorage.getItem('user_data') || '{}');
+	return currentUser.username || null;
+  }
+
+  // Fonction pour formater la durée de la partie
+  function formatGameDuration(startTime: Date, endTime: Date): string {
+	const durationMs = endTime.getTime() - startTime.getTime();
+	const durationSeconds = Math.floor(durationMs / 1000);
+	
+	const hours = Math.floor(durationSeconds / 3600);
+	const minutes = Math.floor((durationSeconds % 3600) / 60);
+	const seconds = durationSeconds % 60;
+	
+	return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+  }
+
+  // Fonction pour sauvegarder le match dans la base de données
+  async function saveMatchToDatabase() {
+	if (!gameStartTime) return;
+	
+	try {
+	  const endTime = new Date();
+	  const gameDuration = formatGameDuration(gameStartTime, endTime);
+	  const currentUsername = getCurrentUsername();
+	  
+	  // Ne sauvegarder que le match du joueur actuel
+	  if (!currentUsername) {
+		console.warn('[GameMultiOnline] Pas de nom d\'utilisateur pour le joueur actuel');
+		return;
+	  }
+	  
+	  // Déterminer le gagnant
+	  const scores = [
+		{ player: 'player1', score: gameState.score.player1 },
+		{ player: 'player2', score: gameState.score.player2 },
+		{ player: 'player3', score: gameState.score.player3 },
+		{ player: 'player4', score: gameState.score.player4 }
+	  ];
+	  
+	  const winner = scores.reduce((max, current) => 
+		current.score > max.score ? current : max
+	  );
+	  
+	  // Trouver le joueur adverse principal (pour un match 1v1 ou le meilleur adversaire en multijoueur)
+	  let opponentUsername = 'MultiOnline'; // Fallback
+	  let opponentScore = 0;
+	  
+	  // Dans un match multijoueur, on prend le joueur avec le meilleur score parmi les adversaires
+	  const opponents = scores.filter(s => s.player !== playerId);
+	  if (opponents.length > 0) {
+		const bestOpponent = opponents.reduce((max, current) => 
+		  current.score > max.score ? current : max
+		);
+		opponentScore = bestOpponent.score;
+		
+		// Essayer de récupérer le vrai nom d'utilisateur de l'adversaire depuis les noms du serveur
+		const opponentPlayerId = bestOpponent.player;
+		if (serverPlayerNames.value[opponentPlayerId]) {
+		  opponentUsername = serverPlayerNames.value[opponentPlayerId];
+		} else {
+		  // Si on n'a pas le nom depuis le serveur, utiliser un nom générique
+		  opponentUsername = `Player${opponentPlayerId.slice(-1)}`;
+		}
+	  }
+	  
+	  const currentPlayerScore = gameState.score[playerId as keyof typeof gameState.score];
+	  
+	  const players = [
+		{
+		  username: currentUsername,
+		  score: currentPlayerScore,
+		  is_winner: playerId === winner.player
+		},
+		{
+		  username: opponentUsername,
+		  score: opponentScore,
+		  is_winner: playerId !== winner.player
+		}
+	  ];
+	  
+	  console.log('[GameMultiOnline] Données du match à sauvegarder:', {
+		Players: players,
+		game_duration: gameDuration,
+		currentPlayer: playerId,
+		currentPlayerScore,
+		opponentUsername,
+		opponentScore,
+		isWinner: playerId === winner.player,
+		serverPlayerNames: serverPlayerNames.value,
+		opponents: opponents,
+		bestOpponent: opponents.length > 0 ? opponents.reduce((max, current) => current.score > max.score ? current : max) : null
+	  });
+	  
+	  await matchApi.saveMatch({
+		Players: players,
+		game_duration: gameDuration
+	  });
+	  
+	  console.log('[GameMultiOnline] Match sauvegardé avec succès pour', getPlayerName(playerId));
+	  
+	  // Déclencher l'événement pour mettre à jour le profil
+	  window.dispatchEvent(new CustomEvent('matchCompleted'));
+	  
+	} catch (error) {
+	  console.error('[GameMultiOnline] Erreur lors de la sauvegarde du match:', error);
+	}
+  }
   
   function handlePlayerDisconnection() {
 	if (playerDisconnected.value) return;
@@ -598,6 +716,7 @@
 	gameState.score.player3 = 0;
 	gameState.score.player4 = 0;
 	gameOver.value = false;
+	matchSaved = false; // Réinitialiser le flag de sauvegarde
 	resetBall();
 	
 	if (animationId) {
@@ -685,6 +804,12 @@
 		  }
 		  gameState.gameStarted = true;
 		  isHost = (playerId === gameState.host);
+		  
+		  // Démarrer le chronomètre de la partie
+		  if (!gameStartTime) {
+			gameStartTime = new Date();
+			console.log('[GameMultiOnline] Partie démarrée à:', gameStartTime);
+		  }
 		  break;
 		}
 		
@@ -716,6 +841,7 @@
 		  gameState.score.player3 = 0;
 		  gameState.score.player4 = 0;
 		  gameOver.value = false;
+		  matchSaved = false; // Réinitialiser le flag de sauvegarde
 		  resetBall();
 		  if (!isHost && animationId) {
    			 cancelAnimationFrame(animationId);

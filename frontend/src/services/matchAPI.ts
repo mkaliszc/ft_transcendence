@@ -3,7 +3,7 @@ import { fetchWithAuth } from './api';
 
 // Interface pour les données d'un joueur dans un match
 export interface MatchPlayer {
-  user_id: number;
+  username: string;
   score: number;
   is_winner: boolean;
 }
