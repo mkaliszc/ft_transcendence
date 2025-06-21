@@ -146,8 +146,6 @@ export async function getPersoData(request: FastifyRequest, reply: FastifyReply)
 			}
 		};
 
-		console.log(`GDPR export requested by user ${payload.user_id} at ${new Date().toISOString()}`);
-
 		return reply.status(200)
 			.header('Content-Type', 'application/json')
 			.header('Content-Disposition', `attachment; filename="gdpr_export_user_${payload.username}_${Date.now()}.json"`)

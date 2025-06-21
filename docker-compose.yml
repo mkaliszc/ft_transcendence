@@ -30,11 +30,8 @@ services:
     build:
         context: ./mariadb
         dockerfile: Dockerfile
-    environment:
-      MARIADB_ROOT_PASSWORD: ${MARIADB_ROOT_PASSWORD}
-      MARIADB_DATABASE: ${MARIADB_DATABASE}
-      MARIADB_USER: ${MARIADB_USER}
-      MARIADB_PASSWORD: ${MARIADB_PASSWORD}
+    env_file:
+      - .env
     networks:
       - ft_transcendance
     volumes:
@@ -73,6 +70,11 @@ services:
     
 volumes:
   db_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ${PWD}/volumes/mariadb/
 
 networks:
   ft_transcendance:
