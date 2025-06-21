@@ -44,10 +44,11 @@ export interface ChangePasswordRequest {
 }
 
 export interface CreateMatchRequest {
-	Players: Array<{
-		username: string;
-		score: number;
-		is_winner: boolean;
-	}>;
-	game_duration: string;
+    Players: Array<{
+        username: string;
+        score: number;
+        is_winner: boolean;
+    }>;
+    game_duration: string;
+
 }
