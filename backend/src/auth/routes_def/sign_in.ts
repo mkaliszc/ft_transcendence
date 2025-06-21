@@ -8,6 +8,13 @@ export async function sign_in(request: FastifyRequest, reply:FastifyReply) {
 		password: string;
 	};
 
+	if (!email || !password) {
+		return reply.code(400).send({ error: 'Email and password are required' })
+	}
+	if (typeof email !== 'string' || typeof password !== 'string') {
+		return reply.code(400).send({ error: 'Email and password must be strings' })
+	}
+
 	try {
 		const user = await User.findOne({ where: { email_adress: email } })
 		if (!user) {

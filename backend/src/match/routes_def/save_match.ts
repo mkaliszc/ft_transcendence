@@ -51,10 +51,16 @@ user.number_of_win += 1;
 user.number_of_lose += 1;
 }
 
-const updatedUser = await user.save();
-if (!updatedUser) {
-return reply.code(400).send({ error: 'Failed to update user stats' });
-}
+			if (!user) {
+				console.error(`User with username ${player.username} not found`);
+				return reply.code(404).send({ error: `User with ID ${player.username} not found` });
+			}
+			user.number_of_matches += 1;
+			if (player.is_winner) {
+				user.number_of_win += 1;
+			} else {
+				user.number_of_lose += 1;
+			}
 
 const userMatch = await UserMatch.create({
 match_id: match.match_id,

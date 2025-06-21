@@ -13,95 +13,88 @@ export async function getPersoData(request: FastifyRequest, reply: FastifyReply)
 			return reply.status(404).send({ error: 'User not found' });
 		}
 
-        const userMatches = await UserMatch.findAll({
-            where: { user_id: user.user_id },
-            include: [
-                {
-                    model: Matches,
-                    as: 'match',
-                    include: [
-                        {
-                            model: UserMatch,
-                            as: 'userMatches',
-                            include: [
-                                {
-                                    model: User,
-                                    as: 'user',
-                                    attributes: ['user_id', 'username', 'email_adress']
-                                }
-                            ]
-                        }
-                    ]
-                }
-            ],
-            order: [
-                [{ model: Matches, as: 'match' }, 'match_date', 'DESC']
-            ]
-        });
-		
+		const userMatches = await UserMatch.findAll({
+			where: { user_id: user.user_id },
+			include: [
+				{
+					model: Matches,
+					as: 'match',
+					include: [
+						{
+							model: UserMatch,
+							as: 'userMatches',
+							include: [
+								{
+									model: User,
+									as: 'user',
+									attributes: ['user_id', 'username', 'email_adress']
+								}]
+						}]
+				}],
+			order: [
+				[{ model: Matches, as: 'match' }, 'match_date', 'DESC']
+			]
+		});
+
 		// 3. Récupérer toutes les relations d'amitié (envoyées et reçues)
-        const sentFriendships = await Friendship.findAll({
-            where: { user_id1: user.user_id },
-            include: [
-                {
-                    model: User,
-                    as: 'receiver',
-                    attributes: ['user_id', 'username', 'email_adress']
-                }
-            ]
-        });
+		const sentFriendships = await Friendship.findAll({
+			where: { user_id1: user.user_id },
+				include: [{
+					model: User,
+					as: 'receiver',
+					attributes: ['user_id', 'username', 'email_adress']
+				}],
+			});
 
-        const receivedFriendships = await Friendship.findAll({
-            where: { user_id2: user.user_id },
-            include: [
-                {
-                    model: User,
-                    as: 'sender',
-                    attributes: ['user_id', 'username', 'email_adress']
-                }
-            ]
-        });
+			const receivedFriendships = await Friendship.findAll({
+			where: { user_id2: user.user_id },
+			include: [{
+					model: User,
+					as: 'sender',
+					attributes: ['user_id', 'username', 'email_adress']
+				}]
+			});
 
-        // 4. Formater les données pour l'export GDPR
-        const gdprExport = {
-            export_info: {
-                export_date: new Date().toISOString(),
-                user_id: user.user_id,
-                format: "JSON",
-                gdpr_compliance: "Article 15 (Right of access) & Article 20 (Right to data portability)",
-                data_controller: "YourApp Name"
-            },
-            
-            personal_information: {
-                user_id: user.user_id,
-                username: user.username,
-                email_address: user.email_adress,
-                account_created: user.creation_date,
-                last_update: user.last_update,
-                two_factor_auth_enabled: user.twoFA,
-                avatar_data: user.avatar ? "Avatar data present" : "No avatar set",
-                
-                gaming_statistics: {
-                    total_matches: user.number_of_matches,
-                    wins: user.number_of_win,
-                    losses: user.number_of_lose,
-                    win_rate: user.number_of_matches > 0 
-                        ? ((user.number_of_win / user.number_of_matches) * 100).toFixed(2) + '%'
-                        : '0%'
-                }
-            },
+		// 4. Formater les données pour l'export GDPR
+		const gdprExport = {
+			export_info: {
+				export_date: new Date().toISOString(),
+				user_id: user.user_id,
+				format: "JSON",
+				gdpr_compliance: "Article 15 (Right of access) & Article 20 (Right to data portability)",
+				data_controller: "YourApp Name"
+			},
 
-            match_history: userMatches.map(userMatch => {
-                const match = (userMatch as any).match;
-                const opponents = match.userMatches
-                    .filter((um: any) => um.user_id !== payload.user_id)
-                    .map((opponent: any) => ({
-                        opponent_id: opponent.user.user_id,
-                        opponent_username: opponent.user.username,
-                        opponent_email: opponent.user.email_adress,
-                        opponent_score: opponent.user_score,
-                        opponent_won: opponent.winner
-                    }));
+			personal_information: {
+				user_id: user.user_id,
+				username: user.username,
+				email_address: user.email_adress,
+				account_created: user.creation_date,
+				last_update: user.last_update,
+				two_factor_auth_enabled: user.twoFA,
+				avatar_data: user.avatar ? "Avatar data present" : "No avatar set",
+			
+				gaming_statistics: {
+					total_matches: user.number_of_matches,
+					wins: user.number_of_win,
+					losses: user.number_of_lose,
+					win_rate: user.number_of_matches > 0 
+						? ((user.number_of_win / user.number_of_matches) * 100).toFixed(2) + '%'
+						: '0%'
+				}
+			},
+
+			match_history: userMatches.map(userMatch => {
+			    const match = (userMatch as any).match;
+			    const opponents = match.userMatches
+			        .filter((um: any) => um.user_id !== payload.user_id)
+			        .map((opponent: any) => ({
+			            opponent_id: opponent.user.user_id,
+			            opponent_username: opponent.user.username,
+			            opponent_email: opponent.user.email_adress,
+			            opponent_score: opponent.user_score,
+			            opponent_won: opponent.winner
+			        }));
 
                 return {
                     match_id: match.match_id,
