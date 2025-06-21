@@ -23,62 +23,60 @@ return reply.code(400).send({ error: 'Failed to create match' });
 }
 console.log('Match created with ID:', match.match_id);
 
-for (let i = 0; i < Players.length; i++) {
-const player = Players[i];
-let winnerCheck = false;
-if (!player.username || player.score === undefined || player.is_winner === undefined) {
-return reply.code(400).send({ error: 'Invalid player data' });
-}
-if (player.score < 0) {
-return reply.code(400).send({ error: 'Player score cannot be negative' });
-}
-if (player.is_winner && !winnerCheck) {
-winnerCheck = true;
-}
-else if (player.is_winner && winnerCheck) {
-return reply.code(400).send({ error: 'Only one player can be marked as winner' });
-}
-}
-console.log('All player data is valid');
-for (let i = 0; i < Players.length; i++) {
-const player = Players[i];
-console.log(`Processing player: ${player.username} with score: ${player.score} and winner status: ${player.is_winner}`);
-const user = await User.findOne({ where: { username: player.username } });
+		for (let i = 0; i < Players.length; i++) {
+			const player = Players[i];
+			let winnerCheck = false;
+			if (!player.username || player.score === undefined || player.is_winner === undefined) {
+				return reply.code(400).send({ error: 'Invalid player data' });
+			}
+			if (player.score < 0) {
+				return reply.code(400).send({ error: 'Player score cannot be negative' });
+			}
+			if (player.is_winner && !winnerCheck) {
+				winnerCheck = true;
+			}
+			else if (player.is_winner && winnerCheck) {
+				return reply.code(400).send({ error: 'Only one player can be marked as winner' });
+			}
+		}
 
-if (!user) {
-return reply.code(404).send({ error: `User with ID ${player.username} not found` });
-}
-console.log(`Found user: ${user.username} with ID: ${user.user_id}`);
-user.number_of_matches += 1;
-if (player.is_winner) {
-user.number_of_win += 1;
-} else {
-user.number_of_lose += 1;
-}
+		for (let i = 0; i < Players.length; i++) {
+			const player = Players[i];
+			const user = await User.findOne({ where: { username: player.username } });
 
-const updatedUser = await user.save();
-if (!updatedUser) {
-return reply.code(400).send({ error: 'Failed to update user stats' });
-}
+			if (!user) {
+				console.error(`User with username ${player.username} not found`);
+				return reply.code(404).send({ error: `User with ID ${player.username} not found` });
+			}
+			user.number_of_matches += 1;
+			if (player.is_winner) {
+				user.number_of_win += 1;
+			} else {
+				user.number_of_lose += 1;
+			}
 
-const userMatch = await UserMatch.create({
-match_id: match.match_id,
-user_id: user.user_id,
-winner: player.is_winner,
-user_score: player.score
-});
-if (!userMatch) {
-return reply.code(400).send({ error: 'Failed to save user match data' });
-}
-console.log(`User match saved for user: ${user.username} with match ID: ${match.match_id}`);
-}
-return reply.code(201).send({
-message: 'Match saved successfully',
-match_id: match.match_id,
-});
-}
-catch (error) {
-console.error('Error saving match:', error);
-return reply.code(500).send({ error: 'Internal server error' });
-}
+			const updatedUser = await user.save();
+			if (!updatedUser) {
+				return reply.code(400).send({ error: 'Failed to update user stats' });
+			}
+
+			const userMatch = await UserMatch.create({
+				match_id: match.match_id,
+				user_id: user.user_id,
+				winner: player.is_winner,
+				user_score: player.score
+			});
+			if (!userMatch) {
+				return reply.code(400).send({ error: 'Failed to save user match data' });
+			}
+		}
+		return reply.code(201).send({
+			message: 'Match saved successfully',
+			match_id: match.match_id,
+		});
+	}
+	catch (error) {
+		console.error('Error saving match:', error);
+		return reply.code(500).send({ error: 'Internal server error' });
+	}
 }
