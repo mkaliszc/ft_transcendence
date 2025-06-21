@@ -8,6 +8,9 @@ export async function friendrequest(request: FastifyRequest<{Params: { username 
 	try {
 		const senderId = (request.user as JWTpayload).user_id;
 		const receiverName = request.params.username;
+		if (!receiverName) {
+			return reply.status(400).send({ error: 'Receiver username is required' });
+		}
 		const receiver = await User.findOne({ where: { username: receiverName}});
 
 		if (!receiver) {
@@ -15,15 +18,11 @@ export async function friendrequest(request: FastifyRequest<{Params: { username 
 		}
 
 		const existingFriendship = await Friendship.findOne({
- 			 where: {
-				user_id1: receiver.user_id,
-				user_id2: senderId,
-				[Op.or]: [
-					{ status: 'pending' },
-					{ status: 'accepted' },
-					{ status: 'declined' },
-					{ status: 'none' }
+ 			where: { [Op.or ]: [
+					{ user_id1: senderId, user_id2: receiver.user_id },
+					{ user_id1: receiver.user_id, user_id2: senderId }
 				],
+				status: { [Op.in]: ['pending', 'accepted', 'declined', 'none'] }
 			}
 		});
 		if (existingFriendship && existingFriendship.status)

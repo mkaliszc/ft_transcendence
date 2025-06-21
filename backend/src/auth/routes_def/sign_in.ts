@@ -15,6 +15,7 @@ export async function sign_in(request: FastifyRequest, reply:FastifyReply) {
 		return reply.code(400).send({ error: 'Email and password must be strings' })
 	}
 
+
 	try {
 		const user = await User.findOne({ where: { email_adress: email } })
 		if (!user) {

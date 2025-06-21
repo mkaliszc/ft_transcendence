@@ -14,13 +14,11 @@ services:
 
   backend:
     container_name: backend
-    # ports:
-    #   - "8002:8002"
     env_file:
       - .env
     build:
       context: ./backend
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.prod
     networks:
       - ft_transcendance
     depends_on:
