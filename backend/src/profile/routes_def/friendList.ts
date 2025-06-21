@@ -63,7 +63,6 @@ export async function friendList(request: FastifyRequest, reply: FastifyReply) {
 		});
 	}
 	catch (error) {
-		console.error('Error fetching friend list:', error);
 		return reply.status(500).send({ error: 'Internal server error while fetching friend list' });
 	}
 }

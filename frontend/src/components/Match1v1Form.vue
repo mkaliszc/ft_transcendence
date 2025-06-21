@@ -206,11 +206,12 @@ const handleSubmit = async () => {
   const result = await saveMatch1v1(formData.value);
   
   if (result.success) {
-    console.log('✅ Match sauvegardé avec l\'ID:', result.matchId);
+    // Déclencher l'événement pour mettre à jour le profil
+    window.dispatchEvent(new CustomEvent('matchCompleted'));
     // Optionnel: réinitialiser le formulaire après succès
     // resetForm();
   } else {
-    console.error('❌ Erreur:', result.error);
+    // Gestion d'erreur silencieuse
   }
 };
 

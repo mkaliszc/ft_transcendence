@@ -18,7 +18,6 @@ export async function refreshToken(request: FastifyRequest, reply: FastifyReply)
 		return reply.status(200).send({ token: newToken });
 	}
 	catch (error) {
-		console.error('Error refreshing token:', error);
 		return reply.status(403).send({ error: 'Invalid or expired refresh token' });
 	}
 }

@@ -203,14 +203,11 @@ onMounted(() => {
   connectSocket(`${protocol}://${host}/ws/`);
 
   setOnMessage((data: any) => {
-    console.log('[CreateOrJoin] Message reçu:', data);
-    
     switch (data.type) {
       case 'game-created':
         gameId.value = data.payload.gameId;
         isCreating.value = false;
         createError.value = null;
-        console.log('[CreateOrJoin] Partie créée avec ID:', gameId.value);
         break;
         
       case 'join-success':
@@ -251,7 +248,6 @@ onMounted(() => {
 });
 
 function createGame() {
-  console.log('[CreateOrJoin] Création de partie avec', playersCount.value, 'joueurs pour', username.value);
   createError.value = null;
   isCreating.value = true;
   
@@ -262,7 +258,6 @@ function createGame() {
 }
 
 function joinGame() {
-  console.log('[CreateOrJoin] Tentative de rejoindre la partie:', gameIdValue.value);
   if (!gameIdValue.value.trim()) return;
 
   joinError.value = null;
@@ -298,7 +293,7 @@ async function copyGameId() {
       gameIdCopied.value = false;
     }, 2000);
   } catch (err) {
-    console.error('Erreur lors de la copie:', err);
+    // Silently handle copy error
   }
 }
 </script>

@@ -143,8 +143,6 @@ const router = useRouter()
 const player1Name = ref(route.query.player1 as string || 'Joueur 1')
 const player2Name = ref(route.query.player2 as string || 'Joueur 2')
 
-// Debug logging
-
 // Game state
 const gameCanvas = ref<HTMLCanvasElement | null>(null)
 const gameContainer = ref<HTMLElement | null>(null)

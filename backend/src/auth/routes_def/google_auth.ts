@@ -14,7 +14,6 @@ export async function googleCallback(request: FastifyRequest, reply: FastifyRepl
 				Authorization: `Bearer ${token.access_token}`
 			}
 		});
-		console.log('✅ Réponse de Google:', userResponse.data);
 		const googleUser: GoogleUserInfo = userResponse.data;
 		if (!googleUser.verified_email) {
 			return reply.status(400).send({ error: 'Email not verified with Google' });
@@ -73,12 +72,10 @@ export async function googleCallback(request: FastifyRequest, reply: FastifyRepl
 			{ expiresIn: '7d' }
 		);
 		
-		console.log('✅ Utilisateur Google connecté:', user.username);
 		const frontendUrl = process.env.FRONTEND_URL || 'https://localhost:5000';
 		return reply.redirect(`${frontendUrl}/Home2?token=${encodeURIComponent(jwtToken)}&refreshToken=${encodeURIComponent(refreshToken)}`);
 	}
 	catch (error) {
-		console.error('❌ Erreur dans le callback Google:', error);
 		const frontendUrl = process.env.FRONTEND_URL || 'https://localhost:5000';
 		return reply.code(400).redirect(`${frontendUrl}/signin`);
 	}

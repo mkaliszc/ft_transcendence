@@ -66,7 +66,6 @@ export async function getHistory(request: FastifyRequest<{ Params: { username: s
 		});
 
 		} catch (error) {
-			console.error('Error:', error);
 			return reply.status(500).send({ error: 'Internal server error' });
 		}
 }

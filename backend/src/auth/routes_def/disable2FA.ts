@@ -19,7 +19,6 @@ export async function disable2FA(request: FastifyRequest, reply: FastifyReply) {
 		return reply.status(200).send({ message: '2FA has been disabled successfully' });
 	}
 	catch (error) {
-		console.error('Error disabling 2FA:', error);
 		return reply.status(500).send({ error: 'Internal server error while disabling 2FA' });
 	}
 }

@@ -13,10 +13,8 @@ async function syncDatabase(maxRetries = 3, delay = 2000) {
             await UserMatch.sync();
             await Friendship.sync();
 
-            console.log('✅ Database synchronized successfully');
 			return true;
         } catch (error) {
-            console.error('❌ Database sync failed:', error);
             throw error;
         }
     }
