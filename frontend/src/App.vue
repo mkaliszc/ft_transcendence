@@ -28,10 +28,18 @@
 	background-color: #0a0a0a;
 	color: #ffffff;
 	height: 100%;
+	min-width: 100vw;
+	min-height: 100vh;
+	max-width: 100vw;
+	max-height: 100vh;
+	overflow: hidden;
   }
   
   #app {
-	height: 100%;
+	height: 100vh;
+	min-height: 100vh;
+	max-width: 100vw;
+	width: 100vw;
 	display: flex;
 	flex-direction: column;
   }

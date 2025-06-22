@@ -7,16 +7,11 @@
 		  <h1 class="logo-text">{{ $t('gameTitle') }}</h1>
 		</div>
 
-		<div class="header-nav">
-		  <!-- Lien vers les amis -->
-		  <router-link to="/friends" class="nav-link friends-link">
-			<i class="fas fa-users"></i>
-			<span>Amis</span>
-			<span v-if="friendRequestsCount > 0" class="notification-badge">{{ friendRequestsCount }}</span>
-		  </router-link>
-		</div>
-		
-		<div class="language-switcher-header">
+		<div class="language-switcher-header" style="display: flex; align-items: center; gap: 1rem;">
+      <router-link to="/friends" class="nav-link friends-link">
+        <i class="fas fa-users"></i>
+        <span>Amis</span>
+      </router-link>
 		  <select v-model="$i18n.locale" @change="saveLanguagePreference" class="language-select">
 			<option value="en">🇺🇸 English</option>
 			<option value="fr">🇫🇷 Français</option>
@@ -151,8 +146,8 @@
   import { useI18n } from 'vue-i18n'
   import { useRouter } from 'vue-router'
   import { defineComponent } from 'vue';
-  import { useAuth } from '../composable/useAuths';
-  import { getPendingRequests } from '../services/friendsAPI';
+  import { useAuth } from '../../composable/useAuths';
+  import { getPendingRequests } from '../../services/friendsAPI';
 
   export default defineComponent({
     setup() {
@@ -472,6 +467,12 @@ html, body {
 	margin: 0;
   }
   
+  .language-switcher-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
   .language-select {
 	padding: 0.5rem 1rem;
 	border: 2px solid #d4af37;
@@ -624,18 +625,19 @@ html, body {
 	background: linear-gradient(135deg, #d4af37, #c19b2e);
 	color: #1a1a1a;
 	box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
-  }
-  
-  .btn-primary:hover {
+	border: none;
+}
+.btn-primary:hover {
 	transform: translateY(-2px);
 	box-shadow: 0 6px 20px rgba(212, 175, 55, 0.4);
-  }
+	background: linear-gradient(135deg, #ffe082, #d4af37);
+}
   
   .btn-secondary {
 	background: transparent;
 	color: #d4af37;
 	border: 2px solid #d4af37;
-  }
+}
   
   .btn-secondary:hover {
 	background: #d4af37;

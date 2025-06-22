@@ -5,13 +5,14 @@ import { JWTpayload } from "../../interfaces";
 
 export async function getUser(request: FastifyRequest<{ Params: { username: string } }>, reply: FastifyReply) {
 	try {
+		console.log("getUser called with username:", request.params.username, ' request.user:', (request.user as JWTpayload).username);
 		const user = await User.findOne({ where: { username: request.params.username }, })
 		const payload = request.user as JWTpayload;
 		if (!user) {
 			return reply.status(404).send({ error: 'User not found' });
 		}
 		const isOwner = user.user_id === payload.user_id;
-		
+		console.log(isOwner, user.username, "user fond",);
 		const Public: Pub_User = {
 			username: user.username,
 			number_of_matches: user.number_of_matches,

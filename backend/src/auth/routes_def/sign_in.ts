@@ -48,14 +48,7 @@ export async function sign_in(request: FastifyRequest, reply:FastifyReply) {
 
 		const userData = {
 			username: user.username,
-			email: user.email_adress,
 			userId: user.user_id,
-			avatar: user.avatar,
-			stats: {
-				matches: user.number_of_matches,
-				wins: user.number_of_win,
-				losses: user.number_of_lose
-			}
 		}
 		
 		return reply.code(200).send({ token: token, refreshToken, user: userData })

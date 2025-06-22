@@ -50,7 +50,7 @@
 
 <script setup lang="ts">
 import { ref, computed } from 'vue';
-import type { FriendRequest } from '../services/friendsAPI';
+import type { FriendRequest } from '../../services/friendsAPI';
 
 // Props
 const props = defineProps<{
@@ -291,29 +291,4 @@ const handleReject = async () => {
   backdrop-filter: blur(2px);
 }
 
-@media (max-width: 768px) {
-  .friend-request-card {
-    padding: 1rem;
-  }
-  
-  .avatar {
-    width: 50px;
-    height: 50px;
-  }
-  
-  .request-actions {
-    flex-direction: column;
-    gap: 0.5rem;
-  }
-  
-  .btn-accept,
-  .btn-reject {
-    padding: 0.5rem 0.75rem;
-    font-size: 0.7rem;
-  }
-  
-  .btn-text {
-    display: none;
-  }
-}
 </style>

@@ -144,8 +144,8 @@
   <script setup lang="ts">
   import { ref, reactive, onMounted, onUnmounted, watch, computed } from 'vue';
   import { useRoute, useRouter } from 'vue-router';
-  import { connectSocket, sendMessage, setOnMessage, closeSocket } from '../services/websocket';
-  import { matchApi } from '../services/matchAPI';
+  import { connectSocket, sendMessage, setOnMessage, closeSocket } from '@/services/websocket';
+  import { matchApi } from '@/services/matchAPI';
   
   const route = useRoute();
   const router = useRouter();
@@ -878,6 +878,12 @@
 	overflow-x: hidden;
 	display: flex;
 	flex-direction: column;
+	width: 100vw;
+	height: 100vh;
+	min-width: 100vw;
+	min-height: 100vh;
+	max-width: 100vw;
+	max-height: 100vh;
   }
   
   .game-header {
@@ -1089,6 +1095,13 @@
 	display: flex;
 	justify-content: center;
 	align-items: center;
+	width: 800px;
+	min-width: 800px;
+	max-width: 800px;
+	height: 400px;
+	min-height: 400px;
+	max-height: 400px;
+	margin: 0 auto;
   }
   
   .pong-table {
@@ -1099,12 +1112,23 @@
 	background: #5d4037;
 	border-radius: 1rem;
 	box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
-	width: fit-content;
+	width: 800px;
+	min-width: 800px;
+	max-width: 800px;
+	height: 400px;
+	min-height: 400px;
+	max-height: 400px;
   }
   
   .game-canvas {
 	border-radius: 0.5rem;
 	box-shadow: 0 0 20px rgba(212, 175, 55, 0.3);
+	width: 800px !important;
+	height: 400px !important;
+	min-width: 800px;
+	min-height: 400px;
+	max-width: 800px;
+	max-height: 400px;
   }
   
   .game-overlay {
@@ -1228,75 +1252,5 @@
   @keyframes float {
 	0%, 100% { transform: translateY(0px) rotate(0deg); }
 	50% { transform: translateY(-20px) rotate(180deg); }
-  }
-  
-  /* Responsive */
-  @media (max-width: 768px) {
-	.main-game-row {
-	  flex-direction: column;
-	  gap: 1rem;
-	}
-	
-	.player-left,
-	.player-right {
-	  justify-content: center;
-	}
-	
-	.game-header {
-	  flex-direction: column;
-	  gap: 1rem;
-	  padding: 1rem;
-	}
-	
-	.header-container {
-	  flex-direction: column;
-	  gap: 1rem;
-	}
-	
-	.header-controls {
-	  flex-direction: column;
-	  gap: 0.5rem;
-	}
-	
-	.controls-info {
-	  flex-direction: column;
-	  gap: 0.5rem;
-	}
-	
-	.pong-table {
-	  transform: scale(0.8);
-	}
-	
-	.overlay-title {
-	  font-size: 2rem;
-	}
-	
-	.btn {
-	  padding: 0.5rem 1rem;
-	  font-size: 0.8rem;
-	}
-	
-	.player-card {
-	  padding: 0.75rem;
-	  min-width: 80px;
-	}
-  }
-  
-  @media (max-width: 480px) {
-	.game-main {
-	  padding: 1rem;
-	}
-	
-	.pong-table {
-	  transform: scale(0.7);
-	}
-	
-	.overlay-title {
-	  font-size: 1.5rem;
-	}
-	
-	.final-score {
-	  font-size: 1.5rem;
-	}
   }
   </style>

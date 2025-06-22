@@ -79,7 +79,7 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted } from 'vue';
-import type { Friendship } from '../services/friendsAPI';
+import type { Friendship } from '../../services/friendsAPI';
 
 // Props
 const props = defineProps<{
@@ -395,31 +395,6 @@ onUnmounted(() => {
   to {
     opacity: 1;
     transform: translateY(0);
-  }
-}
-
-@media (max-width: 768px) {
-  .friend-card {
-    padding: 1rem;
-  }
-  
-  .avatar {
-    width: 50px;
-    height: 50px;
-  }
-  
-  .friend-name {
-    font-size: 1rem;
-  }
-  
-  .btn-action {
-    width: 36px;
-    height: 36px;
-    font-size: 0.9rem;
-  }
-  
-  .online-actions {
-    display: none; /* Masquer sur mobile, utiliser le menu */
   }
 }
 </style>

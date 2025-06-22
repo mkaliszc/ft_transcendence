@@ -18,15 +18,7 @@
 			<div class="avatar-section">
 			  <div class="avatar-wrapper">
 				<img :src="displayAvatar" alt="Avatar" class="avatar" />
-				<!-- Bouton d'édition de l'avatar (uniquement pour son propre profil) -->
-				<button 
-				  v-if="isOwnProfile"
-				  @click="openEditProfile"
-				  class="edit-avatar-btn"
-				  title="Modifier l'avatar"
-				>
-				  ✏️
-				</button>
+				<!-- Bouton d'édition de l'avatar supprimé -->
 			  </div>
 			  <div class="player-rank">
 				<span class="rank-label">{{ $t('rank') }}</span>
@@ -45,15 +37,7 @@
 					:placeholder="$t('enterUsername')"
 					readonly
 				  />
-				  <!-- Bouton d'édition du profil (uniquement pour son propre profil) -->
-				  <button 
-					v-if="isOwnProfile"
-					@click="openEditProfile"
-					class="edit-btn"
-					title="Modifier le profil"
-				  >
-					✏️ {{ $t('edit') || 'Modifier' }}
-				  </button>
+				  <!-- Bouton d'édition du profil supprimé -->
 				</div>
 			  </div>
 			  
@@ -303,11 +287,11 @@
 <script setup>
 import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { useAuth } from '../composable/useAuths';
-import { useUser } from '../composable/useUser';
+import { useAuth } from '../../composable/useAuths.ts';
+import { useUser } from '../../composable/useUser.ts';
 import { useRouter, useRoute } from 'vue-router';
-import { userApi } from '../services/userAPI.ts';
-import { DEFAULT_AVATARS_BASE64 } from '../utils/imageUtils.ts';
+import { userApi } from '../../services/userAPI.ts';
+import { DEFAULT_AVATARS_BASE64 } from '../../utils/imageUtils.ts';
 import EditProfileModal from './EditProfileModal.vue';
 
 const { t } = useI18n()
@@ -703,26 +687,6 @@ onUnmounted(() => {
   position: relative;
 }
 
-.edit-avatar-btn {
-  position: absolute;
-  bottom: 5px;
-  right: 5px;
-  background: rgba(212, 175, 55, 0.9);
-  border: none;
-  border-radius: 50%;
-  width: 35px;
-  height: 35px;
-  cursor: pointer;
-  font-size: 0.9em;
-  transition: all 0.3s ease;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-}
-
-.edit-avatar-btn:hover {
-  background: #d4af37;
-  transform: scale(1.1);
-}
-
 .avatar {
   width: 150px;
   height: 150px;
@@ -780,23 +744,6 @@ onUnmounted(() => {
   align-items: center;
   gap: 15px;
   flex: 1;
-}
-
-.edit-btn {
-  padding: 8px 16px;
-  background: rgba(212, 175, 55, 0.9);
-  color: #1a1a1a;
-  border: none;
-  border-radius: 6px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  font-size: 0.9em;
-}
-
-.edit-btn:hover {
-  background: #d4af37;
-  transform: translateY(-1px);
 }
 
 .label {

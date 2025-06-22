@@ -171,7 +171,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
-import { connectSocket, sendMessage, setOnMessage } from '../services/websocket';
+import { connectSocket, sendMessage, setOnMessage } from '@/services/websocket';
 
 const router = useRouter();
 
@@ -792,75 +792,4 @@ async function copyGameId() {
   90% { transform: translateY(-2px); }
 }
 
-/* Responsive Design */
-@media (max-width: 768px) {
-  .header {
-    padding: 1rem;
-    flex-direction: column;
-    gap: 1rem;
-    align-items: center;
-  }
-  
-  .header-actions {
-    gap: 0.5rem;
-  }
-  
-  .logo-text {
-    font-size: 1.5rem;
-  }
-  
-  .main-content {
-    padding: 1rem;
-  }
-  
-  .footer {
-    padding: 1.5rem;
-  }
-  
-  .main-title {
-    font-size: 2.5rem;
-  }
-  
-  .game-card {
-    padding: 1.5rem;
-  }
-  
-  .mode-tabs {
-    flex-direction: column;
-  }
-  
-  .game-id-container {
-    flex-direction: column;
-    gap: 1rem;
-  }
-}
-
-@media (max-width: 480px) {
-  .main-title {
-    font-size: 2rem;
-  }
-  
-  .game-card {
-    padding: 1rem;
-  }
-  
-  .btn {
-    padding: 0.75rem 1rem;
-    font-size: 0.9rem;
-  }
-  
-  .logo-text {
-    font-size: 1.2rem;
-  }
-  
-  .header-back-btn {
-    padding: 0.5rem 0.75rem;
-    font-size: 0.8rem;
-  }
-  
-  .back-button {
-    padding: 0.5rem 1rem;
-    font-size: 0.9rem;
-  }
-}
 </style>
