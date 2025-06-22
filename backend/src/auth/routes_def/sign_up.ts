@@ -1,8 +1,8 @@
 import { FastifyRequest, FastifyReply } from 'fastify'
 import { Op } from 'sequelize';
 import bcrypt from 'bcryptjs'
-import { User } from '../../db_models/user_model'
-import { SignUpRequest } from '../../interfaces'
+import { User } from '../utils/db_models/user_model'
+import { SignUpRequest } from '../utils/interfaces'
 import { validateEmail, validateUsername } from '../utils/validation';
 
 export async function sign_up (request: FastifyRequest<{ Body: SignUpRequest }>, reply: FastifyReply)

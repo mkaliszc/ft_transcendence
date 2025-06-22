@@ -1,6 +1,6 @@
 import { FastifyRequest, FastifyReply } from 'fastify'
 import bcrypt from 'bcryptjs'
-import { User } from '../../db_models/user_model'
+import { User } from '../utils/db_models/user_model'
 
 export async function sign_in(request: FastifyRequest, reply:FastifyReply) {
 	const { email, password } = request.body as {

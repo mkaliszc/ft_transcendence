@@ -1,6 +1,6 @@
 import { FastifyRequest, FastifyReply } from 'fastify'
-import { User } from '../../db_models/user_model';
-import { JWTpayload } from '../../interfaces';
+import { User } from '../utils/db_models/user_model';
+import { JWTpayload } from '../utils/interfaces';
 
 export async function disable2FA(request: FastifyRequest, reply: FastifyReply) {
 	try {
