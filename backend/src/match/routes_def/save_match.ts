@@ -1,8 +1,8 @@
 import { FastifyReply, FastifyRequest } from 'fastify';
-import { Matches } from '../../db_models/matches_model';
-import { User } from '../../db_models/user_model';
-import { UserMatch } from '../../db_models/user_match_model';
-import { CreateMatchRequest } from '../../interfaces';
+import { Matches } from '../utils/db_models/matches_model';
+import { User } from '../utils/db_models/user_model';
+import { UserMatch } from '../utils/db_models/user_match_model';
+import { CreateMatchRequest } from '../utils/interfaces';
 
 export async function SaveMatch(request: FastifyRequest<{ Body: CreateMatchRequest}>, reply: FastifyReply) {
 	const { Players, game_duration } = request.body as CreateMatchRequest;
@@ -65,10 +65,7 @@ export async function SaveMatch(request: FastifyRequest<{ Body: CreateMatchReque
 				return reply.code(400).send({ error: 'Failed to save user match data' });
 			}
 		}
-		return reply.code(201).send({
-			message: 'Match saved successfully',
-			match_id: match.match_id,
-		});
+		return reply.code(201).send({ message: 'Match saved successfully' });
 	}
 	catch (error) {
 		console.error('Error saving match:', error);
