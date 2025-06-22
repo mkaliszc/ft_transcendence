@@ -233,7 +233,6 @@
 	  <div class="instructions">
 		<p>🎮 <strong>Instructions :</strong> Cliquez sur "Jouer Pong" pour lancer un match entre deux joueurs</p>
 		<p>🏓 <strong>Automatique :</strong> Les vainqueurs avancent automatiquement au tour suivant après chaque match</p>
-		<p>⚡ <strong>Nouveau :</strong> Plus besoin de cliquer sur les joueurs - tout se fait automatiquement !</p>
 	  </div>
   
 	  <!-- Notification de résultat -->
@@ -709,11 +708,6 @@
   overflow: hidden;
   display: flex;
   flex-direction: column;
-}
-
-@keyframes backgroundMove {
-  0%, 100% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
 }
 
 .tournament-container::before {
