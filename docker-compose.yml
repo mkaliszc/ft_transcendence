@@ -12,12 +12,38 @@ services:
       - db
     restart: always
 
-  backend:
-    container_name: backend
+  backend_profile:
+    container_name: profile_service
     env_file:
       - .env
     build:
-      context: ./backend
+      context: ./backend/src/profile
+      dockerfile: Dockerfile.prod
+    networks:
+      - ft_transcendance
+    depends_on:
+        - db
+    restart: always
+
+  backend_auth:
+    container_name: auth_service
+    env_file:
+      - .env
+    build:
+      context: ./backend/src/auth
+      dockerfile: Dockerfile.prod
+    networks:
+      - ft_transcendance
+    depends_on:
+        - db
+    restart: always
+
+  backend_match:
+    container_name: match_service
+    env_file:
+      - .env
+    build:
+      context: ./backend/src/match
       dockerfile: Dockerfile.prod
     networks:
       - ft_transcendance
@@ -63,7 +89,9 @@ services:
       - ./volumes/logs:/var/log/nginx
     depends_on:
       - frontend
-      - backend
+      - backend_auth
+      - backend_match
+      - backend_profile
     networks:
       - ft_transcendance
     restart: always

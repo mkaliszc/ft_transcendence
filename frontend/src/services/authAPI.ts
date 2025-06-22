@@ -115,7 +115,7 @@ const fetchApi = async (url: string, options: RequestInit = {}, isRetry = false)
   
 	// Connexion
 	login: async (credentials: Record<string, any>) => {
-	  const response = await fetchApi("/auth", {
+	  const response = await fetchApi("/auth/", {
 		method: "POST",
 		body: JSON.stringify(credentials),
 	  })

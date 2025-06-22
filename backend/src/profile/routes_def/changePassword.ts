@@ -1,6 +1,6 @@
-import { User } from "../../db_models/user_model";
+import { User } from "../utils/db_models/user_model";
 import { FastifyRequest, FastifyReply } from "fastify";
-import { JWTpayload, ChangePasswordRequest } from "../../interfaces";
+import { JWTpayload, ChangePasswordRequest } from "../utils/interfaces";
 import bcrypt from "bcryptjs";
 
 export async function changePassword(request: FastifyRequest<{ Body: ChangePasswordRequest }>, reply: FastifyReply) {

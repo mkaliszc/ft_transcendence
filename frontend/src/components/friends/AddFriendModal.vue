@@ -142,7 +142,7 @@ const handleSearch = () => {
     } finally {
       isSearching.value = false;
     }
-  }, 300);
+  }, 5000);
 };
 
 const handleAddFriend = async (user: User) => {

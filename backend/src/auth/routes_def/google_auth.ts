@@ -1,7 +1,7 @@
 import { FastifyRequest, FastifyReply } from 'fastify';
 import axios from 'axios';
-import { User } from '../../db_models/user_model';
-import { GoogleUserInfo } from '../../interfaces';
+import { User } from '../utils/db_models/user_model';
+import { GoogleUserInfo } from '../utils/interfaces';
 
 export async function googleCallback(request: FastifyRequest, reply: FastifyReply) {
 	try {

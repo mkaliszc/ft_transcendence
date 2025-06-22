@@ -1,6 +1,6 @@
 import { FastifyRequest , FastifyReply } from 'fastify';
-import { JWTpayload } from '../../interfaces';
-import { Friendship } from '../../db_models/friendship_model';
+import { JWTpayload } from '../utils/interfaces';
+import { Friendship } from '../utils/db_models/friendship_model';
 
 export async function acceptRequest(request: FastifyRequest<{ Body: { friendship_id: number } }>, reply: FastifyReply) {
 	try {
