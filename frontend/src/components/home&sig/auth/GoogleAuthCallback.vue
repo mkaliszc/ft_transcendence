@@ -45,8 +45,8 @@
 import { ref, onMounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
-import { useAuth } from '../composable/useAuths'
-import { googleAuthService } from '../services/googleAuthAPI'
+import { useAuth } from '@/composable/useAuths'
+import { googleAuthService } from '@/services/googleAuthAPI'
 
 const { t } = useI18n()
 const router = useRouter()

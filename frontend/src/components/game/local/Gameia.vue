@@ -96,7 +96,7 @@
   <script setup>
   import { ref, onMounted, onUnmounted, watch } from 'vue';
   import { useRouter } from 'vue-router';
-  import { useAuth } from '../composable/useAuths';
+  import { useAuth } from '@/composable/useAuths';
   
   // Router et auth
   const router = useRouter();
@@ -148,6 +148,11 @@
   
   // Animation frame ID for cleanup
   let animationFrameId = null;
+  
+  // --- Ajout pour IA : prise de décision toutes les secondes ---
+  const aiKeyState = ref({ up: false, down: false });
+  let aiLastUpdate = Date.now();
+  const aiUpdateInterval = 1; // 1 seconde
   
   // Initialize game
   onMounted(() => {
@@ -239,6 +244,7 @@
 	}
   
 	moveAI();
+	handleAIMovement();
   }
   
   function checkImprovedPaddleCollision(paddle) {
@@ -332,23 +338,49 @@
   }
   
   function moveAI() {
+	const now = Date.now();
+	if (now - aiLastUpdate < aiUpdateInterval) {
+	  // Ne rafraîchit la vue qu'une fois par seconde
+	  return;
+	}
+	aiLastUpdate = now;
+
 	const aiCenter = ai.value.y;
 	const ballCenter = ball.value.y;
 	
+	// Logique défensive conservée
 	if (ball.value.speedX > 0) {
 	  if (aiCenter < ballCenter - 10) {
-		ai.value.y += ai.value.speed;
+		aiKeyState.value.up = false;
+		aiKeyState.value.down = true;
 	  } else if (aiCenter > ballCenter + 10) {
-		ai.value.y -= ai.value.speed;
+		aiKeyState.value.up = true;
+		aiKeyState.value.down = false;
+	  } else {
+		aiKeyState.value.up = false;
+		aiKeyState.value.down = false;
 	  }
 	} else {
 	  if (aiCenter < gameCanvas.value.height / 2 - 30) {
-		ai.value.y += ai.value.speed * 0.5;
+		aiKeyState.value.up = false;
+		aiKeyState.value.down = true;
 	  } else if (aiCenter > gameCanvas.value.height / 2 + 30) {
-		ai.value.y -= ai.value.speed * 0.5;
+		aiKeyState.value.up = true;
+		aiKeyState.value.down = false;
+	  } else {
+		aiKeyState.value.up = false;
+		aiKeyState.value.down = false;
 	  }
 	}
+  }
   
+  function handleAIMovement() {
+	if (isPaused.value || gameOver.value) return;
+	if (aiKeyState.value.up && !aiKeyState.value.down) {
+	  ai.value.y -= ai.value.speed;
+	} else if (aiKeyState.value.down && !aiKeyState.value.up) {
+	  ai.value.y += ai.value.speed;
+	}
 	if (ai.value.y - ai.value.height / 2 < 0) {
 	  ai.value.y = ai.value.height / 2;
 	} else if (ai.value.y + ai.value.height / 2 > gameCanvas.value.height) {
@@ -441,11 +473,16 @@
   
   <style scoped>
   .game-container {
+	width: 100vw;
+	height: 100vh;
+	min-width: 100vw;
 	min-height: 100vh;
+	max-width: 100vw;
+	max-height: 100vh;
+	overflow: hidden;
 	background: linear-gradient(135deg, #1a472a 0%, #2d5a3d 50%, #1a472a 100%);
 	color: #f8f9fa;
 	position: relative;
-	overflow-x: hidden;
 	display: flex;
 	flex-direction: column;
   }
@@ -554,7 +591,8 @@
 	justify-content: center;
 	align-items: center;
 	width: 100%;
-	margin: 2rem 0;
+	height: 400px;
+	margin: 0 auto;
   }
   
   .pong-table {
@@ -565,10 +603,14 @@
 	background: #5d4037;
 	border-radius: 1rem;
 	box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
-	width: fit-content;
+	width: 800px;
+	height: 400px;
+	margin: 0 auto;
   }
   
   .game-canvas {
+	width: 800px !important;
+	height: 400px !important;
 	border-radius: 0.5rem;
 	box-shadow: 0 0 20px rgba(212, 175, 55, 0.3);
   }

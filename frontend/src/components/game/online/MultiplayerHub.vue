@@ -47,7 +47,7 @@
 
 <script setup lang="ts">
 import { useRouter } from 'vue-router';
-import { useAuth } from '../composable/useAuths';
+import { useAuth } from '@/composable/useAuths';
 
 const router = useRouter();
 const { isAuthenticated } = useAuth();
@@ -317,5 +317,3 @@ function goLocal() {
   opacity: 1;
 }
 </style>
-message.txt
-8 KB

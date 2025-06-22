@@ -8,6 +8,9 @@ export async function sign_up (request: FastifyRequest<{ Body: SignUpRequest }>,
 {
 	try {
 		const { username, email_adress, password } = request.body
+		if (!username || !email_adress || !password) {
+			return reply.status(400).send({ error: 'Username, email and password are required' })
+		}
 		const existingUser = await User.findOne({ 
 			where: { [Op.or]: [{ email_adress }, { username }] }
 		})
@@ -31,5 +34,3 @@ export async function sign_up (request: FastifyRequest<{ Body: SignUpRequest }>,
 		reply.status(500).send({ error: 'Error creating user' })
 	}
 }
-
-// TODO : Add verification on every field

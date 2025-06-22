@@ -1,6 +1,7 @@
 import { FastifyReply, FastifyRequest } from 'fastify';
 import { User } from '../../db_models/user_model';
 import { JWTpayload } from '../../interfaces';
+import { AnonymeAvatar } from '../utils/default';
 
 export async function anonymization(request: FastifyRequest, reply: FastifyReply) {
 	try {
@@ -15,6 +16,7 @@ export async function anonymization(request: FastifyRequest, reply: FastifyReply
 		await user.update({
 			username: `anonymous_${userId}`,
 			email_adress: null,
+			avatar: AnonymeAvatar,
 			twoFA: false,
 			twoFA_secret: null,
 		});
@@ -22,7 +24,6 @@ export async function anonymization(request: FastifyRequest, reply: FastifyReply
 		return reply.status(200).send({ message: 'User anonymized successfully' });
 	}
 	catch (error) {
-		console.error('Error anonymizing user:', error);
 		return reply.status(500).send({ error: 'Internal server error while anonymizing user' });
 	}
 }

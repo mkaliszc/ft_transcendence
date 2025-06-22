@@ -14,7 +14,6 @@ export async function googleCallback(request: FastifyRequest, reply: FastifyRepl
 				Authorization: `Bearer ${token.access_token}`
 			}
 		});
-
 		const googleUser: GoogleUserInfo = userResponse.data;
 		if (!googleUser.verified_email) {
 			return reply.status(400).send({ error: 'Email not verified with Google' });
@@ -24,12 +23,7 @@ export async function googleCallback(request: FastifyRequest, reply: FastifyRepl
 			where: { email_adress: googleUser.email }
 		});
 
-		if (user) {
-			if (!user.avatar && googleUser.picture) {
-				await user.update({ avatar: googleUser.picture });
-			}
-		} 
-		else 
+		if (!user)
 		{
 			const baseName = googleUser.name.toLowerCase().replace(/[^a-z0-9]/g, '').substring(0, 8);
 			const timestamp = Date.now().toString().slice(-4);
@@ -52,7 +46,7 @@ export async function googleCallback(request: FastifyRequest, reply: FastifyRepl
 				attributes: ['username']
 			});
 		
-			const takenUsernames = existingUsers.map(user => user.username);            
+			const takenUsernames = existingUsers.map(user => user.username);
 			let finalUsername = usernameOptions.find(username => !takenUsernames.includes(username));
 		
 			if (!finalUsername) {
@@ -65,10 +59,10 @@ export async function googleCallback(request: FastifyRequest, reply: FastifyRepl
 				email_adress: googleUser.email,
 				hashed_password: 'GOOGLE_OAUTH_USER',
 				avatar: googleUser.picture,
-				google_user: true
+				google_user: true,
 			});
 		}
-		console.log('✅ Utilisateur connecté ou créé:', user.username);
+		console.log(`User ${user.username} authenticated with Google OAuth`);
 		const jwtToken = await reply.jwtSign(
 			{ username: user.username, user_id: user.user_id },
 			{ expiresIn: '15min' }
@@ -82,20 +76,12 @@ export async function googleCallback(request: FastifyRequest, reply: FastifyRepl
 		const userData = {
 			username: user.username,
 			userId: user.user_id,
-			avatar: user.avatar,
-			stats: {
-				matches: user.number_of_matches,
-				wins: user.number_of_win,
-				losses: user.number_of_lose
-			}
 		}
-		
-		console.log('✅ Utilisateur Google connecté:', user.username);
+
 		const frontendUrl = process.env.FRONTEND_URL || 'https://localhost:5000';
 		return reply.redirect(`${frontendUrl}/Home2?token=${encodeURIComponent(jwtToken)}&refreshToken=${encodeURIComponent(refreshToken)}&userData=${encodeURIComponent(JSON.stringify(userData))}`);
 	}
 	catch (error) {
-		console.error('❌ Erreur dans le callback Google:', error);
 		const frontendUrl = process.env.FRONTEND_URL || 'https://localhost:5000';
 		return reply.code(400).redirect(`${frontendUrl}/signin`);
 	}

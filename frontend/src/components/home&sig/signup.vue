@@ -174,7 +174,7 @@
 import { ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
-import { useAuth } from '../composable/useAuths'
+import { useAuth } from '../../composable/useAuths'
 
 // Utilisation de vue-i18n
 const { t, locale } = useI18n()

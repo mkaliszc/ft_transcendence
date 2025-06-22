@@ -8,18 +8,6 @@
 		</div>
 	  </header>
   
-	  <!-- DEBUG PANEL -->
-	  <div class="debug-panel" style="position: fixed; top: 50px; right: 10px; background: rgba(0,0,0,0.8); color: white; padding: 10px; border-radius: 5px; font-size: 12px; z-index: 1000;">
-		<div><strong>DEBUG:</strong></div>
-		<div>GameId: {{ gameId }}</div>
-		<div>PlayerId: {{ playerId }}</div>
-		<div>Players: {{ JSON.stringify(players) }}</div>
-		<div>PlayerNames: {{ JSON.stringify(playerNames) }}</div>
-		<div>ReadyPlayers: {{ JSON.stringify(readyPlayers) }}</div>
-		<div>IsReady: {{ isReady }}</div>
-		<div>MaxPlayers: {{ maxPlayers }}</div>
-	  </div>
-  
 	  <!-- Contenu principal -->
 	  <main class="main-content">
 		<div class="content-container">
@@ -60,11 +48,8 @@
 			  </ul>
 			</div>
   
-			<!-- Bouton Prêt - TOUJOURS VISIBLE POUR DEBUG -->
+			<!-- Bouton Prêt -->
 			<div class="ready-section">
-			  <div class="debug-info" style="margin-bottom: 1rem; font-size: 0.9rem; color: #ccc;">
-				Debug: players.length={{ players.length }}, condition={{ players.length >= 2 }}
-			  </div>
 			  <button 
 				@click="onReady" 
 				:disabled="isReady" 
@@ -126,7 +111,7 @@
   <script setup lang="ts">
   import { ref, onMounted, onUnmounted } from 'vue';
   import { useRoute, useRouter } from 'vue-router';
-  import { connectSocket, sendMessage, setOnMessage } from '../services/websocket';
+  import { connectSocket, sendMessage, setOnMessage } from '@/services/websocket';
   
   const route = useRoute();
   const router = useRouter();
@@ -135,7 +120,6 @@
   
   // Si pas de paramètres, rediriger
   if (!gameId || !playerId) {
-	console.error('[WaitingRoom] Paramètres manquants, redirection');
 	router.replace({ name: 'Home' });
   }
   
@@ -152,42 +136,28 @@
   }
   
   onMounted(() => {
-	console.log('[WaitingRoom] ===== DÉMARRAGE =====');
-	console.log('[WaitingRoom] GameId:', gameId);
-	console.log('[WaitingRoom] PlayerId:', playerId);
-	
 	const protocol = window.location.protocol === 'https:' ? 'wss' : 'ws';
 	const host = window.location.host;
 	connectSocket(`${protocol}://${host}/ws/`);
   
 	setOnMessage((data: any) => {
-	  console.log('[WaitingRoom] ===== MESSAGE REÇU =====');
-	  console.log('[WaitingRoom] Type:', data.type);
-	  console.log('[WaitingRoom] Payload complet:', JSON.stringify(data.payload, null, 2));
-	  
 	  switch (data.type) {
 		case 'player-joined':
-		  console.log('[WaitingRoom] TRAITEMENT PLAYER-JOINED');
 		  handlePlayerUpdate(data.payload);
 		  break;
 		  
 		case 'join-success':
-		  console.log('[WaitingRoom] TRAITEMENT JOIN-SUCCESS');
 		  handlePlayerUpdate(data.payload);
 		  break;
 		  
 		case 'player-ready-updated':
-		  console.log('[WaitingRoom] TRAITEMENT PLAYER-READY-UPDATED');
 		  if (data.payload.readyPlayers) {
-			console.log('[WaitingRoom] Nouveaux readyPlayers:', data.payload.readyPlayers);
 			readyPlayers.value = [...data.payload.readyPlayers];
 			isReady.value = readyPlayers.value.includes(playerId);
-			console.log('[WaitingRoom] IsReady mis à jour:', isReady.value);
 		  }
 		  break;
 		  
 		case 'all-ready':
-		  console.log('[WaitingRoom] ALL-READY - Démarrage de la partie');
 		  router.push({
 			name: 'GamemultiOnline',
 			query: { id: gameId, playerId }
@@ -195,7 +165,6 @@
 		  break;
 		  
 		case 'game-start':
-		  console.log('[WaitingRoom] GAME-START - Redirection');
 		  router.push({
 			name: 'GamemultiOnline',
 			query: { id: gameId, playerId }
@@ -203,79 +172,52 @@
 		  break;
 		  
 		case 'error':
-		  console.error('[WaitingRoom] Erreur:', data.payload.message);
+		  // Handle error silently
 		  break;
 		  
 		default:
-		  console.log('[WaitingRoom] Type non géré:', data.type);
 		  break;
 	  }
-	  
-	  console.log('[WaitingRoom] ===== ÉTAT APRÈS TRAITEMENT =====');
-	  console.log('[WaitingRoom] players:', players.value);
-	  console.log('[WaitingRoom] playerNames:', playerNames.value);
-	  console.log('[WaitingRoom] readyPlayers:', readyPlayers.value);
-	  console.log('[WaitingRoom] isReady:', isReady.value);
-	  console.log('[WaitingRoom] maxPlayers:', maxPlayers.value);
-	  console.log('[WaitingRoom] ========================================');
 	});
   
 	// Petite pause avant de demander l'état pour s'assurer que la WS est prête
 	setTimeout(() => {
-	  console.log('[WaitingRoom] Demande get-players...');
 	  sendMessage('get-players', { gameId });
 	}, 100);
   });
   
   function handlePlayerUpdate(payload: any) {
-	console.log('[WaitingRoom] handlePlayerUpdate appelé avec:', payload);
-	
 	// Mise à jour des joueurs
 	if (payload.players && Array.isArray(payload.players)) {
-	  console.log('[WaitingRoom] Mise à jour players:', payload.players);
 	  players.value = [...payload.players]; // Copie pour forcer la réactivité
 	}
 	
 	// Mise à jour des noms
 	if (payload.playerNames && typeof payload.playerNames === 'object') {
-	  console.log('[WaitingRoom] Mise à jour playerNames:', payload.playerNames);
 	  playerNames.value = { ...payload.playerNames }; // Copie pour forcer la réactivité
 	}
 	
 	// Mise à jour des joueurs prêts
 	if (payload.readyPlayers && Array.isArray(payload.readyPlayers)) {
-	  console.log('[WaitingRoom] Mise à jour readyPlayers:', payload.readyPlayers);
 	  readyPlayers.value = [...payload.readyPlayers];
 	  isReady.value = readyPlayers.value.includes(playerId);
 	}
 	
 	// Mise à jour du nombre max de joueurs
 	if (payload.maxPlayers) {
-	  console.log('[WaitingRoom] Mise à jour maxPlayers:', payload.maxPlayers);
 	  maxPlayers.value = payload.maxPlayers;
 	}
-	
-	console.log('[WaitingRoom] Après handlePlayerUpdate:');
-	console.log('[WaitingRoom] - players.value:', players.value);
-	console.log('[WaitingRoom] - playerNames.value:', playerNames.value);
-	console.log('[WaitingRoom] - readyPlayers.value:', readyPlayers.value);
-	console.log('[WaitingRoom] - isReady.value:', isReady.value);
   }
   
   onUnmounted(() => {
-	console.log('[WaitingRoom] Nettoyage onUnmounted');
+	// Cleanup on unmount
   });
   
   function onReady() {
 	if (isReady.value) {
-	  console.log('[WaitingRoom] Déjà prêt, ignorer');
 	  return;
 	}
-	console.log('[WaitingRoom] ===== BOUTON PRÊT CLIQUÉ =====');
-	console.log('[WaitingRoom] GameId:', gameId);
-	console.log('[WaitingRoom] PlayerId:', playerId);
 	sendMessage('player-ready', { gameId, playerId });
-	console.log('[WaitingRoom] Message player-ready envoyé');
   }
   
   function goBack() {
@@ -301,7 +243,7 @@
 		gameIdCopied.value = false;
 	  }, 2000);
 	} catch (err) {
-	  console.error('Erreur lors de la copie:', err);
+	  // Handle copy error silently
 	}
   }
   </script>
@@ -696,70 +638,5 @@
   @keyframes spin {
 	from { transform: rotate(0deg); }
 	to { transform: rotate(360deg); }
-  }
-  
-  @media (max-width: 768px) {
-	.header {
-	  padding: 1rem;
-	}
-	
-	.logo-text {
-	  font-size: 1.5rem;
-	}
-	
-	.main-content {
-	  padding: 1rem;
-	}
-	
-	.main-title {
-	  font-size: 2.5rem;
-	}
-	
-	.game-card {
-	  padding: 1.5rem;
-	}
-	
-	.game-id-display {
-	  flex-direction: column;
-	  gap: 1rem;
-	}
-	
-	.btn-ready {
-	  font-size: 1rem;
-	  padding: 0.875rem 1.5rem;
-	}
-  }
-  
-  @media (max-width: 480px) {
-	.main-title {
-	  font-size: 2rem;
-	}
-	
-	.game-card {
-	  padding: 1rem;
-	}
-	
-	.logo-text {
-	  font-size: 1.2rem;
-	}
-	
-	.back-button {
-	  padding: 0.5rem 1rem;
-	  font-size: 0.9rem;
-	}
-	
-	.game-id-value {
-	  font-size: 1.2rem;
-	  padding: 0.5rem 1rem;
-	}
-	
-	.btn-ready {
-	  font-size: 0.9rem;
-	  padding: 0.75rem 1.25rem;
-	}
-	
-	.ready-section {
-	  padding: 1rem;
-	}
   }
   </style>

@@ -81,7 +81,7 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
-import { useAuth } from '../composable/useAuths'
+import { useAuth } from '../../composable/useAuths'
 
 const router = useRouter()
 const { isAuthenticated } = useAuth()

@@ -20,8 +20,5 @@ export default fp(async function googleOAuth(fastify: any) {
         scope: ['openid', 'profile', 'email']
     });
     
-    // Log pour debug
-    console.log('✅ Google OAuth plugin configured');
-    console.log('🔗 Redirect URI:', process.env.GOOGLE_REDIRECT_URI);
-    console.log('🆔 Client ID:', process.env.GOOGLE_CLIENT_ID ? 'Set' : 'Not set');
+    // Google OAuth plugin configured
 });

@@ -30,7 +30,6 @@ export async function enable2FA(request: FastifyRequest, reply: FastifyReply) {
 		return reply.status(500).send('QR_CODE_GENERATION_ERROR ');
 	}
 	catch (error) {
-		console.error(error);
 		return reply.code(500).send({ error: 'Internal server error' });
 	}
 }
