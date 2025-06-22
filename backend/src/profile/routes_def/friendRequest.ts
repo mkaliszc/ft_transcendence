@@ -1,6 +1,6 @@
-import { User } from "../../db_models/user_model";
-import { JWTpayload } from "../../interfaces";
-import { Friendship } from "../../db_models/friendship_model";
+import { User } from "../utils/db_models/user_model";
+import { JWTpayload } from "../utils/interfaces";
+import { Friendship } from "../utils/db_models/friendship_model";
 import { FastifyRequest, FastifyReply } from "fastify";
 import { Op } from "sequelize";
 
@@ -22,7 +22,7 @@ export async function friendrequest(request: FastifyRequest<{Params: { username 
 					{ user_id1: senderId, user_id2: receiver.user_id },
 					{ user_id1: receiver.user_id, user_id2: senderId }
 				],
-				status: { [Op.in]: ['pending', 'accepted', 'declined', 'none'] }
+				status: { [Op.in]: ['pending', 'accepted', 'none'] }
 			}
 		});
 		if (existingFriendship && existingFriendship.status)
@@ -33,10 +33,6 @@ export async function friendrequest(request: FastifyRequest<{Params: { username 
 
 			if (existingFriendship.status=== 'pending') {
 				return reply.status(400).send({ error: 'Friend request already sent' });
-			}
-
-			if (existingFriendship?.status === 'declined') {
-				return reply.status(200).send({ message: 'This user declined your request' });
 			}
 
 			if (existingFriendship?.status === 'none') {

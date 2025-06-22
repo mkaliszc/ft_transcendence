@@ -1,6 +1,6 @@
-import { User } from "../../db_models/user_model";
+import { User } from "../utils/db_models/user_model";
 import { FastifyRequest, FastifyReply } from "fastify";
-import { JWTpayload } from "../../interfaces";
+import { JWTpayload } from "../utils/interfaces";
 
 export async function deleteUser(request: FastifyRequest, reply: FastifyReply) {
 	try {

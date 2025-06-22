@@ -1,7 +1,7 @@
 import { FastifyRequest, FastifyReply } from 'fastify';
 import speakeasy from 'speakeasy';
-import { User } from '../../db_models/user_model';
-import { JWTpayload } from '../../interfaces';
+import { User } from '../utils/db_models/user_model';
+import { JWTpayload } from '../utils/interfaces';
 
 interface Check2FARequest {
 	code: string;

@@ -5,7 +5,7 @@ class Friendship extends Model {
 	friendship_id!: number;
 	user_id1!: number;
 	user_id2!: number;
-	status!: string; // 'pending', 'accepted', 'declined', 'blocked'
+	status!: string; // 'pending', 'accepted','none'
 	creation_date!: Date;
 	last_update!: Date;
 }
@@ -39,7 +39,7 @@ Friendship.init({
 		allowNull: false,
 		defaultValue: 'none',
 		validate: {
-			isIn: [['pending', 'accepted', 'declined', 'none']]
+			isIn: [['pending', 'accepted', 'none']]
 		}
 	},
 	creation_date: {
