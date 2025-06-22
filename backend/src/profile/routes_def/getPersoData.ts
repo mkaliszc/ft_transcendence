@@ -62,7 +62,7 @@ export async function getPersoData(request: FastifyRequest, reply: FastifyReply)
 				user_id: user.user_id,
 				format: "JSON",
 				gdpr_compliance: "Article 15 (Right of access) & Article 20 (Right to data portability)",
-				data_controller: "YourApp Name"
+				data_controller: "ft_transcendence"
 			},
 
 			personal_information: {
@@ -71,7 +71,7 @@ export async function getPersoData(request: FastifyRequest, reply: FastifyReply)
 				email_address: user.email_adress,
 				account_created: user.creation_date,
 				last_update: user.last_update,
-				two_factor_auth_enabled: user.twoFA,
+				two_factor_enabled: user.twoFA,
 				avatar_data: user.avatar ? "Avatar data present" : "No avatar set",
 			
 				gaming_statistics: {
@@ -91,7 +91,6 @@ export async function getPersoData(request: FastifyRequest, reply: FastifyReply)
 					.map((opponent: any) => ({
 						opponent_id: opponent.user.user_id,
 						opponent_username: opponent.user.username,
-						opponent_email: opponent.user.email_adress,
 						opponent_score: opponent.user_score,
 						opponent_won: opponent.winner
 					}));
@@ -111,7 +110,6 @@ export async function getPersoData(request: FastifyRequest, reply: FastifyReply)
 					friendship_id: friendship.friendship_id,
 					sent_to_user_id: (friendship as any).receiver.user_id,
 					sent_to_username: (friendship as any).receiver.username,
-					sent_to_email: (friendship as any).receiver.email_adress,
 					status: friendship.status,
 					request_date: friendship.creation_date,
 					last_update: friendship.last_update
@@ -121,7 +119,6 @@ export async function getPersoData(request: FastifyRequest, reply: FastifyReply)
 					friendship_id: friendship.friendship_id,
 					received_from_user_id: (friendship as any).sender.user_id,
 					received_from_username: (friendship as any).sender.username,
-					received_from_email: (friendship as any).sender.email_adress,
 					status: friendship.status,
 					request_date: friendship.creation_date,
 					last_update: friendship.last_update
@@ -145,8 +142,6 @@ export async function getPersoData(request: FastifyRequest, reply: FastifyReply)
 				data_sharing: "Your data is not shared with third parties except as required by law."
 			}
 		};
-
-		console.log(`GDPR export requested by user ${payload.user_id} at ${new Date().toISOString()}`);
 
 		return reply.status(200)
 			.header('Content-Type', 'application/json')

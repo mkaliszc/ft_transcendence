@@ -11,7 +11,6 @@ export async function getUser(request: FastifyRequest<{ Params: { username: stri
 			return reply.status(404).send({ error: 'User not found' });
 		}
 		const isOwner = user.user_id === payload.user_id;
-		
 		const Public: Pub_User = {
 			username: user.username,
 			number_of_matches: user.number_of_matches,
