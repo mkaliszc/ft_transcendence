@@ -1,6 +1,6 @@
-import { User } from "../../db_models/user_model";
-import { UserMatch } from "../../db_models/user_match_model";
-import { Matches } from "../../db_models/matches_model";
+import { User } from "../utils/db_models/user_model";
+import { UserMatch } from "../utils/db_models/user_match_model";
+import { Matches } from "../utils/db_models/matches_model";
 import { FastifyRequest, FastifyReply } from "fastify";
 import { Op } from "sequelize";
 
@@ -60,8 +60,22 @@ export async function getHistory(request: FastifyRequest<{ Params: { username: s
 			})) || []
 		}));
 
+		let matches1v1 = 0;
+		let matches1v1v1v1 = 0;
+
+		formattedMatches.forEach(match => {
+			const totalPlayers = match.opponents.length + 1;
+			if (totalPlayers === 2) {
+				matches1v1++;
+			} else if (totalPlayers === 4) {
+				matches1v1v1v1++;
+			}
+		});
+
 		return reply.status(200).send({
 			total_matches: formattedMatches.length,
+			matches_2p: matches1v1,
+			matches_4p: matches1v1v1v1,
 			matches: formattedMatches
 		});
 

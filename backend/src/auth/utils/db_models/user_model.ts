@@ -1,6 +1,6 @@
 import { DataTypes, Model } from 'sequelize';
 import { sequelize } from '../def'
-import { DefaultAvatar } from '../profile/utils/default';
+import { DefaultAvatar } from '../default';
 
 class User extends Model {
 	user_id!: number

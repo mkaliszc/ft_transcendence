@@ -7,10 +7,11 @@ CERT_PATH = nginx/certificates
 CERT_KEY = $(CERT_PATH)/localhost.key
 CERT_CRT = $(CERT_PATH)/localhost.crt
 CERT_FILES = $(CERT_KEY) $(CERT_CRT)
+VOLUME_DIRS = ./volumes/logs ./volumes/mariadb
 
 all: up
 
-up: ${CERT_FILES}
+up: ${CERT_FILES} ${VOLUME_DIRS}
 	${DOCKER_CMD} -p ${NAME} -f ${DOCKER_PATH} up -d --build;
 
 down:
@@ -25,11 +26,19 @@ start:
 restart:	
 	${DOCKER_CMD} -p ${NAME} -f ${DOCKER_PATH} restart;
 
-re: down reload_certs up
+re: down reload_certs create_dirs up
 
 reload_certs:
 	@rm -f ${CERT_FILES}
 	@$(MAKE) -s ${CERT_FILES}
+
+create_dirs: ${VOLUME_DIRS}
+
+${VOLUME_DIRS}:
+	@if [ ! -d $@ ]; then \
+		mkdir -p $@; \
+		echo "Created directory: $@"; \
+	fi
 
 ${CERT_FILES}:
 	@mkdir -p $(CERT_PATH)
@@ -38,4 +47,4 @@ ${CERT_FILES}:
 		-subj "/CN=localhost" \
 		-addext "subjectAltName=DNS:localhost"
 
-.PHONY: all up down stop start restart re reload_certs
+.PHONY: all up down stop start restart re reload_certs create_dirs

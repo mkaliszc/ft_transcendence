@@ -1,6 +1,6 @@
 import { FastifyRequest, FastifyReply } from 'fastify';
-import { JWTpayload } from '../../interfaces';
-import { User } from '../../db_models/user_model';
+import { JWTpayload } from '../utils/interfaces';
+import { User } from '../utils/db_models/user_model';
 
 export async function refreshToken(request: FastifyRequest, reply: FastifyReply) {
 	try {

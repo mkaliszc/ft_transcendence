@@ -1,6 +1,6 @@
 import { FastifyReply, FastifyRequest } from 'fastify';
-import { User } from '../../db_models/user_model';
-import { JWTpayload } from '../../interfaces';
+import { User } from '../utils/db_models/user_model';
+import { JWTpayload } from '../utils/interfaces';
 import { AnonymeAvatar } from '../utils/default';
 
 export async function anonymization(request: FastifyRequest, reply: FastifyReply) {

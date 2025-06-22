@@ -15,7 +15,7 @@ export interface Friendship {
   friendship_id: number;
   user_id1: number;
   user_id2: number;
-  status: 'pending' | 'accepted' | 'blocked' | 'declined' | 'none';
+  status: 'pending' | 'accepted'| 'none';
   creation_date: string;
   friend: {
     username: string;

@@ -1,6 +1,6 @@
 import { FastifyRequest , FastifyReply } from 'fastify';
-import { JWTpayload } from '../../interfaces';
-import { Friendship } from '../../db_models/friendship_model';
+import { JWTpayload } from '../utils/interfaces';
+import { Friendship } from '../utils/db_models/friendship_model';
 
 export async function declineRequest(request: FastifyRequest<{ Body: { friendship_id: number } }>, reply: FastifyReply) {
 	try {
@@ -23,11 +23,11 @@ export async function declineRequest(request: FastifyRequest<{ Body: { friendshi
 			return reply.status(404).send({ error: 'Friendship not found' });
 		}
 
-		await friendship.update({ status: 'declined' });
+		await friendship.update({ status: 'none' });
 
 		return reply.status(200).send({ message: 'Friend request declined successfully', });
 	}
 	catch (error) {
-		return reply.status(500).send({ error: 'Internal server error while accepting friend request' });
+		return reply.status(500).send({ error: 'Internal server error while declining friend request' });
 	}
 }
