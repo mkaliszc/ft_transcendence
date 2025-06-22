@@ -693,6 +693,12 @@ const saveProfile = async () => {
     
     // Mettre à jour les données originales
     originalProfile.value = { ...editableProfile.value }
+
+    // MAJ du localStorage user_data avec le nouveau username (et avatar si besoin)
+    const userData = JSON.parse(localStorage.getItem('user_data') || '{}');
+    userData.username = editableProfile.value.username.trim();
+    if (editableProfile.value.avatar) userData.avatar = editableProfile.value.avatar;
+    localStorage.setItem('user_data', JSON.stringify(userData));
     
     updateMessage.value = {
       type: 'success',

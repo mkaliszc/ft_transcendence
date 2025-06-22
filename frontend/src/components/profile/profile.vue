@@ -8,11 +8,7 @@
 		</div>
 
 		<!-- Contenu principal -->
-		<div v-else>
-		  <h1 class="text-4xl font-bold text-white mb-8 text-center flex items-center justify-center gap-3">
-			{{ $t('profileTitle') }} {{ username }}
-		  </h1>
-
+		<div>
 		  <!-- Section principale du profil -->
 		  <div class="profile-container bg-black/40 backdrop-blur-sm p-8 rounded-xl border border-yellow-500/30 shadow-2xl">
 			<div class="avatar-section">
@@ -20,46 +16,12 @@
 				<img :src="displayAvatar" alt="Avatar" class="avatar" />
 				<!-- Bouton d'édition de l'avatar supprimé -->
 			  </div>
-			  <div class="player-rank">
-				<span class="rank-label">{{ $t('rank') }}</span>
-				<span class="rank-value">{{ playerRank }}</span>
-			  </div>
+			  <!-- Suppression du player-rank (classement) -->
 			</div>
-			
 			<div class="info-section">
 			  <div class="info-row">
 				<span class="label">{{ $t('username') }}:</span>
-				<div class="username-field">
-				  <input 
-					v-model="username" 
-					type="text" 
-					class="input-field"
-					:placeholder="$t('enterUsername')"
-					readonly
-				  />
-				  <!-- Bouton d'édition du profil supprimé -->
-				</div>
-			  </div>
-			  
-			  <div class="info-row">
-				<span class="label">{{ $t('level') }}:</span>
-				<div class="level-display">
-				  <span class="value">{{ level }}</span>
-				  <div class="level-progress">
-					<div class="progress-bar" :style="{ width: levelProgress + '%' }"></div>
-				  </div>
-				  <span class="level-text">{{ experienceText }}</span>
-				</div>
-			  </div>
-			  
-			  <div class="info-row">
-				<span class="label">{{ $t('pongRating') }}:</span>
-				<div class="rating-display">
-				  <span class="rating-value">{{ pongStats.rating }}</span>
-				  <div class="rating-stars">
-					<span v-for="star in ratingStars" :key="star" class="star">⭐</span>
-				  </div>
-				</div>
+				<span class="value profile-username">{{ username }}</span>
 			  </div>
 
 			  <div class="info-row">
@@ -71,13 +33,6 @@
 				<span class="label">{{ $t('memberSince') }}:</span>
 				<span class="value">{{ formatDate(memberSince) }}</span>
 			  </div>
-
-			  <div class="info-row">
-				<span class="label">{{ $t('title') }}:</span>
-				<span class="value title-badge">{{ playerTitle }}</span>
-			  </div>
-
-
 			</div>
 		  </div>
 
@@ -122,9 +77,10 @@
 				<div class="stat-value">{{ winRatePercentage }}%</div>
 			  </div>
 			  <div class="stat-card">
-				<div class="stat-icon">⚡</div>
-				<h3>{{ $t('rating') }}</h3>
-				<div class="stat-value">{{ pongStats.rating }}</div>
+				<div class="stat-icon">👾</div>
+				<h3>Parties à 4 joueurs</h3>
+				<div class="stat-value">{{ fourPlayersMatchesCount }}</div>
+				<div class="stat-subtitle">Mêlée générale</div>
 			  </div>
 			</div>
 
@@ -149,20 +105,31 @@
 						{{ match.playerScore }} - {{ match.opponentScore }}
 					  </div>
 					  <div class="match-info">
-						<span class="match-opponent">vs {{ match.opponent }}</span>
+						<span class="match-opponent">
+						  <template v-if="match.matchType === '1v1'">
+							vs {{ match.opponent }}
+						  </template>
+						  <template v-else>
+							<span class="melee-badge">Mêlée générale</span>
+						  </template>
+						</span>
 						<span class="match-duration">{{ match.duration }}</span>
 					  </div>
 					  <div class="match-stats">
 						<span class="match-date">{{ formatDate(match.date) }}</span>
 					  </div>
+					  <div v-if="match.matchType === '1v1v1v1'" class="melee-players">
+						<span class="melee-title">Joueurs & scores :</span>
+						<ul class="melee-list">
+						  <li v-for="(op, idx) in [ {username: username, score: match.playerScore}, ...match.allOpponents ]" :key="idx">
+							<span class="melee-player">{{ op.username }}</span>
+							<span class="melee-score">({{ op.score }})</span>
+						  </li>
+						</ul>
+					  </div>
 					</div>
 					<div class="match-points">
-					  <span class="points-earned">+{{ match.pointsEarned }}</span>
-					  <div class="match-rating">
-						<span class="rating-change" :class="match.ratingChange >= 0 ? 'positive' : 'negative'">
-						  {{ match.ratingChange >= 0 ? '+' : '' }}{{ match.ratingChange }}
-						</span>
-					  </div>
+					  <!-- Suppression de l'affichage des points gagnés/perdus et du ratingChange -->
 					</div>
 				  </div>
 				</div>
@@ -317,7 +284,6 @@ const isOwnProfile = computed(() => !targetUsername.value || targetUsername.valu
 
 // État local avec la Composition API
 const username = ref('')
-const level = ref(1)
 const avatar = ref(DEFAULT_AVATARS_BASE64.default) // Utilise l'avatar par défaut en base64
 const memberSince = ref(new Date())
 
@@ -330,7 +296,6 @@ const isLoadingData = ref(true)
 const pongStats = ref({
   matchesPlayed: 0,
   victories: 0,
-  rating: 1000,
   avgReactionTime: 200, // Valeur par défaut
   accuracy: 0,
   longestRally: 0,
@@ -346,46 +311,6 @@ const twoFactorEnabled = ref(false)
 // Computed properties
 const winRatePercentage = computed(() => {
   return pongStats.value.matchesPlayed > 0 ? Math.round((pongStats.value.victories / pongStats.value.matchesPlayed) * 100) : 0
-})
-
-const levelProgress = computed(() => {
-  const baseMatches = (level.value - 1) * 10
-  const currentMatches = pongStats.value.matchesPlayed // Nombre de matchs en ligne seulement
-  const progressInLevel = currentMatches - baseMatches
-  return Math.min((progressInLevel / 10) * 100, 100)
-})
-
-const experienceText = computed(() => {
-  const nextLevel = level.value + 1
-  const baseMatches = (level.value - 1) * 10
-  const currentMatches = pongStats.value.matchesPlayed // Nombre de matchs en ligne seulement
-  const progressInLevel = currentMatches - baseMatches
-  const remaining = 10 - progressInLevel
-  return `${remaining} matchs en ligne vers niveau ${nextLevel}`
-})
-
-const playerTitle = computed(() => {
-  const rating = pongStats.value.rating
-  if (rating >= 2000) return 'Légende du Pong'
-  if (rating >= 1800) return 'Maître Paddle'
-  if (rating >= 1600) return 'Expert Pong'
-  if (rating >= 1400) return 'Joueur Avancé'
-  if (rating >= 1200) return 'Joueur Confirmé'
-  return 'Débutant'
-})
-
-const playerRank = computed(() => {
-  const rating = pongStats.value.rating
-  if (rating >= 2000) return 'Diamant'
-  if (rating >= 1800) return 'Platine'
-  if (rating >= 1600) return 'Or'
-  if (rating >= 1400) return 'Argent'
-  if (rating >= 1200) return 'Bronze'
-  return 'Fer'
-})
-
-const ratingStars = computed(() => {
-  return Math.floor(pongStats.value.rating / 400) + 1
 })
 
 // Computed pour l'avatar avec fallback
@@ -411,6 +336,22 @@ const winrateHistory = ref([
 
 // Historique des matches (formaté pour l'affichage)
 const pongMatchHistory = ref([])
+// Nombre de parties à 4 joueurs (mêlée générale)
+const fourPlayersMatchesCount = computed(() => {
+  // Si le backend fournit matches_4p, on l'utilise directement
+  if (userProfile.value && typeof userProfile.value.matches_4p === 'number') {
+    return userProfile.value.matches_4p;
+  }
+  // Sinon, fallback sur le calcul local
+  return pongMatchHistory.value.filter(match => match.matchType === '1v1v1v1').length;
+});
+// Nombre de parties à 2 joueurs (1v1)
+const twoPlayersMatchesCount = computed(() => {
+  if (userProfile.value && typeof userProfile.value.matches_2p === 'number') {
+    return userProfile.value.matches_2p;
+  }
+  return pongMatchHistory.value.filter(match => match.matchType === '1v1').length;
+});
 
 // Variables pour l'édition du profil (simplifiées pour le composant)
 const showEditProfile = ref(false)
@@ -425,13 +366,26 @@ const editProfileData = computed(() => {
   }
 })
 
+// Fonction utilitaire pour obtenir le username à partir de l'id utilisateur courant
+const getCurrentUsernameFromId = () => {
+  const userData = JSON.parse(localStorage.getItem('user_data') || '{}');
+  return userData.username || '';
+}
+
 // Fonction pour charger les données utilisateur depuis le backend
 const loadUserData = async () => {
   try {
     isLoadingData.value = true
     
     // Détermine quel utilisateur charger
-    const usernameToLoad = targetUsername.value || currentUser.value?.username;
+    let usernameToLoad = '';
+    if (isOwnProfile.value) {
+      // Toujours utiliser le username à jour lié à l'id utilisateur courant
+      usernameToLoad = getCurrentUsernameFromId();
+    } else {
+      usernameToLoad = targetUsername.value;
+    }
+    if (!usernameToLoad) throw new Error('Aucun username trouvé');
     
     // Récupérer les informations du profil utilisateur
     const userInfo = await userApi.getUser(usernameToLoad);
@@ -441,7 +395,15 @@ const loadUserData = async () => {
     username.value = userInfo.username || ''
     memberSince.value = new Date(userInfo.created_at) || new Date()
     avatar.value = userInfo.avatar || DEFAULT_AVATAR // Utilise l'avatar par défaut si null en DB
-    
+
+    // Mise à jour du nombre de matchs 2p/4p si présents
+    if (typeof userInfo.matches_2p === 'number') {
+      userProfile.value.matches_2p = userInfo.matches_2p;
+    }
+    if (typeof userInfo.matches_4p === 'number') {
+      userProfile.value.matches_4p = userInfo.matches_4p;
+    }
+
     // Mise à jour de l'état 2FA (seulement pour son propre profil)
     if (isOwnProfile.value) {
       twoFactorEnabled.value = userInfo.twoFA || false
@@ -450,13 +412,6 @@ const loadUserData = async () => {
     // Calcul des statistiques à partir des vraies données (sera mise à jour par processMatchHistory)
     pongStats.value.matchesPlayed = 0 // Sera calculé avec les matchs en ligne seulement
     pongStats.value.victories = 0     // Sera calculé avec les matchs en ligne seulement
-    
-    // Calcul du niveau basé sur le nombre de matches en ligne
-    // level.value sera recalculé après avoir filtré les matchs en ligne
-    
-    // Calcul du rating basé sur le ratio des matchs en ligne
-    const ratio = userInfo.ratio || 0
-    pongStats.value.rating = Math.round(1000 + (ratio * 800))
     
     // Récupérer l'historique des matches depuis le serveur
     try {
@@ -489,43 +444,61 @@ const processMatchHistory = (matches) => {
     match.opponents[0]?.username.toLowerCase() !== 'ia' &&
     match.opponents[0]?.username.toLowerCase() !== 'bot'
   )
-  
-  // Mettre à jour les statistiques pour ne compter que les matchs en ligne
-  pongStats.value.matchesPlayed = onlineMatches.length
-  pongStats.value.victories = onlineMatches.filter(match => match.i_won).length
-  
-  // Recalculer le niveau basé sur les matchs en ligne seulement
-  level.value = Math.floor(onlineMatches.length / 10) + 1
-  
-  // Calculer les données de winrate au fil du temps (seulement matchs en ligne)
-  let wins = 0
-  const winrateData = []
-  
-  onlineMatches.slice(-10).forEach((match, index) => {
-    if (match.i_won) wins++
-    const winrate = Math.round((wins / (index + 1)) * 100)
+
+  // Séparer les matchs 1v1 (2 joueurs) et 1v1v1v1 (4 joueurs)
+  const oneVsOneMatches = onlineMatches.filter(match => match.opponents.length === 1);
+  const fourPlayersMatches = onlineMatches.filter(match => match.opponents.length === 3);
+
+  // Mettre à jour les statistiques pour les 1v1 uniquement
+  pongStats.value.matchesPlayed = oneVsOneMatches.length;
+  pongStats.value.victories = oneVsOneMatches.filter(match => match.i_won).length;
+
+  // Calculer les données de winrate au fil du temps (1v1)
+  let wins = 0;
+  const winrateData = [];
+  oneVsOneMatches.slice(-10).forEach((match, index) => {
+    if (match.i_won) wins++;
+    const winrate = Math.round((wins / (index + 1)) * 100);
     winrateData.push({
       date: new Date(match.match_date),
       winrate: winrate
-    })
-  })
-  
+    });
+  });
   winrateHistory.value = winrateData.length > 0 ? winrateData : [
     { date: new Date(), winrate: pongStats.value.matchesPlayed > 0 ? Math.round((pongStats.value.victories / pongStats.value.matchesPlayed) * 100) : 0 }
-  ]
-  
-  // Adapter l'historique des matches pour l'affichage (seulement matches en ligne)
-  pongMatchHistory.value = onlineMatches.slice(0, 10).map((match, index) => ({
-    id: index + 1,
-    playerScore: match.my_score,
-    opponentScore: match.opponents[0]?.score || 0,
-    opponent: match.opponents[0]?.username || 'Inconnu',
-    won: match.i_won,
-    duration: formatDuration(match.game_duration),
-    pointsEarned: match.i_won ? 20 : 5,
-    ratingChange: match.i_won ? Math.floor(Math.random() * 20) + 5 : -Math.floor(Math.random() * 15) - 5,
-    date: new Date(match.match_date)
-  }))
+  ];
+
+  // Historique pour affichage : on mélange les deux types, mais on précise le type
+  // On affiche tous les matchs (1v1 et 1v1v1v1), avec un affichage détaillé pour les 4 joueurs
+  pongMatchHistory.value = onlineMatches.slice(0, 10).map((match, index) => {
+    const isFourPlayers = match.opponents.length === 3;
+    let matchType = isFourPlayers ? '1v1v1v1' : '1v1';
+    let opponentsDisplay = '';
+    let playerScore = match.my_score;
+    let opponentScore = match.opponents[0]?.score || 0;
+    let opponent = match.opponents[0]?.username || 'Inconnu';
+    if (isFourPlayers) {
+      // Affichage détaillé pour la mêlée générale
+      opponentsDisplay = match.opponents.map(op => `${op.username} (${op.score})`).join(' | ');
+      // Pour l'affichage principal, on peut mettre le score du joueur et la somme des autres scores
+      opponentScore = match.opponents.reduce((acc, op) => acc + (op.score || 0), 0);
+      opponent = 'Mêlée générale';
+    } else {
+      opponentsDisplay = `${match.opponents[0]?.username || 'Inconnu'} (${match.opponents[0]?.score ?? '-'})`;
+    }
+    return {
+      id: index + 1,
+      playerScore,
+      opponentScore,
+      opponent,
+      won: match.i_won,
+      duration: match.game_duration || formatDuration(match.game_duration),
+      date: new Date(match.match_date),
+      matchType,
+      opponentsDisplay,
+      allOpponents: match.opponents
+    };
+  });
 }
 
 // Générer des données par défaut (pas de matchs en ligne)
@@ -533,7 +506,6 @@ const generateDefaultData = () => {
   // Réinitialiser les statistiques pour les matchs en ligne seulement
   pongStats.value.matchesPlayed = 0
   pongStats.value.victories = 0
-  level.value = 1 // Niveau 1 si aucun match en ligne
   
   const currentWinRate = 0 // Pas de matchs en ligne = 0% winrate
   winrateHistory.value = [
@@ -630,7 +602,13 @@ const handleProfileUpdated = async (updatedProfile) => {
   // Mettre à jour les données locales
   username.value = updatedProfile.username
   avatar.value = updatedProfile.avatar
-  
+
+  // Recharge le username à jour depuis le localStorage (user_data)
+  const userData = JSON.parse(localStorage.getItem('user_data') || '{}');
+  if (userData.username) {
+    username.value = userData.username;
+  }
+
   // Recharger les données utilisateur pour synchroniser avec le backend
   await loadUserData()
 }
@@ -765,24 +743,6 @@ const deleteAccount = async () => {
   transform: scale(1.05);
 }
 
-.player-rank {
-  margin-top: 10px;
-  text-align: center;
-}
-
-.rank-label {
-  display: block;
-  color: #e0e0e0;
-  font-size: 0.8em;
-}
-
-.rank-value {
-  display: block;
-  color: #d4af37;
-  font-weight: bold;
-  font-size: 1.1em;
-}
-
 .info-section {
   flex: 1;
   text-align: left;
@@ -819,80 +779,6 @@ const deleteAccount = async () => {
 .value {
   font-size: 1.1em;
   color: #f8f9fa;
-}
-
-.level-display {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-  flex: 1;
-}
-
-.level-progress {
-  width: 200px;
-  height: 8px;
-  background-color: rgba(255, 255, 255, 0.1);
-  border-radius: 4px;
-  overflow: hidden;
-}
-
-.progress-bar {
-  height: 100%;
-  background: linear-gradient(90deg, #d4af37, #c19b2e);
-  transition: width 0.5s ease;
-}
-
-.level-text {
-  font-size: 0.9em;
-  color: #e0e0e0;
-}
-
-.rating-display {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.rating-value {
-  font-size: 1.3em;
-  font-weight: bold;
-  color: #d4af37;
-}
-
-.rating-stars {
-  display: flex;
-  gap: 2px;
-}
-
-.star {
-  font-size: 1.2em;
-}
-
-.title-badge {
-  background: linear-gradient(45deg, #d4af37, #c19b2e);
-  color: #1a1a1a;
-  padding: 4px 12px;
-  border-radius: 12px;
-  font-weight: bold;
-  font-size: 0.9em;
-}
-
-.input-field {
-  padding: 12px;
-  border: 2px solid rgba(212, 175, 55, 0.3);
-  background-color: rgba(255, 255, 255, 0.1);
-  color: #f8f9fa;
-  border-radius: 8px;
-  font-size: 1em;
-  width: 250px;
-  transition: border-color 0.3s ease;
-  backdrop-filter: blur(10px);
-}
-
-.input-field:focus {
-  outline: none;
-  border-color: #d4af37;
-  box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.3);
 }
 
 .status {
@@ -1044,24 +930,11 @@ const deleteAccount = async () => {
 .match-history-extended .history-list {
   max-height: 400px;
   overflow-y: auto;
+  scrollbar-width: none; /* Firefox */
 }
 
 .match-history-extended .history-list::-webkit-scrollbar {
-  width: 6px;
-}
-
-.match-history-extended .history-list::-webkit-scrollbar-track {
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 3px;
-}
-
-.match-history-extended .history-list::-webkit-scrollbar-thumb {
-  background: #d4af37;
-  border-radius: 3px;
-}
-
-.match-history-extended .history-list::-webkit-scrollbar-thumb:hover {
-  background: #c19b2e;
+  display: none; /* Chrome, Safari, Opera */
 }
 
 /* Styles pour le message "Aucun historique" */
@@ -1230,31 +1103,6 @@ const deleteAccount = async () => {
   font-size: 0.8em;
 }
 
-.match-points {
-  text-align: right;
-}
-
-.points-earned {
-  color: #d4af37;
-  font-weight: bold;
-  font-size: 1.1em;
-  display: block;
-  margin-bottom: 4px;
-}
-
-.rating-change {
-  font-size: 0.9em;
-  font-weight: bold;
-}
-
-.rating-change.positive {
-  color: #22c55e;
-}
-
-.rating-change.negative {
-  color: #ef4444;
-}
-
 /* Animation de chargement */
 .animate-spin {
   animation: spin 1s linear infinite;
@@ -1392,5 +1240,14 @@ const deleteAccount = async () => {
   color: #e0e0e0;
   font-size: 0.95em;
   margin-top: 1rem;
+}
+
+/* Ajout du style pour le pseudo dans la section info-row */
+.profile-username {
+  color: #d4af37;
+  font-size: 1.2em;
+  font-weight: bold;
+  letter-spacing: 1px;
+  padding-left: 0.5em;
 }
 </style>

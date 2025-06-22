@@ -278,78 +278,79 @@
 
   // Fonction pour sauvegarder le match dans la base de données
   async function saveMatchToDatabase() {
-	if (!gameStartTime) return;
-	
-	try {
-	  const endTime = new Date();
-	  const gameDuration = formatGameDuration(gameStartTime, endTime);
-	  const currentUsername = getCurrentUsername();
-	  
-	  // Ne sauvegarder que le match du joueur actuel
-	  if (!currentUsername) {
-		return;
-	  }
-	  
-	  // Déterminer le gagnant
-	  const scores = [
-		{ player: 'player1', score: gameState.score.player1 },
-		{ player: 'player2', score: gameState.score.player2 },
-		{ player: 'player3', score: gameState.score.player3 },
-		{ player: 'player4', score: gameState.score.player4 }
-	  ];
-	  
-	  const winner = scores.reduce((max, current) => 
-		current.score > max.score ? current : max
-	  );
-	  
-	  // Trouver le joueur adverse principal (pour un match 1v1 ou le meilleur adversaire en multijoueur)
-	  let opponentUsername = 'MultiOnline'; // Fallback
-	  let opponentScore = 0;
-	  
-	  // Dans un match multijoueur, on prend le joueur avec le meilleur score parmi les adversaires
-	  const opponents = scores.filter(s => s.player !== playerId);
-	  if (opponents.length > 0) {
-		const bestOpponent = opponents.reduce((max, current) => 
-		  current.score > max.score ? current : max
-		);
-		opponentScore = bestOpponent.score;
-		
-		// Essayer de récupérer le vrai nom d'utilisateur de l'adversaire depuis les noms du serveur
-		const opponentPlayerId = bestOpponent.player;
-		if (serverPlayerNames.value[opponentPlayerId]) {
-		  opponentUsername = serverPlayerNames.value[opponentPlayerId];
-		} else {
-		  // Si on n'a pas le nom depuis le serveur, utiliser un nom générique
-		  opponentUsername = `Player${opponentPlayerId.slice(-1)}`;
-		}
-	  }
-	  
-	  const currentPlayerScore = gameState.score[playerId as keyof typeof gameState.score];
-	  
-	  const players = [
-		{
-		  username: currentUsername,
-		  score: currentPlayerScore,
-		  is_winner: playerId === winner.player
-		},
-		{
-		  username: opponentUsername,
-		  score: opponentScore,
-		  is_winner: playerId !== winner.player
-		}
-	  ];
-	  
-	  await matchApi.saveMatch({
-		Players: players,
-		game_duration: gameDuration
-	  });
-	  
-	  // Déclencher l'événement pour mettre à jour le profil
-	  window.dispatchEvent(new CustomEvent('matchCompleted'));
-	  
-	} catch (error) {
-	  // Erreur silencieuse lors de la sauvegarde du match
-	}
+    if (!gameStartTime) return;
+
+    try {
+      const endTime = new Date();
+      const gameDuration = formatGameDuration(gameStartTime, endTime);
+      const currentUsername = getCurrentUsername();
+      if (!currentUsername) {
+        return;
+      }
+
+      // Déterminer le gagnant
+      const scores = [
+        { player: 'player1', score: gameState.score.player1 },
+        { player: 'player2', score: gameState.score.player2 },
+        { player: 'player3', score: gameState.score.player3 },
+        { player: 'player4', score: gameState.score.player4 }
+      ];
+      const winner = scores.reduce((max, current) =>
+        current.score > max.score ? current : max
+      );
+
+      let players = [];
+      if (gameState.gameMode === 4) {
+        // Partie à 4 joueurs : envoyer un tableau de 4 joueurs
+        players = [
+          {
+            username: getPlayerName('player1'),
+            score: gameState.score.player1,
+            is_winner: winner.player === 'player1'
+          },
+          {
+            username: getPlayerName('player2'),
+            score: gameState.score.player2,
+            is_winner: winner.player === 'player2'
+          },
+          {
+            username: getPlayerName('player3'),
+            score: gameState.score.player3,
+            is_winner: winner.player === 'player3'
+          },
+          {
+            username: getPlayerName('player4'),
+            score: gameState.score.player4,
+            is_winner: winner.player === 'player4'
+          }
+        ];
+      } else {
+        // Partie 1v1 : envoyer un tableau de 2 joueurs (moi + adversaire)
+        // Trouver l'adversaire
+        const opponentId = playerId === 'player1' ? 'player2' : 'player1';
+        players = [
+          {
+            username: getPlayerName(playerId),
+            score: gameState.score[playerId as keyof typeof gameState.score],
+            is_winner: playerId === winner.player
+          },
+          {
+            username: getPlayerName(opponentId),
+            score: gameState.score[opponentId as keyof typeof gameState.score],
+            is_winner: opponentId === winner.player
+          }
+        ];
+      }
+
+      await matchApi.saveMatch({
+        Players: players,
+        game_duration: gameDuration
+      });
+
+      window.dispatchEvent(new CustomEvent('matchCompleted'));
+    } catch (error) {
+      // Erreur silencieuse lors de la sauvegarde du match
+    }
   }
   
   function handlePlayerDisconnection() {
