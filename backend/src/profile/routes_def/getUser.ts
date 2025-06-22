@@ -1,5 +1,8 @@
 import { Pub_User } from "../../interfaces";
 import { User } from "../../db_models/user_model";
+import { Matches } from "../../db_models/matches_model";
+import { UserMatch } from "../../db_models/user_match_model";
+import { Op } from "sequelize";
 import { FastifyRequest, FastifyReply } from "fastify";
 import { JWTpayload } from "../../interfaces";
 
@@ -11,6 +14,7 @@ export async function getUser(request: FastifyRequest<{ Params: { username: stri
 			return reply.status(404).send({ error: 'User not found' });
 		}
 		const isOwner = user.user_id === payload.user_id;
+
 		const Public: Pub_User = {
 			username: user.username,
 			number_of_matches: user.number_of_matches,
@@ -21,8 +25,8 @@ export async function getUser(request: FastifyRequest<{ Params: { username: stri
 			updated_at: user.last_update,
 			avatar: user.avatar,
 			...(isOwner && {
-                email_adress: user.email_adress,
-                twoFA: user.twoFA
+				email_adress: user.email_adress,
+				twoFA: user.twoFA
             })
 		}
 
