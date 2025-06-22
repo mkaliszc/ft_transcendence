@@ -5,7 +5,7 @@ import { DefaultAvatar } from '../default';
 class User extends Model {
 	user_id!: number
 	username!: string
-	email_adress!: string
+	email_adress?: string
 	hashed_password!: string
 	number_of_matches!: number
 	number_of_win!: number
@@ -34,7 +34,7 @@ User.init({
 	},
 	email_adress: {
 		type: DataTypes.STRING(255),
-		allowNull: false,
+		allowNull: true,
 		unique: true,
 		validate: {
 			isEmail: true

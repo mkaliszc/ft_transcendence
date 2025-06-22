@@ -5,7 +5,6 @@ export interface JWTpayload {
 
 export interface SignUpRequest {
 	username: string;
-	email_adress: string;
 	password: string;
 }
 

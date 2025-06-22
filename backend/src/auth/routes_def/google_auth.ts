@@ -62,7 +62,7 @@ export async function googleCallback(request: FastifyRequest, reply: FastifyRepl
 				google_user: true,
 			});
 		}
-		console.log(`User ${user.username} authenticated with Google OAuth`);
+
 		const jwtToken = await reply.jwtSign(
 			{ username: user.username, user_id: user.user_id },
 			{ expiresIn: '15min' }
@@ -77,7 +77,7 @@ export async function googleCallback(request: FastifyRequest, reply: FastifyRepl
 			username: user.username,
 			userId: user.user_id,
 		}
-
+		await user.save();
 		const frontendUrl = process.env.FRONTEND_URL || 'https://localhost:5000';
 		return reply.redirect(`${frontendUrl}/Home2?token=${encodeURIComponent(jwtToken)}&refreshToken=${encodeURIComponent(refreshToken)}&userData=${encodeURIComponent(JSON.stringify(userData))}`);
 	}

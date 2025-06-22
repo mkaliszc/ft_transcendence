@@ -5,7 +5,7 @@ export interface JWTpayload {
 
 export interface Pub_User {
 	username: string;
-	email_adress?: string;
+	email_adress?: string | null;
 	number_of_matches: number;
 	number_of_win: number;
 	number_of_lose: number;
