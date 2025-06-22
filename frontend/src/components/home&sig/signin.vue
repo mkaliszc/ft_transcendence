@@ -42,13 +42,13 @@
         <!-- Formulaire de connexion -->
         <form @submit.prevent="handleSignIn" class="signin-form">
           <div class="form-group">
-            <label for="email">{{ $t('email') }}</label>
+            <label for="username">{{ $t('username') }}</label>
             <input 
-              id="email"
-              v-model="form.email"
-              type="email"
+              id="username"
+              v-model="form.username"
+              type="text"
               required
-              :placeholder="$t('emailPlaceholder')"
+              :placeholder="$t('username')"
               class="form-input"
               :disabled="loading"
             />
@@ -173,7 +173,7 @@ const { initializeAuth } = useAuth()
 
 // États réactifs
 const form = ref({
-  email: '',
+  username: '',
   password: ''
 })
 const loading = ref(false)
@@ -203,11 +203,10 @@ const handleSignIn = async () => {
   error.value = ''
   successMessage.value = ''
   loading.value = true
-  
   try {
     // Appel à l'API de connexion
     const response = await authApi.login({
-      email: form.value.email,
+      username: form.value.username,
       password: form.value.password
     })
     
