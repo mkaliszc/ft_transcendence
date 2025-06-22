@@ -55,6 +55,8 @@ export async function SaveMatch(request: FastifyRequest<{ Body: CreateMatchReque
 				return reply.code(400).send({ error: 'Failed to update user stats' });
 			}
 
+			console.log(`User ${user.username} updated: Matches: ${user.number_of_matches}, Wins: ${user.number_of_win}, Losses: ${user.number_of_lose}`);
+
 			const userMatch = await UserMatch.create({
 				match_id: match.match_id,
 				user_id: user.user_id,
