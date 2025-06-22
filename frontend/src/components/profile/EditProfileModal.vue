@@ -266,9 +266,9 @@
 <script setup>
 import { ref, watch, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { userApi } from '../services/userAPI.ts'
-import { TwoFactorService } from '../services/twoFactorAPI.ts'
-import { DEFAULT_AVATARS_BASE64, resizeImageToBase64, isValidImageBase64, getBase64Size } from '../utils/imageUtils.ts'
+import { userApi } from '../../services/userAPI.ts'
+import { TwoFactorService } from '../../services/twoFactorAPI.ts'
+import { DEFAULT_AVATARS_BASE64, resizeImageToBase64, isValidImageBase64, getBase64Size } from '../../utils/imageUtils.ts'
 
 const { t } = useI18n()
 

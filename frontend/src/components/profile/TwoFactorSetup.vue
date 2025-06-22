@@ -140,7 +140,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { twoFactorService } from '../services/twoFactorAPI'
+import { twoFactorService } from '../../services/twoFactorAPI'
 
 const { t } = useI18n()
 

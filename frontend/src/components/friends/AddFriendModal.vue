@@ -94,8 +94,8 @@
 
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted } from 'vue';
-import { searchUsers, sendFriendRequest } from '../services/friendsAPI';
-import type { User } from '../services/friendsAPI';
+import { searchUsers, sendFriendRequest } from '../../services/friendsAPI';
+import type { User } from '../../services/friendsAPI';
 import UserSearchCard from './UserSearchCard.vue';
 
 // Émissions
@@ -226,9 +226,11 @@ onUnmounted(() => {
 }
 
 .modal-container {
-  width: 90%;
+  width: 600px;
   max-width: 600px;
+  min-width: 600px;
   max-height: 90vh;
+  margin: 0 auto;
   background: linear-gradient(135deg, #1a472a 0%, #2d5a3d 50%, #1a472a 100%);
   border-radius: 1rem;
   border: 1px solid rgba(212, 175, 55, 0.3);
@@ -467,25 +469,6 @@ onUnmounted(() => {
   to {
     opacity: 1;
     transform: scale(1) translateY(0);
-  }
-}
-
-@media (max-width: 768px) {
-  .modal-container {
-    width: 95%;
-    max-height: 95vh;
-    margin: 1rem;
-  }
-  
-  .modal-header,
-  .modal-content,
-  .modal-footer {
-    padding: 1rem;
-  }
-  
-  .instruction-item {
-    flex-direction: column;
-    gap: 0.5rem;
   }
 }
 </style>

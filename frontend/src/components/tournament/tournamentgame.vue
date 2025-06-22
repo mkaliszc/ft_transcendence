@@ -551,14 +551,9 @@ function handleKeyUp(e: KeyboardEvent) {
   }
 }
 
+// Suppression de la gestion responsive JS
 function handleResize() {
-  if (gameContainer.value && gameCanvas.value) {
-    const containerWidth = gameContainer.value.clientWidth
-    const scale = Math.min(1, containerWidth / 800)
-    
-    gameCanvas.value.style.transform = `scale(${scale})`
-    gameCanvas.value.style.transformOrigin = 'top left'
-  }
+  // Ne rien faire, le canvas reste à taille fixe
 }
 </script>
 
@@ -571,6 +566,11 @@ function handleResize() {
   overflow-x: hidden;
   display: flex;
   flex-direction: column;
+  /* width et height fixes pour éviter le responsive */
+  width: 100vw;
+  height: 100vh;
+  max-width: 100vw;
+  max-height: 100vh;
 }
 
 .game-header {
@@ -693,7 +693,7 @@ function handleResize() {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 2rem;
+  padding: 0;
   position: relative;
 }
 
@@ -706,7 +706,7 @@ function handleResize() {
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 100%;
+  width: 800px;
   margin: 2rem 0;
 }
 
@@ -718,12 +718,18 @@ function handleResize() {
   background: #5d4037;
   border-radius: 1rem;
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
-  width: fit-content;
+  width: 800px;
 }
 
 .game-canvas {
   border-radius: 0.5rem;
   box-shadow: 0 0 20px rgba(212, 175, 55, 0.3);
+  width: 800px !important;
+  height: 400px !important;
+  min-width: 800px;
+  min-height: 400px;
+  max-width: 800px;
+  max-height: 400px;
 }
 
 .game-overlay {

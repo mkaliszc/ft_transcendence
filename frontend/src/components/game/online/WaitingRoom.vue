@@ -111,7 +111,7 @@
   <script setup lang="ts">
   import { ref, onMounted, onUnmounted } from 'vue';
   import { useRoute, useRouter } from 'vue-router';
-  import { connectSocket, sendMessage, setOnMessage } from '../services/websocket';
+  import { connectSocket, sendMessage, setOnMessage } from '@/services/websocket';
   
   const route = useRoute();
   const router = useRouter();
@@ -638,70 +638,5 @@
   @keyframes spin {
 	from { transform: rotate(0deg); }
 	to { transform: rotate(360deg); }
-  }
-  
-  @media (max-width: 768px) {
-	.header {
-	  padding: 1rem;
-	}
-	
-	.logo-text {
-	  font-size: 1.5rem;
-	}
-	
-	.main-content {
-	  padding: 1rem;
-	}
-	
-	.main-title {
-	  font-size: 2.5rem;
-	}
-	
-	.game-card {
-	  padding: 1.5rem;
-	}
-	
-	.game-id-display {
-	  flex-direction: column;
-	  gap: 1rem;
-	}
-	
-	.btn-ready {
-	  font-size: 1rem;
-	  padding: 0.875rem 1.5rem;
-	}
-  }
-  
-  @media (max-width: 480px) {
-	.main-title {
-	  font-size: 2rem;
-	}
-	
-	.game-card {
-	  padding: 1rem;
-	}
-	
-	.logo-text {
-	  font-size: 1.2rem;
-	}
-	
-	.back-button {
-	  padding: 0.5rem 1rem;
-	  font-size: 0.9rem;
-	}
-	
-	.game-id-value {
-	  font-size: 1.2rem;
-	  padding: 0.5rem 1rem;
-	}
-	
-	.btn-ready {
-	  font-size: 0.9rem;
-	  padding: 0.75rem 1.25rem;
-	}
-	
-	.ready-section {
-	  padding: 1rem;
-	}
   }
   </style>

@@ -23,7 +23,12 @@
           </div>
         </div>
       </div>
-      
+      <!-- Bouton déplacé depuis Home2.vue -->
+      <router-link to="/friends" class="nav-link friends-link">
+        <i class="fas fa-users"></i>
+        <span>Amis</span>
+        <span v-if="pendingRequestsCount > 0" class="notification-badge">{{ pendingRequestsCount }}</span>
+      </router-link>
       <button @click="showAddFriend = true" class="btn-primary">
         <i class="fas fa-user-plus"></i>
         Ajouter un ami
@@ -130,13 +135,32 @@
         <i class="fas fa-times"></i>
       </button>
     </div>
+
+    <!-- Module GDPR -->
+    <div class="gdpr-banner" v-if="showGdpr">
+      <span>
+        Ce site utilise des cookies et collecte des données pour améliorer votre expérience. 
+        <a href="#" @click.prevent="showGdprModal = true">En savoir plus</a>
+      </span>
+      <button class="btn-primary" @click="acceptGdpr">Accepter</button>
+      <button class="btn-secondary" @click="declineGdpr">Refuser</button>
+    </div>
+    <div v-if="showGdprModal" class="gdpr-modal">
+      <div class="gdpr-modal-content">
+        <h2>Confidentialité &amp; Données</h2>
+        <p>Nous utilisons des cookies pour l'authentification et la personnalisation. Vous pouvez gérer vos préférences ici.</p>
+        <button class="btn-primary" @click="acceptGdpr">Accepter</button>
+        <button class="btn-secondary" @click="declineGdpr">Refuser</button>
+        <button class="close-btn" @click="showGdprModal = false">Fermer</button>
+      </div>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
-import { useFriends } from '../composable/useFriends';
+import { useFriends } from '@/composable/useFriends';
 import FriendCard from './FriendCard.vue';
 import FriendRequestCard from './FriendRequestCard.vue';
 import AddFriendModal from './AddFriendModal.vue';
@@ -166,6 +190,8 @@ const notification = ref<{
   message: string;
   icon: string;
 } | null>(null);
+const showGdpr = ref(false);
+const showGdprModal = ref(false);
 
 // Gestionnaires d'événements
 const handleAcceptRequest = async (requestId: number) => {
@@ -217,6 +243,23 @@ const showNotification = (type: 'success' | 'error' | 'info', message: string, i
     notification.value = null;
   }, 5000);
 };
+
+onMounted(() => {
+  if (!localStorage.getItem('gdpr_accepted')) {
+    showGdpr.value = true;
+  }
+});
+
+function acceptGdpr() {
+  localStorage.setItem('gdpr_accepted', 'true');
+  showGdpr.value = false;
+  showGdprModal.value = false;
+}
+function declineGdpr() {
+  localStorage.setItem('gdpr_accepted', 'false');
+  showGdpr.value = false;
+  showGdprModal.value = false;
+}
 </script>
 
 <style scoped>
@@ -297,11 +340,45 @@ const showNotification = (type: 'success' | 'error' | 'info', message: string, i
   transition: all 0.3s ease;
   text-transform: uppercase;
   letter-spacing: 0.5px;
+  margin: 0 0.5rem;
 }
 
 .btn-primary:hover {
   transform: translateY(-2px);
   box-shadow: 0 6px 20px rgba(212, 175, 55, 0.4);
+  background: linear-gradient(135deg, #ffe082, #d4af37);
+}
+.btn-secondary {
+  background: transparent;
+  color: #d4af37;
+  border: 2px solid #d4af37;
+  border-radius: 0.5rem;
+  padding: 0.5rem 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  margin: 0 0.5rem;
+  transition: all 0.2s;
+}
+.btn-secondary:hover {
+  background: #d4af37;
+  color: #1a1a1a;
+  transform: translateY(-2px);
+}
+.btn-retry {
+  padding: 0.5rem 1.2rem;
+  background: linear-gradient(135deg, #d4af37, #c19b2e);
+  color: #1a1a1a;
+  border: none;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 0.9rem;
+  margin-left: 1rem;
+  transition: all 0.2s;
+}
+.btn-retry:hover {
+  background: linear-gradient(135deg, #ffe082, #d4af37);
+  color: #1a1a1a;
 }
 
 .error-message {
@@ -314,16 +391,6 @@ const showNotification = (type: 'success' | 'error' | 'info', message: string, i
   border-radius: 0.5rem;
   color: #ff6b6b;
   margin-bottom: 1rem;
-}
-
-.btn-retry {
-  padding: 0.25rem 0.75rem;
-  background: rgba(220, 53, 69, 0.3);
-  border: 1px solid rgba(220, 53, 69, 0.5);
-  border-radius: 0.25rem;
-  color: #ff6b6b;
-  cursor: pointer;
-  font-size: 0.8rem;
 }
 
 .loading-container {
@@ -456,26 +523,64 @@ const showNotification = (type: 'success' | 'error' | 'info', message: string, i
   }
 }
 
-@media (max-width: 768px) {
-  .friends-page {
-    padding: 1rem;
-  }
-  
-  .friends-header {
-    flex-direction: column;
-    gap: 1rem;
-  }
-  
-  .header-content {
-    flex-direction: column;
-    gap: 1rem;
-    text-align: center;
-  }
-  
-  .requests-grid,
-  .friends-grid {
-    grid-template-columns: 1fr;
-  }
+.gdpr-banner {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100vw;
+  background: #222;
+  color: #fff;
+  padding: 1rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  z-index: 1000;
 }
-</style>
+.gdpr-modal {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+}
+.gdpr-modal-content {
+  background: #fff;
+  color: #222;
+  padding: 2rem;
+  border-radius: 8px;
+  min-width: 300px;
+  max-width: 90vw;
+  box-shadow: 0 2px 16px rgba(0,0,0,0.2);
+  text-align: center;
+}
+.btn-primary {
+  background: #007bff;
+  color: #fff;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  margin: 0 0.5rem;
+  cursor: pointer;
+}
+.btn-secondary {
+  background: #aaa;
+  color: #222;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  margin: 0 0.5rem;
+  cursor: pointer;
+}
+.close-btn {
+  background: transparent;
+  color: #222;
+  border: none;
+  font-size: 1.2rem;
+  margin-left: 1rem;
+  cursor: pointer;
+}
 
+</style>

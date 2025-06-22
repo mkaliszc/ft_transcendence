@@ -96,7 +96,7 @@
   <script setup>
   import { ref, onMounted, onUnmounted, watch } from 'vue';
   import { useRouter } from 'vue-router';
-  import { useAuth } from '../composable/useAuths';
+  import { useAuth } from '@/composable/useAuths';
   
   // Router et auth
   const router = useRouter();
@@ -152,7 +152,7 @@
   // --- Ajout pour IA : prise de décision toutes les secondes ---
   const aiKeyState = ref({ up: false, down: false });
   let aiLastUpdate = Date.now();
-  const aiUpdateInterval = 1000; // 1 seconde
+  const aiUpdateInterval = 1; // 1 seconde
   
   // Initialize game
   onMounted(() => {
@@ -473,11 +473,16 @@
   
   <style scoped>
   .game-container {
+	width: 100vw;
+	height: 100vh;
+	min-width: 100vw;
 	min-height: 100vh;
+	max-width: 100vw;
+	max-height: 100vh;
+	overflow: hidden;
 	background: linear-gradient(135deg, #1a472a 0%, #2d5a3d 50%, #1a472a 100%);
 	color: #f8f9fa;
 	position: relative;
-	overflow-x: hidden;
 	display: flex;
 	flex-direction: column;
   }
@@ -586,7 +591,8 @@
 	justify-content: center;
 	align-items: center;
 	width: 100%;
-	margin: 2rem 0;
+	height: 400px;
+	margin: 0 auto;
   }
   
   .pong-table {
@@ -597,10 +603,14 @@
 	background: #5d4037;
 	border-radius: 1rem;
 	box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
-	width: fit-content;
+	width: 800px;
+	height: 400px;
+	margin: 0 auto;
   }
   
   .game-canvas {
+	width: 800px !important;
+	height: 400px !important;
 	border-radius: 0.5rem;
 	box-shadow: 0 0 20px rgba(212, 175, 55, 0.3);
   }

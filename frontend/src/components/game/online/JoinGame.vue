@@ -37,7 +37,7 @@ import {
   connectSocket,
   sendMessage,
   setOnMessage
-} from '../services/websocket';
+} from '../../../services/websocket';
 //import { useI18n } from 'vue-i18n';
 
 const router = useRouter();

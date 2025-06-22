@@ -252,10 +252,7 @@
   </template>
   
   <script setup lang="ts">
-  import { ref, computed, onMounted, onUnmounted, watch, nextTick } from 'vue'
-    import { useRoute } from 'vue-router'
-  
-  const route = useRoute()
+  import { ref, computed, onMounted, onUnmounted, nextTick } from 'vue'
   
   interface Team {
 	name: string
@@ -349,7 +346,7 @@
 	  leftSemiFinal: leftSemiFinal.value,
 	  rightSemiFinal: rightSemiFinal.value,
 	  finalMatch: finalMatch.value,
-	  players: route.query.players
+	  players: ''
 	}
 	localStorage.setItem('tournament_state', JSON.stringify(state))
   }
@@ -513,72 +510,69 @@
 	}
   }
   
-  // Initialiser le tournoi avec les joueurs
-  const initializeTournament = (playerNames: string[]) => {
-  
-	if (playerNames.length < 8) {
-	  playerNames = ['Alice', 'Bob', 'Charlie', 'Diana', 'Eve', 'Frank', 'Grace', 'Henry']
-	}
-  
-    // Ne pas charger l'état sauvegardé si on vient avec de nouveaux joueurs
-    const shouldLoadSaved = route.query.timestamp ? false : loadTournamentState()
-    
-	if (shouldLoadSaved) {
-	  return
-	}
-    
-	
-	leftQuarterFinals.value = [
-	  {
-		team1: { name: playerNames[0], isWinner: false },
-		team2: { name: playerNames[1], isWinner: false },
-		isCompleted: false,
-		autoAdvance: true
-	  },
-	  {
-		team1: { name: playerNames[2], isWinner: false },
-		team2: { name: playerNames[3], isWinner: false },
-		isCompleted: false,
-		autoAdvance: true
-	  }
-	]
-  
-	rightQuarterFinals.value = [
-	  {
-		team1: { name: playerNames[4], isWinner: false },
-		team2: { name: playerNames[5], isWinner: false },
-		isCompleted: false,
-		autoAdvance: true
-	  },
-	  {
-		team1: { name: playerNames[6], isWinner: false },
-		team2: { name: playerNames[7], isWinner: false },
-		isCompleted: false,
-		autoAdvance: true
-	  }
-	]
-  
-	leftSemiFinal.value = {
-	  team1: { name: '', isWinner: false },
-	  team2: { name: '', isWinner: false },
-	  isCompleted: false,
-	  autoAdvance: true
-	}
-  
-	rightSemiFinal.value = {
-	  team1: { name: '', isWinner: false },
-	  team2: { name: '', isWinner: false },
-	  isCompleted: false,
-	  autoAdvance: true
-	}
-  
-	finalMatch.value = {
-	  team1: { name: '', isWinner: false },
-	  team2: { name: '', isWinner: false },
-	  isCompleted: false
-	}
-	
-	saveTournamentState()
+  // Initialiser le tournoi avec les joueurs par défaut
+  const defaultPlayers = ['Alice', 'Bob', 'Charlie', 'Diana', 'Eve', 'Frank', 'Grace', 'Henry']
+
+  const initializeTournament = (playerNames: string[] = defaultPlayers) => {
+    if (playerNames.length < 8) {
+      playerNames = [...defaultPlayers]
+    }
+
+    if (loadTournamentState()) {
+      return
+    }
+
+    leftQuarterFinals.value = [
+      {
+        team1: { name: playerNames[0], isWinner: false },
+        team2: { name: playerNames[1], isWinner: false },
+        isCompleted: false,
+        autoAdvance: true
+      },
+      {
+        team1: { name: playerNames[2], isWinner: false },
+        team2: { name: playerNames[3], isWinner: false },
+        isCompleted: false,
+        autoAdvance: true
+      }
+    ]
+
+    rightQuarterFinals.value = [
+      {
+        team1: { name: playerNames[4], isWinner: false },
+        team2: { name: playerNames[5], isWinner: false },
+        isCompleted: false,
+        autoAdvance: true
+      },
+      {
+        team1: { name: playerNames[6], isWinner: false },
+        team2: { name: playerNames[7], isWinner: false },
+        isCompleted: false,
+        autoAdvance: true
+      }
+    ]
+
+    leftSemiFinal.value = {
+      team1: { name: '', isWinner: false },
+      team2: { name: '', isWinner: false },
+      isCompleted: false,
+      autoAdvance: true
+    }
+
+    rightSemiFinal.value = {
+      team1: { name: '', isWinner: false },
+      team2: { name: '', isWinner: false },
+      isCompleted: false,
+      autoAdvance: true
+    }
+
+    finalMatch.value = {
+      team1: { name: '', isWinner: false },
+      team2: { name: '', isWinner: false },
+      isCompleted: false
+    }
+
+    saveTournamentState()
   }
   
   // Lancer le jeu Pong
@@ -657,86 +651,13 @@
 	lastMatchResult.value = null
   }
   
-  // Fonction pour initialiser le tournoi selon les paramètres
-  const initializeFromRoute = () => {
-    const playersParam = route.query.players as string
-    let playerNames: string[] = []
-    
-    // Forcer une nouvelle clé pour re-rendre le composant
-    componentKey.value = Date.now()
-    
-    if (!playersParam) {
-      playerNames = ['Alice', 'Bob', 'Charlie', 'Diana', 'Eve', 'Frank', 'Grace', 'Henry']
-    } else {
-      playerNames = playersParam.split(',').filter(name => name.trim() !== '')
-      while (playerNames.length < 8) {
-        playerNames.push(`Joueur ${playerNames.length + 1}`)
-      }
-    }
-    
-    
-    // Réinitialiser complètement l'état
-    resetTournamentState()
-    
-    initializeTournament(playerNames)
-  }
-  
-  // Fonction pour réinitialiser complètement l'état du tournoi
-  const resetTournamentState = () => {
-    leftQuarterFinals.value = []
-    rightQuarterFinals.value = []
-    leftSemiFinal.value = {
-      team1: { name: '', isWinner: false },
-      team2: { name: '', isWinner: false },
-      isCompleted: false
-    }
-    rightSemiFinal.value = {
-      team1: { name: '', isWinner: false },
-      team2: { name: '', isWinner: false },
-      isCompleted: false
-    }
-    finalMatch.value = {
-      team1: { name: '', isWinner: false },
-      team2: { name: '', isWinner: false },
-      isCompleted: false
-    }
-    lastMatchResult.value = null
-  }
-  
-  // Watcher pour les changements de route avec debounce
-  let routeWatchTimeout: ReturnType<typeof setTimeout> | null = null
-  
-  watch(() => route.query.players, () => {
-    
-    // Nettoyer le timeout précédent
-    if (routeWatchTimeout) {
-      clearTimeout(routeWatchTimeout)
-    }
-    
-    // Attendre un peu pour éviter les appels multiples rapides
-    routeWatchTimeout = setTimeout(() => {
-      nextTick(() => {
-        initializeFromRoute()
-      })
-    }, 100)
-  }, { immediate: false })
-  
-  // Watcher pour les changements de route complète (pour détecter toute navigation)
-  watch(() => route.fullPath, (newPath) => {
-    if (newPath.includes('/tournamentbracket')) {
-      nextTick(() => {
-        initializeFromRoute()
-      })
-    }
-  }, { immediate: false })
-  
   // Initialisation avec vérification de l'état de montage
   onMounted(() => {
     
     nextTick(() => {
       // S'assurer que le composant est complètement monté
       setTimeout(() => {
-        initializeFromRoute()
+        initializeTournament()
         
         // Démarrer la vérification automatique des résultats
         resultCheckInterval = setInterval(checkForMatchResults, 1000)
@@ -751,12 +672,32 @@
 	if (resultCheckInterval) {
 	  clearInterval(resultCheckInterval)
 	}
-	if (routeWatchTimeout) {
-	  clearTimeout(routeWatchTimeout)
-	}
   })
   </script>
  <style scoped>
+/* Suppression du responsive : largeur/hauteur fixes pour la zone de jeu */
+.tournament-container {
+  width: 100vw;
+  min-width: 100vw;
+  max-width: 100vw;
+  height: 100vh;
+  min-height: 100vh;
+  max-height: 100vh;
+  overflow: hidden;
+}
+
+.bracket-container {
+  width: 1200px;
+  min-width: 1200px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.match-wrapper, .match, .team-container, .team {
+  min-width: 200px;
+  max-width: 200px;
+}
+
 .tournament-container {
   height: 100vh;
   background: linear-gradient(135deg, #1a472a 0%, #2d5a3d 50%, #1a472a 100%);

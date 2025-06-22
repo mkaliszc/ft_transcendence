@@ -38,7 +38,7 @@
 
 <script setup lang="ts">
 import { computed } from 'vue';
-import type { User } from '../services/friendsAPI';
+import type { User } from '../../services/friendsAPI';
 
 // Props
 const props = defineProps<{
@@ -225,24 +225,4 @@ const handleAddFriend = () => {
   color: #6c757d;
 }
 
-@media (max-width: 768px) {
-  .user-search-card {
-    padding: 0.75rem;
-  }
-  
-  .user-avatar {
-    width: 40px;
-    height: 40px;
-  }
-  
-  .btn-add-friend {
-    padding: 0.5rem 0.75rem;
-    font-size: 0.75rem;
-    min-width: 80px;
-  }
-  
-  .btn-text {
-    font-size: 0.7rem;
-  }
-}
 </style>

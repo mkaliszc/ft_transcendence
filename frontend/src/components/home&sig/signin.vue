@@ -158,9 +158,9 @@
 import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
-import { authApi } from '../services/authAPI'
-import { useAuth } from '../composable/useAuths'
-import { googleAuthService } from '../services/googleAuthAPI'
+import { authApi } from '../../services/authAPI'
+import { useAuth } from '../../composable/useAuths'
+import { googleAuthService } from '../../services/googleAuthAPI'
 
 // Utilisation de vue-i18n
 const { t, locale } = useI18n()

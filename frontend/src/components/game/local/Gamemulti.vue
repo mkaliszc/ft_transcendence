@@ -102,7 +102,7 @@
   <script setup>
   import { ref, onMounted, onUnmounted, watch } from 'vue';
   import { useRouter } from 'vue-router';
-  import { useAuth } from '../composable/useAuths';
+  import { useAuth } from '@/composable/useAuths';
   
   // Router et auth
   const router = useRouter();
@@ -453,12 +453,41 @@
 </script>
   
   <style scoped>
+  /* Suppression du responsive : largeur/hauteur fixes pour la zone de jeu */
+.game-container {
+  width: 100vw;
+  height: 100vh;
+  min-width: 100vw;
+  min-height: 100vh;
+  max-width: 100vw;
+  max-height: 100vh;
+  overflow: hidden;
+}
+
+.pong-table-container, .pong-table {
+  width: 800px;
+  min-width: 800px;
+  max-width: 800px;
+  height: 400px;
+  min-height: 400px;
+  max-height: 400px;
+  margin: 0 auto;
+}
+
+.game-canvas {
+  width: 800px !important;
+  height: 400px !important;
+  min-width: 800px;
+  min-height: 400px;
+  max-width: 800px;
+  max-height: 400px;
+}
+
   .game-container {
 	min-height: 100vh;
 	background: linear-gradient(135deg, #1a472a 0%, #2d5a3d 50%, #1a472a 100%);
 	color: #f8f9fa;
 	position: relative;
-	overflow-x: hidden;
 	display: flex;
 	flex-direction: column;
   }

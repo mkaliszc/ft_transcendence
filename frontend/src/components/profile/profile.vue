@@ -18,15 +18,7 @@
 			<div class="avatar-section">
 			  <div class="avatar-wrapper">
 				<img :src="displayAvatar" alt="Avatar" class="avatar" />
-				<!-- Bouton d'édition de l'avatar (uniquement pour son propre profil) -->
-				<button 
-				  v-if="isOwnProfile"
-				  @click="openEditProfile"
-				  class="edit-avatar-btn"
-				  title="Modifier l'avatar"
-				>
-				  ✏️
-				</button>
+				<!-- Bouton d'édition de l'avatar supprimé -->
 			  </div>
 			  <div class="player-rank">
 				<span class="rank-label">{{ $t('rank') }}</span>
@@ -45,15 +37,7 @@
 					:placeholder="$t('enterUsername')"
 					readonly
 				  />
-				  <!-- Bouton d'édition du profil (uniquement pour son propre profil) -->
-				  <button 
-					v-if="isOwnProfile"
-					@click="openEditProfile"
-					class="edit-btn"
-					title="Modifier le profil"
-				  >
-					✏️ {{ $t('edit') || 'Modifier' }}
-				  </button>
+				  <!-- Bouton d'édition du profil supprimé -->
 				</div>
 			  </div>
 			  
@@ -296,6 +280,17 @@
 			</router-link>
 		  </div>
 		</div>
+
+		<!-- Section GDPR/Confidentialité & Données -->
+		<div class="gdpr-section" style="margin-top: 3rem;">
+		  <h2 class="gdpr-title">Confidentialité & Données</h2>
+		  <div class="gdpr-actions">
+			<button class="btn btn-secondary" @click="downloadPersonalData">Télécharger mes données</button>
+			<button class="btn btn-secondary" @click="anonymizeAccount">Anonymiser mon compte</button>
+			<button class="btn btn-primary" @click="deleteAccount">Supprimer mon compte</button>
+		  </div>
+		  <p class="gdpr-info">Vous pouvez gérer vos données personnelles conformément à la réglementation RGPD.</p>
+		</div>
 	  </div>
 	</div>
 </template>
@@ -303,11 +298,11 @@
 <script setup>
 import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { useAuth } from '../composable/useAuths';
-import { useUser } from '../composable/useUser';
+import { useAuth } from '../../composable/useAuths.ts';
+import { useUser } from '../../composable/useUser.ts';
 import { useRouter, useRoute } from 'vue-router';
-import { userApi } from '../services/userAPI.ts';
-import { DEFAULT_AVATARS_BASE64 } from '../utils/imageUtils.ts';
+import { userApi } from '../../services/userAPI.ts';
+import { DEFAULT_AVATARS_BASE64 } from '../../utils/imageUtils.ts';
 import EditProfileModal from './EditProfileModal.vue';
 
 const { t } = useI18n()
@@ -668,6 +663,58 @@ onUnmounted(() => {
   // Supprimer l'écouteur d'événements
   window.removeEventListener('matchCompleted', handleMatchCompleted)
 })
+
+// GDPR actions
+const downloadPersonalData = async () => {
+  try {
+    // Appel à l'API backend pour récupérer les données personnelles
+    const token = localStorage.getItem('auth_token');
+    const response = await fetch('/api/profile/data', {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+    if (!response.ok) throw new Error('Erreur lors du téléchargement des données');
+    const data = await response.json();
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'mes_donnees_perso.json';
+    a.click();
+    window.URL.revokeObjectURL(url);
+  } catch (err) {
+    alert('Impossible de télécharger vos données personnelles.');
+  }
+};
+const anonymizeAccount = async () => {
+  if (!confirm('Êtes-vous sûr de vouloir anonymiser votre compte ? Cette action est irréversible.')) return;
+  try {
+    const token = localStorage.getItem('auth_token');
+    const response = await fetch('/api/profile/anonymization', {
+      method: 'PATCH',
+      headers: { Authorization: `Bearer ${token}` }
+    });
+    if (!response.ok) throw new Error('Erreur lors de l\'anonymisation');
+    alert('Votre compte a été anonymisé.');
+    window.location.reload();
+  } catch (err) {
+    alert('Impossible d\'anonymiser votre compte.');
+  }
+};
+const deleteAccount = async () => {
+  if (!confirm('Êtes-vous sûr de vouloir supprimer votre compte ? Cette action est irréversible.')) return;
+  try {
+    const token = localStorage.getItem('auth_token');
+    const response = await fetch('/api/profile/delete', {
+      method: 'DELETE',
+      headers: { Authorization: `Bearer ${token}` }
+    });
+    if (!response.ok) throw new Error('Erreur lors de la suppression');
+    alert('Votre compte a été supprimé.');
+    window.location.href = '/';
+  } catch (err) {
+    alert('Impossible de supprimer votre compte.');
+  }
+};
 </script>
 
 <style scoped>
@@ -701,26 +748,6 @@ onUnmounted(() => {
 
 .avatar-wrapper {
   position: relative;
-}
-
-.edit-avatar-btn {
-  position: absolute;
-  bottom: 5px;
-  right: 5px;
-  background: rgba(212, 175, 55, 0.9);
-  border: none;
-  border-radius: 50%;
-  width: 35px;
-  height: 35px;
-  cursor: pointer;
-  font-size: 0.9em;
-  transition: all 0.3s ease;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-}
-
-.edit-avatar-btn:hover {
-  background: #d4af37;
-  transform: scale(1.1);
 }
 
 .avatar {
@@ -780,23 +807,6 @@ onUnmounted(() => {
   align-items: center;
   gap: 15px;
   flex: 1;
-}
-
-.edit-btn {
-  padding: 8px 16px;
-  background: rgba(212, 175, 55, 0.9);
-  color: #1a1a1a;
-  border: none;
-  border-radius: 6px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  font-size: 0.9em;
-}
-
-.edit-btn:hover {
-  background: #d4af37;
-  transform: translateY(-1px);
 }
 
 .label {
@@ -1354,5 +1364,33 @@ onUnmounted(() => {
   background: rgba(34, 197, 94, 0.2);
   color: #86efac;
   border: 1px solid rgba(34, 197, 94, 0.3);
+}
+
+/* Section GDPR */
+.gdpr-section {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(212, 175, 55, 0.2);
+  border-radius: 1rem;
+  padding: 2rem;
+  margin-top: 2rem;
+  text-align: center;
+}
+.gdpr-title {
+  color: #d4af37;
+  font-size: 1.3em;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+.gdpr-actions {
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+}
+.gdpr-info {
+  color: #e0e0e0;
+  font-size: 0.95em;
+  margin-top: 1rem;
 }
 </style>
