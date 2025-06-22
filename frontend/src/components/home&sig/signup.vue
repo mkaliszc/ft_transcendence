@@ -56,19 +56,6 @@
           </div>
 
           <div class="form-group">
-            <label for="email">{{ $t('email') }}</label>
-            <input 
-              id="email"
-              v-model="form.email"
-              type="email"
-              required
-              :placeholder="$t('emailPlaceholder')"
-              class="form-input"
-              :disabled="loading"
-            />
-          </div>
-          
-          <div class="form-group">
             <label for="password">{{ $t('password') }}</label>
             <div class="password-input-container">
               <input
@@ -188,7 +175,6 @@ const router = useRouter()
 // États réactifs
 const form = ref({
   username: '',
-  email: '',
   password: '',
   confirmPassword: ''
 })
@@ -264,7 +250,7 @@ const toggleConfirmPassword = () => {
 }
 
 const validateForm = () => {
-  if (!form.value.username || !form.value.email || !form.value.password || !form.value.confirmPassword) {
+  if (!form.value.username || !form.value.password || !form.value.confirmPassword) {
     error.value = t('allFieldsRequired')
     return false
   }
@@ -292,7 +278,6 @@ const handleSignUp = async () => {
   try {
     const response = await register({
       username: form.value.username,
-      email_adress: form.value.email,
       password: form.value.password
     })
     

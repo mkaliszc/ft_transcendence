@@ -16,7 +16,7 @@ export async function enable2FA(request: FastifyRequest, reply: FastifyReply) {
 			return reply.status(400).send({ error: 'Cannot enable 2FA for Google-authenticated users' });
 		}
 
-		const generatedSecret = speakeasy.generateSecret({ name: `TonApp (${user.username})`, });
+		const generatedSecret = speakeasy.generateSecret({ name: `Pong Billard: ${user.username}`, });
 		if (!generatedSecret) {
 			return reply.code(400).send({ error: 'Internal ERROR' });
 		}
