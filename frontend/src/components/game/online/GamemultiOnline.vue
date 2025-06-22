@@ -50,13 +50,14 @@
 			  </div>
   
 			  <!-- Terrain de jeu -->
-			  <div class="pong-table-container">
-				<div class="pong-table">
+			  <div class="pong-table-container" :data-mode="gameState.gameMode">
+				<div class="pong-table" :data-mode="gameState.gameMode">
 				  <canvas 
 					ref="canvasRef" 
 					:width="canvasWidth" 
 					:height="canvasHeight"
 					class="game-canvas"
+					:data-mode="gameState.gameMode"
 				  ></canvas>
 				</div>
 			  </div>
@@ -163,7 +164,8 @@
   const gameContainer = ref<HTMLElement | null>(null);
   
   // Taille adaptée selon le mode de jeu
-  const canvasWidth = computed(() => gameState.gameMode === 4 ? 600 : 800);
+  const canvasSize = computed(() => gameState.gameMode === 4 ? 600 : 800);
+  const canvasWidth = computed(() => canvasSize.value);
   const canvasHeight = computed(() => gameState.gameMode === 4 ? 600 : 400);
   const winningScore = 5;
   
@@ -1104,7 +1106,6 @@
 	max-height: 400px;
 	margin: 0 auto;
   }
-  
   .pong-table {
 	display: flex;
 	justify-content: center;
@@ -1120,7 +1121,6 @@
 	min-height: 400px;
 	max-height: 400px;
   }
-  
   .game-canvas {
 	border-radius: 0.5rem;
 	box-shadow: 0 0 20px rgba(212, 175, 55, 0.3);
@@ -1130,6 +1130,18 @@
 	min-height: 400px;
 	max-width: 800px;
 	max-height: 400px;
+  }
+  
+  /* Styles spécifiques au mode 4 joueurs */
+  .pong-table-container[data-mode="4"],
+  .pong-table[data-mode="4"],
+  .game-canvas[data-mode="4"] {
+	width: 600px !important;
+	min-width: 600px !important;
+	max-width: 600px !important;
+	height: 600px !important;
+	min-height: 600px !important;
+	max-height: 600px !important;
   }
   
   .game-overlay {

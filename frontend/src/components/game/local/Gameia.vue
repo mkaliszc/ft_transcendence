@@ -123,8 +123,8 @@
 	x: 400,
 	y: 200,
 	radius: 12,
-	speedX: 5,
-	speedY: 3,
+	speedX: 6, // vitesse adaptée
+	speedY: 3.5, // vitesse adaptée
 	color: '#ffffff'
   });
   
@@ -134,17 +134,17 @@
 	width: 8,
 	height: 60,
 	color: '#d4af37',
-	speed: 8
-  });
-  
-  const ai = ref({
+	speed: 6 // vitesse harmonisée
+});
+
+const ai = ref({
 	x: 762,
 	y: 200,
 	width: 8,
 	height: 60,
 	color: '#d4af37',
-	speed: 4
-  });
+	speed: 6 // vitesse harmonisée
+});
   
   // Animation frame ID for cleanup
   let animationFrameId = null;
