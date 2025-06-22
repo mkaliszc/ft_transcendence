@@ -15,7 +15,8 @@ export async function anonymization(request: FastifyRequest, reply: FastifyReply
 
 		await user.update({
 			username: `anonymous_${userId}`,
-			email_adress: null,
+			email_adress: `anonymous_${userId}@delete.local`,
+			passsword: 'anonymous',
 			avatar: AnonymeAvatar,
 			twoFA: false,
 			twoFA_secret: null,
