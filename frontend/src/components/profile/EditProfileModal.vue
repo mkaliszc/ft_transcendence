@@ -1,6 +1,6 @@
 <template>
   <!-- Popup pour l'édition du profil -->
-  <div v-if="show" class="modal-overlay" @click="close">
+  <div v-if="show" class="modal-overlay">
 
     <div class="edit-profile-modal" @click.stop>
       <button @click="close" class="modal-close">×</button>
@@ -1235,11 +1235,8 @@ const saveProfile = async () => {
   text-align: center;
   font-family: monospace;
   letter-spacing: 0.2em;
-}
-
-.verification-input:focus {
-  border-color: #3b82f6;
-  outline: none;
+  background: #fff;
+  color: #111;
 }
 
 .verification-buttons {
@@ -1294,24 +1291,4 @@ const saveProfile = async () => {
   box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
 }
 
-/* Responsive */
-@media (max-width: 768px) {
-  .modal-overlay {
-    padding: 1rem;
-  }
-  
-  .edit-profile-modal {
-    padding: 1.5rem;
-    max-height: 95vh;
-  }
-  
-  .modal-title {
-    font-size: 1.5rem;
-  }
-  
-  .btn-save {
-    width: 100%;
-    justify-content: center;
-  }
-}
 </style>

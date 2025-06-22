@@ -233,7 +233,6 @@
 	  <div class="instructions">
 		<p>🎮 <strong>Instructions :</strong> Cliquez sur "Jouer Pong" pour lancer un match entre deux joueurs</p>
 		<p>🏓 <strong>Automatique :</strong> Les vainqueurs avancent automatiquement au tour suivant après chaque match</p>
-		<p>⚡ <strong>Nouveau :</strong> Plus besoin de cliquer sur les joueurs - tout se fait automatiquement !</p>
 	  </div>
   
 	  <!-- Notification de résultat -->
@@ -264,7 +263,6 @@
 	team2: Team
 	isCompleted: boolean
 	winner?: Team
-	autoAdvance?: boolean
   }
   
   interface MatchResult {
@@ -345,8 +343,7 @@
 	  rightQuarterFinals: rightQuarterFinals.value,
 	  leftSemiFinal: leftSemiFinal.value,
 	  rightSemiFinal: rightSemiFinal.value,
-	  finalMatch: finalMatch.value,
-	  players: ''
+	  finalMatch: finalMatch.value
 	}
 	localStorage.setItem('tournament_state', JSON.stringify(state))
   }
@@ -526,14 +523,12 @@
       {
         team1: { name: playerNames[0], isWinner: false },
         team2: { name: playerNames[1], isWinner: false },
-        isCompleted: false,
-        autoAdvance: true
+        isCompleted: false
       },
       {
         team1: { name: playerNames[2], isWinner: false },
         team2: { name: playerNames[3], isWinner: false },
-        isCompleted: false,
-        autoAdvance: true
+        isCompleted: false
       }
     ]
 
@@ -541,29 +536,25 @@
       {
         team1: { name: playerNames[4], isWinner: false },
         team2: { name: playerNames[5], isWinner: false },
-        isCompleted: false,
-        autoAdvance: true
+        isCompleted: false
       },
       {
         team1: { name: playerNames[6], isWinner: false },
         team2: { name: playerNames[7], isWinner: false },
-        isCompleted: false,
-        autoAdvance: true
+        isCompleted: false
       }
     ]
 
     leftSemiFinal.value = {
       team1: { name: '', isWinner: false },
       team2: { name: '', isWinner: false },
-      isCompleted: false,
-      autoAdvance: true
+      isCompleted: false
     }
 
     rightSemiFinal.value = {
       team1: { name: '', isWinner: false },
       team2: { name: '', isWinner: false },
-      isCompleted: false,
-      autoAdvance: true
+      isCompleted: false
     }
 
     finalMatch.value = {
@@ -675,7 +666,7 @@
   })
   </script>
  <style scoped>
-/* Suppression du responsive : largeur/hauteur fixes pour la zone de jeu */
+
 .tournament-container {
   width: 100vw;
   min-width: 100vw;
@@ -709,11 +700,6 @@
   overflow: hidden;
   display: flex;
   flex-direction: column;
-}
-
-@keyframes backgroundMove {
-  0%, 100% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
 }
 
 .tournament-container::before {
@@ -947,24 +933,6 @@
   to { box-shadow: 0 6px 20px rgba(212, 175, 55, 0.7); }
 }
 
-.team.ready-to-play {
-  background: linear-gradient(135deg, #bbf7d0, #86efac);
-  border-color: #10b981;
-  animation: readyPulse 2s ease-in-out infinite;
-  box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
-}
-
-@keyframes readyPulse {
-  0%, 100% { 
-    transform: scale(1);
-    box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
-  }
-  50% { 
-    transform: scale(1.02);
-    box-shadow: 0 6px 20px rgba(16, 185, 129, 0.5);
-  }
-}
-
 .final-teams {
   gap: 4px;
 }
@@ -1091,17 +1059,6 @@
 
 .ready-btn {
   animation: readyGlow 2s ease-in-out infinite alternate;
-}
-
-@keyframes readyGlow {
-  from { 
-    box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
-    transform: scale(1);
-  }
-  to { 
-    box-shadow: 0 4px 16px rgba(16, 185, 129, 0.6);
-    transform: scale(1.02);
-  }
 }
 
 .match-completed {

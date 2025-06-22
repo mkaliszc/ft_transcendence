@@ -456,7 +456,7 @@ const processMatchHistory = (matches) => {
   // Calculer les données de winrate au fil du temps (1v1)
   let wins = 0;
   const winrateData = [];
-  oneVsOneMatches.slice(-10).forEach((match, index) => {
+  oneVsOneMatches.forEach((match, index) => {
     if (match.i_won) wins++;
     const winrate = Math.round((wins / (index + 1)) * 100);
     winrateData.push({
@@ -470,7 +470,7 @@ const processMatchHistory = (matches) => {
 
   // Historique pour affichage : on mélange les deux types, mais on précise le type
   // On affiche tous les matchs (1v1 et 1v1v1v1), avec un affichage détaillé pour les 4 joueurs
-  pongMatchHistory.value = onlineMatches.slice(0, 10).map((match, index) => {
+  pongMatchHistory.value = onlineMatches.map((match, index) => {
     const isFourPlayers = match.opponents.length === 3;
     let matchType = isFourPlayers ? '1v1v1v1' : '1v1';
     let opponentsDisplay = '';
