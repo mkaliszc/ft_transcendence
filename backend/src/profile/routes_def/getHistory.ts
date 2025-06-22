@@ -1,6 +1,6 @@
-import { User } from "../../db_models/user_model";
-import { UserMatch } from "../../db_models/user_match_model";
-import { Matches } from "../../db_models/matches_model";
+import { User } from "../utils/db_models/user_model";
+import { UserMatch } from "../utils/db_models/user_match_model";
+import { Matches } from "../utils/db_models/matches_model";
 import { FastifyRequest, FastifyReply } from "fastify";
 import { Op } from "sequelize";
 

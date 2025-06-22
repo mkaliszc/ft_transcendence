@@ -1,6 +1,6 @@
-import { User } from "../../db_models/user_model";
+import { User } from "../utils/db_models/user_model";
 import { FastifyRequest, FastifyReply } from "fastify";
-import { JWTpayload, UpdateData } from "../../interfaces";
+import { JWTpayload, UpdateData } from "../utils/interfaces";
 
 export async function update(request: FastifyRequest<{ Body: UpdateData }>, reply: FastifyReply) {
 	try {

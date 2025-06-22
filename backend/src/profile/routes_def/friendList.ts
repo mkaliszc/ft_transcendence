@@ -1,8 +1,8 @@
 import { FastifyRequest, FastifyReply } from 'fastify';
-import { Friendship } from '../../db_models/friendship_model';
-import { User } from '../../db_models/user_model';
+import { Friendship } from '../utils/db_models/friendship_model';
+import { User } from '../utils/db_models/user_model';
 import { Op } from 'sequelize';
-import { JWTpayload } from '../../interfaces';
+import { JWTpayload } from '../utils/interfaces';
 
 export async function friendList(request: FastifyRequest, reply: FastifyReply) {
 	try {

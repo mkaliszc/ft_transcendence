@@ -1,10 +1,7 @@
-import { Pub_User } from "../../interfaces";
-import { User } from "../../db_models/user_model";
-import { Matches } from "../../db_models/matches_model";
-import { UserMatch } from "../../db_models/user_match_model";
-import { Op } from "sequelize";
+import { Pub_User } from "../utils/interfaces";
+import { User } from "../utils/db_models/user_model";
 import { FastifyRequest, FastifyReply } from "fastify";
-import { JWTpayload } from "../../interfaces";
+import { JWTpayload } from "../utils/interfaces";
 
 export async function getUser(request: FastifyRequest<{ Params: { username: string } }>, reply: FastifyReply) {
 	try {

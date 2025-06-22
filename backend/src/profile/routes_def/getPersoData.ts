@@ -1,9 +1,9 @@
 import { FastifyRequest, FastifyReply } from 'fastify';
-import { User } from '../../db_models/user_model';
-import { JWTpayload } from '../../interfaces';
-import { UserMatch } from '../../db_models/user_match_model';
-import { Matches } from '../../db_models/matches_model';
-import { Friendship } from '../../db_models/friendship_model';
+import { User } from '../utils/db_models/user_model';
+import { JWTpayload } from '../utils/interfaces';
+import { UserMatch } from '../utils/db_models/user_match_model';
+import { Matches } from '../utils/db_models/matches_model';
+import { Friendship } from '../utils/db_models/friendship_model';
 
 export async function getPersoData(request: FastifyRequest, reply: FastifyReply) {
 	try {

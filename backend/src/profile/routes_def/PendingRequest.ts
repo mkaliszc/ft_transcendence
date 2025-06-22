@@ -1,7 +1,7 @@
 import { FastifyRequest, FastifyReply } from 'fastify';
-import { User } from '../../db_models/user_model';
-import { JWTpayload } from '../../interfaces';
-import { Friendship } from '../../db_models/friendship_model';
+import { User } from '../utils/db_models/user_model';
+import { JWTpayload } from '../utils/interfaces';
+import { Friendship } from '../utils/db_models/friendship_model';
 
 export async function pendingRequest(request: FastifyRequest, reply: FastifyReply) {
 	try {
