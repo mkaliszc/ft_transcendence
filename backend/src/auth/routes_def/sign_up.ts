@@ -8,6 +8,7 @@ export async function sign_up (request: FastifyRequest<{ Body: SignUpRequest }>,
 {
 	try {
 		const { username, password } = request.body
+		console.log('Sign up request received:', { username, password });
 		if (!username || !password) {
 			return reply.status(400).send({ error: 'Username and password are required' })
 		}
@@ -32,7 +33,9 @@ export async function sign_up (request: FastifyRequest<{ Body: SignUpRequest }>,
 		const hashed_password = await bcrypt.hash(password, 13)
 		const newUser = await User.create({
 			username,
-			hashed_password
+			email_adress: null,
+			hashed_password,
+			google_user: false
 		})
 
 		if (!newUser) {
@@ -41,6 +44,7 @@ export async function sign_up (request: FastifyRequest<{ Body: SignUpRequest }>,
 		reply.status(201).send({ message: 'User created successfully'})
 	}
 	catch (error) {
+		console.error('Sign up error:', error);
 		reply.status(500).send({ error: 'Error creating user' })
 	}
 }
