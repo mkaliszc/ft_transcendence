@@ -50,13 +50,14 @@
 			  </div>
   
 			  <!-- Terrain de jeu -->
-			  <div class="pong-table-container">
-				<div class="pong-table">
+			  <div class="pong-table-container" :data-mode="gameState.gameMode">
+				<div class="pong-table" :data-mode="gameState.gameMode">
 				  <canvas 
 					ref="canvasRef" 
 					:width="canvasWidth" 
 					:height="canvasHeight"
 					class="game-canvas"
+					:data-mode="gameState.gameMode"
 				  ></canvas>
 				</div>
 			  </div>
@@ -163,7 +164,8 @@
   const gameContainer = ref<HTMLElement | null>(null);
   
   // Taille adaptée selon le mode de jeu
-  const canvasWidth = computed(() => gameState.gameMode === 4 ? 600 : 800);
+  const canvasSize = computed(() => gameState.gameMode === 4 ? 600 : 800);
+  const canvasWidth = computed(() => canvasSize.value);
   const canvasHeight = computed(() => gameState.gameMode === 4 ? 600 : 400);
   const winningScore = 5;
   
@@ -440,18 +442,25 @@
 	gameState.ballX += gameState.ballSpeedX;
 	gameState.ballY += gameState.ballSpeedY;
   
+	// Tolérance pour la détection de collision paddle/balle
+	const tolerance = 4;
+  
 	// Collision avec paddle player1 (gauche)
 	if (
-	  gameState.ballX - gameState.ballSize <= 30 + paddleWidth &&
-	  gameState.ballY >= gameState.paddles.player1 - paddleHeight/2 &&
-	  gameState.ballY <= gameState.paddles.player1 + paddleHeight/2 &&
+	  gameState.ballX - gameState.ballSize <= 30 + paddleWidth + tolerance &&
+	  gameState.ballY >= gameState.paddles.player1 - paddleHeight/2 - tolerance &&
+	  gameState.ballY <= gameState.paddles.player1 + paddleHeight/2 + tolerance &&
 	  gameState.ballSpeedX < 0
 	) {
-	  const hitPos = (gameState.ballY - gameState.paddles.player1) / (paddleHeight / 2);
+	  let hitPos = (gameState.ballY - gameState.paddles.player1) / (paddleHeight / 2);
+	  hitPos = Math.max(-1, Math.min(1, hitPos));
 	  gameState.ballSpeedX = Math.abs(gameState.ballSpeedX);
 	  gameState.ballSpeedY = hitPos * 4;
+	  // Limiter la vitesse verticale
+	  const maxVerticalSpeed = 6;
+	  if (gameState.ballSpeedY > maxVerticalSpeed) gameState.ballSpeedY = maxVerticalSpeed;
+	  if (gameState.ballSpeedY < -maxVerticalSpeed) gameState.ballSpeedY = -maxVerticalSpeed;
 	  gameState.lastPaddleHit = 'player1';
-	  
 	  const minSpeed = 4;
 	  if (Math.abs(gameState.ballSpeedX) < minSpeed) {
 		gameState.ballSpeedX = minSpeed;
@@ -460,22 +469,25 @@
 	  if (Math.abs(gameState.ballSpeedX) < maxSpeed) {
 		gameState.ballSpeedX *= 1.05;
 	  }
-	  
 	  gameState.ballX = 30 + paddleWidth + gameState.ballSize + 1;
 	}
   
 	// Collision avec paddle player2 (droite)
 	if (
-	  gameState.ballX + gameState.ballSize >= canvasWidth.value - 30 - paddleWidth &&
-	  gameState.ballY >= gameState.paddles.player2 - paddleHeight/2 &&
-	  gameState.ballY <= gameState.paddles.player2 + paddleHeight/2 &&
+	  gameState.ballX + gameState.ballSize >= canvasWidth.value - 30 - paddleWidth - tolerance &&
+	  gameState.ballY >= gameState.paddles.player2 - paddleHeight/2 - tolerance &&
+	  gameState.ballY <= gameState.paddles.player2 + paddleHeight/2 + tolerance &&
 	  gameState.ballSpeedX > 0
 	) {
-	  const hitPos = (gameState.ballY - gameState.paddles.player2) / (paddleHeight / 2);
+	  let hitPos = (gameState.ballY - gameState.paddles.player2) / (paddleHeight / 2);
+	  hitPos = Math.max(-1, Math.min(1, hitPos));
 	  gameState.ballSpeedX = -Math.abs(gameState.ballSpeedX);
 	  gameState.ballSpeedY = hitPos * 4;
+	  // Limiter la vitesse verticale
+	  const maxVerticalSpeed = 6;
+	  if (gameState.ballSpeedY > maxVerticalSpeed) gameState.ballSpeedY = maxVerticalSpeed;
+	  if (gameState.ballSpeedY < -maxVerticalSpeed) gameState.ballSpeedY = -maxVerticalSpeed;
 	  gameState.lastPaddleHit = 'player2';
-	  
 	  const minSpeed = 4;
 	  if (Math.abs(gameState.ballSpeedX) < minSpeed) {
 		gameState.ballSpeedX = -minSpeed;
@@ -484,7 +496,6 @@
 	  if (Math.abs(gameState.ballSpeedX) < maxSpeed) {
 		gameState.ballSpeedX *= 1.05;
 	  }
-	  
 	  gameState.ballX = canvasWidth.value - 30 - paddleWidth - gameState.ballSize - 1;
 	}
   
@@ -492,28 +503,37 @@
 	if (gameState.gameMode === 4) {
 	  // Paddle player3 (haut)
 	  if (
-		gameState.ballY - gameState.ballSize <= 30 + paddleHeightHorizontal &&
-		gameState.ballX >= gameState.paddles.player3 - paddleWidthHorizontal/2 &&
-		gameState.ballX <= gameState.paddles.player3 + paddleWidthHorizontal/2 &&
+		gameState.ballY - gameState.ballSize <= 30 + paddleHeightHorizontal + tolerance &&
+		gameState.ballX >= gameState.paddles.player3 - paddleWidthHorizontal/2 - tolerance &&
+		gameState.ballX <= gameState.paddles.player3 + paddleWidthHorizontal/2 + tolerance &&
 		gameState.ballSpeedY < 0
 	  ) {
-		const hitPos = (gameState.ballX - gameState.paddles.player3) / (paddleWidthHorizontal / 2);
+		let hitPos = (gameState.ballX - gameState.paddles.player3) / (paddleWidthHorizontal / 2);
+		hitPos = Math.max(-1, Math.min(1, hitPos));
 		gameState.ballSpeedY = Math.abs(gameState.ballSpeedY);
 		gameState.ballSpeedX = hitPos * 4;
+		// Limiter la vitesse horizontale
+		const maxHorizontalSpeed = 6;
+		if (gameState.ballSpeedX > maxHorizontalSpeed) gameState.ballSpeedX = maxHorizontalSpeed;
+		if (gameState.ballSpeedX < -maxHorizontalSpeed) gameState.ballSpeedX = -maxHorizontalSpeed;
 		gameState.ballY = 30 + paddleHeightHorizontal + gameState.ballSize + 1;
 		gameState.lastPaddleHit = 'player3';
 	  }
-	  
 	  // Paddle player4 (bas)
 	  if (
-		gameState.ballY + gameState.ballSize >= canvasHeight.value - 30 - paddleHeightHorizontal &&
-		gameState.ballX >= gameState.paddles.player4 - paddleWidthHorizontal/2 &&
-		gameState.ballX <= gameState.paddles.player4 + paddleWidthHorizontal/2 &&
+		gameState.ballY + gameState.ballSize >= canvasHeight.value - 30 - paddleHeightHorizontal - tolerance &&
+		gameState.ballX >= gameState.paddles.player4 - paddleWidthHorizontal/2 - tolerance &&
+		gameState.ballX <= gameState.paddles.player4 + paddleWidthHorizontal/2 + tolerance &&
 		gameState.ballSpeedY > 0
 	  ) {
-		const hitPos = (gameState.ballX - gameState.paddles.player4) / (paddleWidthHorizontal / 2);
+		let hitPos = (gameState.ballX - gameState.paddles.player4) / (paddleWidthHorizontal / 2);
+		hitPos = Math.max(-1, Math.min(1, hitPos));
 		gameState.ballSpeedY = -Math.abs(gameState.ballSpeedY);
 		gameState.ballSpeedX = hitPos * 4;
+		// Limiter la vitesse horizontale
+		const maxHorizontalSpeed = 6;
+		if (gameState.ballSpeedX > maxHorizontalSpeed) gameState.ballSpeedX = maxHorizontalSpeed;
+		if (gameState.ballSpeedX < -maxHorizontalSpeed) gameState.ballSpeedX = -maxHorizontalSpeed;
 		gameState.ballY = canvasHeight.value - 30 - paddleHeightHorizontal - gameState.ballSize - 1;
 		gameState.lastPaddleHit = 'player4';
 	  }
@@ -1104,7 +1124,6 @@
 	max-height: 400px;
 	margin: 0 auto;
   }
-  
   .pong-table {
 	display: flex;
 	justify-content: center;
@@ -1120,7 +1139,6 @@
 	min-height: 400px;
 	max-height: 400px;
   }
-  
   .game-canvas {
 	border-radius: 0.5rem;
 	box-shadow: 0 0 20px rgba(212, 175, 55, 0.3);
@@ -1130,6 +1148,18 @@
 	min-height: 400px;
 	max-width: 800px;
 	max-height: 400px;
+  }
+  
+  /* Styles spécifiques au mode 4 joueurs */
+  .pong-table-container[data-mode="4"],
+  .pong-table[data-mode="4"],
+  .game-canvas[data-mode="4"] {
+	width: 600px !important;
+	min-width: 600px !important;
+	max-width: 600px !important;
+	height: 600px !important;
+	min-height: 600px !important;
+	max-height: 600px !important;
   }
   
   .game-overlay {
