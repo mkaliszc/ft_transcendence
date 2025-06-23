@@ -7,7 +7,7 @@
       
       <div class="modal-header">
         <h2 class="modal-title">
-          {{ $t('editProfile') || 'Modifier le profil' }}
+          {{ $t('edit Profile') || 'Modifier le profil' }}
         </h2>
       </div>
       

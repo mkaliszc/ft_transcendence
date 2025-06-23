@@ -5,7 +5,7 @@
       <div class="modal-header">
         <h2 class="modal-title">
           <i class="fas fa-user-plus"></i>
-          Ajouter un ami
+          {{ t('addFriend') }}
         </h2>
         <button @click="$emit('close')" class="btn-close">
           ✗
@@ -22,7 +22,7 @@
               v-model="searchQuery"
               @keyup.enter="handleSearchClick"
               type="text"
-              placeholder="Rechercher un utilisateur par nom..."
+              :placeholder="t('searchUserPlaceholder')"
               class="search-input"
               :disabled="isSearching"
             />
@@ -37,7 +37,7 @@
             </button>
           </div>
           <p class="search-hint">
-            Tapez au moins 2 caractères puis cliquez sur "Rechercher" ou appuyez sur Entrée
+            {{ t('searchHint') }}
           </p>
         </div>
 
@@ -54,7 +54,7 @@
 
         <!-- Résultats de recherche -->
         <div v-if="searchResults.length > 0" class="search-results">
-          <h3 class="results-title">Utilisateurs trouvés ({{ searchResults.length }})</h3>
+          <h3 class="results-title">{{ t('usersFound', { count: searchResults.length }) }}</h3>
           <div class="results-list">
             <UserSearchCard
               v-for="user in searchResults"
@@ -69,8 +69,8 @@
         <!-- Message si aucun résultat -->
         <div v-else-if="hasSearched && !isSearching && searchResults.length === 0" class="empty-results">
           <i class="fas fa-search"></i>
-          <h3>Aucun utilisateur trouvé</h3>
-          <p>Aucun utilisateur ne correspond à votre recherche "{{ lastSearchQuery }}"</p>
+          <h3>{{ t('noUsersFound') }}</h3>
+          <p>{{ t('noUsersFoundMessage', { query: lastSearchQuery }) }}</p>
         </div>
 
         <!-- Instructions -->
@@ -78,13 +78,13 @@
           <div class="instruction-item">
             <i class="fas fa-info-circle"></i>
             <div>
-              <h4>Comment ajouter un ami ?</h4>
+              <h4>{{ t('howToAddFriend') }}</h4>
               <ul>
-                <li>Tapez le nom d'utilisateur ou nom d'affichage de votre ami</li>
-                <li>Cliquez sur le bouton "Rechercher" ou appuyez sur Entrée</li>
-                <li>Sélectionnez-le dans les résultats de recherche</li>
-                <li>Envoyez une demande d'ami</li>
-                <li>Attendez qu'il accepte votre demande</li>
+                <li>{{ t('typeUsername') }}</li>
+                <li>{{ t('clickSearchButton') }}</li>
+                <li>{{ t('selectFromResults') }}</li>
+                <li>{{ t('sendRequest') }}</li>
+                <li>{{ t('waitForAcceptance') }}</li>
               </ul>
             </div>
           </div>
@@ -94,7 +94,7 @@
       <!-- Footer du modal -->
       <div class="modal-footer">
         <button @click="$emit('close')" class="btn-secondary">
-          Fermer
+          {{ t('close') }}
         </button>
       </div>
     </div>
@@ -103,6 +103,7 @@
 
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted } from 'vue';
+import { useI18n } from 'vue-i18n';
 import { searchUsers, sendFriendRequest } from '../../services/friendsAPI';
 import type { User } from '../../services/friendsAPI';
 import UserSearchCard from './UserSearchCard.vue';
@@ -112,6 +113,9 @@ const emit = defineEmits<{
   'close': [];
   'friend-added': [];
 }>();
+
+// Composable i18n
+const { t } = useI18n();
 
 // État réactif
 const searchQuery = ref('');
@@ -128,7 +132,7 @@ const handleSearchClick = async () => {
   clearMessages();
   
   if (searchQuery.value.length < 2) {
-    error.value = 'Veuillez saisir au moins 2 caractères pour la recherche';
+    error.value = t('searchAtLeast2Chars');
     return;
   }
 
@@ -143,10 +147,10 @@ const handleSearchClick = async () => {
     searchResults.value = (results.success && results.data) ? results.data : [];
     
     if (!results.success) {
-      error.value = results.error || 'Erreur lors de la recherche';
+      error.value = results.error || t('searchError');
     }
   } catch (err: any) {
-    error.value = err.message || 'Erreur lors de la recherche';
+    error.value = err.message || t('searchError');
     searchResults.value = [];
   } finally {
     isSearching.value = false;
@@ -163,7 +167,7 @@ const handleAddFriend = async (user: User) => {
     const result = await sendFriendRequest(user.username);
     
     if (result.success) {
-      successMessage.value = 'Demande d\'ami envoyée avec succès !';
+      successMessage.value = t('friendRequestSent');
       // Retirer l'utilisateur des résultats
       searchResults.value = searchResults.value.filter(u => u.user_id !== user.user_id);
       
@@ -175,10 +179,10 @@ const handleAddFriend = async (user: User) => {
         emit('close');
       }, 2000);
     } else {
-      error.value = result.error || 'Erreur lors de l\'envoi de la demande';
+      error.value = result.error || t('sendRequestError');
     }
   } catch (err: any) {
-    error.value = err.message || 'Erreur lors de l\'ajout de l\'ami';
+    error.value = err.message || t('addFriendError');
   } finally {
     addingUserId.value = null;
   }

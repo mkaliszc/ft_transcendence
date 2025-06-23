@@ -10,16 +10,16 @@
       <div class="header-content">
         <h1 class="page-title">
           <i class="fas fa-users"></i>
-          Mes Amis
+          {{ t('myFriends') }}
         </h1>
         <div class="friends-stats">
           <div class="stat-item">
             <span class="stat-number">{{ totalFriendsCount }}</span>
-            <span class="stat-label">Amis</span>
+            <span class="stat-label">{{ t('friends') }}</span>
           </div>
           <div class="stat-item online">
             <span class="stat-number">{{ onlineFriendsCount }}</span>
-            <span class="stat-label">En ligne</span>
+            <span class="stat-label">{{ t('online') }}</span>
           </div>
         </div>
       </div>
@@ -27,12 +27,12 @@
         <!-- Bouton Accueil -->
         <router-link to="/Home2" class="nav-link friends-link">
           <i class="fas fa-home"></i>
-          <span>Accueil</span>
+          <span>{{ t('home') }}</span>
         </router-link>
         
         <button @click="showAddFriend = true" class="btn-primary">
           <i class="fas fa-user-plus"></i>
-          Ajouter un ami
+          {{ t('addFriend') }}
         </button>
       </div>
     </div>
@@ -41,14 +41,14 @@
     <div v-if="error" class="error-message">
       <i class="fas fa-exclamation-triangle"></i>
       {{ error }}
-      <button @click="loadFriends" class="btn-retry">Réessayer</button>
+      <button @click="loadFriends" class="btn-retry">{{ t('retry') }}</button>
     </div>
 
     <!-- Loading state -->
     <div v-if="isLoading" class="loading-container">
       <div class="loading-spinner">
         <i class="fas fa-spinner fa-spin"></i>
-        <span>Chargement des amis...</span>
+        <span>{{ t('loadingFriends') }}</span>
       </div>
     </div>
 
@@ -56,7 +56,7 @@
     <div v-if="pendingRequestsCount > 0" class="friend-requests-section">
       <h2 class="section-title">
         <i class="fas fa-inbox"></i>
-        Demandes d'amis ({{ pendingRequestsCount }})
+        {{ t('friendRequests') }} ({{ pendingRequestsCount }})
       </h2>
       <div class="requests-grid">
         <FriendRequestCard 
@@ -75,7 +75,7 @@
       <div v-if="onlineFriends.length > 0" class="friends-section">
         <h2 class="section-title online">
           <i class="fas fa-circle"></i>
-          En ligne ({{ onlineFriendsCount }})
+          {{ t('online') }} ({{ onlineFriendsCount }})
         </h2>
         <div class="friends-grid">
           <FriendCard 
@@ -93,7 +93,7 @@
       <div v-if="offlineFriends.length > 0" class="friends-section">
         <h2 class="section-title offline">
           <i class="fas fa-circle"></i>
-          Hors ligne ({{ offlineFriends.length }})
+          {{ t('offline') }} ({{ offlineFriends.length }})
         </h2>
         <div class="friends-grid">
           <FriendCard 
@@ -111,10 +111,10 @@
       <div v-if="totalFriendsCount === 0 && !isLoading" class="empty-state">
         <div class="empty-content">
           <i class="fas fa-user-friends"></i>
-          <h3>Aucun ami pour le moment</h3>
-          <p>Commencez à construire votre réseau d'amis Pong !</p>
+          <h3>{{ t('noFriendsYet') }}</h3>
+          <p>{{ t('startBuildingNetwork') }}</p>
           <button @click="showAddFriend = true" class="btn-primary">
-            Ajouter votre premier ami
+            {{ t('addFirstFriend') }}
           </button>
         </div>
       </div>
@@ -140,7 +140,7 @@
     <div class="footer-home-btn">
       <router-link to="/home2" class="btn-home-gold">
         <i class="fas fa-home"></i>
-        Retour à l'accueil
+        {{ t('backToHome') }}
       </router-link>
     </div>
 
@@ -150,12 +150,14 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
+import { useI18n } from 'vue-i18n';
 import { useFriends } from '@/composable/useFriends';
 import FriendCard from './FriendCard.vue';
 import FriendRequestCard from './FriendRequestCard.vue';
 import AddFriendModal from './AddFriendModal.vue';
 
 const router = useRouter();
+const { t } = useI18n();
 
 // Utilisation du composable
 const {
@@ -186,7 +188,7 @@ const handleAcceptRequest = async (requestId: number) => {
   const result = await acceptFriendRequest(requestId);
   showNotification(
     result.success ? 'success' : 'error',
-    result.success ? 'Demande acceptée avec succès' : (result.error || 'Erreur lors de l\'acceptation'),
+    result.success ? t('requestAccepted') : (result.error || t('acceptError')),
     result.success ? 'fas fa-check' : 'fas fa-times'
   );
 };
@@ -195,7 +197,7 @@ const handleRejectRequest = async (requestId: number) => {
   const result = await rejectFriendRequest(requestId);
   showNotification(
     result.success ? 'info' : 'error',
-    result.success ? 'Demande rejetée' : (result.error || 'Erreur lors du rejet'),
+    result.success ? t('requestRejected') : (result.error || t('rejectError')),
     result.success ? 'fas fa-times' : 'fas fa-exclamation'
   );
 };
@@ -204,7 +206,7 @@ const handleRemoveFriend = async (friendshipId: number) => {
   const result = await removeFriend(friendshipId);
   showNotification(
     result.success ? 'info' : 'error',
-    result.success ? 'Ami supprimé' : (result.error || 'Erreur lors de la suppression'),
+    result.success ? t('friendRemoved') : (result.error || t('removeError')),
     result.success ? 'fas fa-user-minus' : 'fas fa-times'
   );
 };
@@ -214,7 +216,7 @@ const handleViewProfile = (friendship: any) => {
 };
 
 const handleFriendAdded = () => {
-  showNotification('success', 'Demande d\'ami envoyée !', 'fas fa-paper-plane');
+  showNotification('success', t('friendRequestSent'), 'fas fa-paper-plane');
   loadFriends();
 };
 

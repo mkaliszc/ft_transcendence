@@ -21,19 +21,19 @@
         @click="handleAccept"
         :disabled="isProcessing"
         class="btn-accept"
-        title="Accepter"
+        :title="t('accept')"
       >
         <i class="fas fa-check"></i>
-        <span class="btn-text">Accepter</span>
+        <span class="btn-text">{{ t('accept') }}</span>
       </button>
       <button 
         @click="handleReject"
         :disabled="isProcessing"
         class="btn-reject"
-        title="Rejeter"
+        :title="t('reject')"
       >
         <i class="fas fa-times"></i>
-        <span class="btn-text">Rejeter</span>
+        <span class="btn-text">{{ t('reject') }}</span>
       </button>
     </div>
 
@@ -46,6 +46,7 @@
 
 <script setup lang="ts">
 import { ref, computed } from 'vue';
+import { useI18n } from 'vue-i18n';
 import type { FriendRequest } from '../../services/friendsAPI';
 
 // Props
@@ -61,6 +62,9 @@ const emit = defineEmits<{
 
 // État local
 const isProcessing = ref(false);
+
+// Composable i18n
+const { t } = useI18n();
 
 // Computed
 const displayName = computed(() => 

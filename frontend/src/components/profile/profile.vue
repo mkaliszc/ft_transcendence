@@ -217,13 +217,13 @@
 
 		  <!-- Section GDPR/Confidentialité & Données -->
 		  <div v-if="isOwnProfile" class="gdpr-section" style="margin-top: 3rem;">
-			<h2 class="gdpr-title">Confidentialité & Données</h2>
+			<h2 class="gdpr-title">{{ t('privacyAndData') }}</h2>
 			<div class="gdpr-actions">
-			  <button class="btn btn-secondary" @click="downloadPersonalData">Télécharger mes données</button>
-			  <button class="btn btn-secondary" @click="anonymizeAccount">Anonymiser mon compte</button>
-			  <button class="btn btn-primary" @click="deleteAccount">Supprimer mon compte</button>
+			  <button class="btn btn-secondary" @click="downloadPersonalData">{{ t('downloadPersonalData') }}</button>
+			  <button class="btn btn-secondary" @click="anonymizeAccount">{{ t('anonymizeAccount') }}</button>
+			  <button class="btn btn-primary" @click="deleteAccount">{{ t('deleteAccount') }}</button>
 			</div>
-			<p class="gdpr-info">Vous pouvez gérer vos données personnelles conformément à la réglementation RGPD.</p>
+			<p class="gdpr-info">{{ t('gdprCompliance') }}</p>
 		  </div>
 
 		  <!-- Boutons d'action en bas de page -->
@@ -660,15 +660,15 @@ const downloadPersonalData = async () => {
     const url = window.URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = 'mes_donnees_perso.json';
+    a.download = t('personalDataFilename');
     a.click();
     window.URL.revokeObjectURL(url);
   } catch (err) {
-    alert('Impossible de télécharger vos données personnelles.');
+    alert(t('cannotDownloadData'));
   }
 };
 const anonymizeAccount = async () => {
-  if (!confirm('Êtes-vous sûr de vouloir anonymiser votre compte ? Cette action est irréversible.')) return;
+  if (!confirm(t('confirmAnonymize'))) return;
   try {
     const token = localStorage.getItem('auth_token');
     const response = await fetch('/api/profile/anonymization', {
@@ -676,7 +676,7 @@ const anonymizeAccount = async () => {
       headers: { Authorization: `Bearer ${token}` }
     });
     if (!response.ok) throw new Error('Erreur lors de l\'anonymisation');
-    alert('Votre compte a été anonymisé. Vous allez être déconnecté.');
+    alert(t('accountAnonymized'));
     localStorage.removeItem('auth_token');
     // Si d'autres infos d'auth existent, les supprimer aussi
     localStorage.removeItem('refresh_token');
@@ -684,11 +684,11 @@ const anonymizeAccount = async () => {
     // Rediriger vers la page de connexion
     router.push('/signin');
   } catch (err) {
-    alert('Impossible d\'anonymiser votre compte.');
+    alert(t('cannotAnonymize'));
   }
 };
 const deleteAccount = async () => {
-  if (!confirm('Êtes-vous sûr de vouloir supprimer votre compte ? Cette action est irréversible.')) return;
+  if (!confirm(t('confirmDeleteAccount'))) return;
   try {
     const token = localStorage.getItem('auth_token');
     const response = await fetch('/api/profile/delete', {
@@ -696,10 +696,10 @@ const deleteAccount = async () => {
       headers: { Authorization: `Bearer ${token}` }
     });
     if (!response.ok) throw new Error('Erreur lors de la suppression');
-    alert('Votre compte a été supprimé.');
+    alert(t('accountDeleted'));
     window.location.href = '/';
   } catch (err) {
-    alert('Impossible de supprimer votre compte.');
+    alert(t('cannotDeleteAccount'));
   }
 };
 </script>

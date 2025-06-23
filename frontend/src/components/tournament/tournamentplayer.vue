@@ -61,7 +61,6 @@
         <!-- Instructions -->
         <div class="instructions">
           <p>🎮 <strong>Instructions :</strong> Entrez les noms des 8 joueurs pour commencer le tournoi</p>
-          <p>⚡ <strong>Astuce :</strong> Appuyez sur Entrée dans un champ pour valider rapidement</p>
         </div>
 
         <!-- Validation Status -->

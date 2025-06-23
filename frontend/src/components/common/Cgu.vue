@@ -1,90 +1,92 @@
 <template>
   <div class="cgu-page min-h-screen bg-gradient-to-br from-green-900 via-green-800 to-green-900 py-10 flex flex-col items-center justify-center">
     <div class="cgu-container">
-      <h1 class="text-3xl font-bold text-yellow-400 mb-6 text-center">Conditions d'Utilisation - Pong Billard</h1>
+      <h1 class="text-3xl font-bold text-yellow-400 mb-6 text-center">{{ t('cguTitle') }}</h1>
       <div class="cgu-content">
-        <p class="text-sm text-gray-300 mb-2">Dernière mise à jour : 22 juin 2025</p>
-        <h2 class="text-xl font-semibold text-yellow-300 mt-4">1. Qu'est-ce que Pong Billard ?</h2>
-        <p>Pong Billard est un jeu en ligne gratuit où vous pouvez jouer contre d'autres joueurs et suivre vos performances.</p>
-        <h2 class="text-xl font-semibold text-yellow-300 mt-4">2. Votre Compte</h2>
-        <h3 class="font-bold text-yellow-200 mt-2">Inscription</h3>
+        <p class="text-sm text-gray-300 mb-2">{{ t('lastUpdated') }}</p>
+        <h2 class="text-xl font-semibold text-yellow-300 mt-4">{{ t('whatIsPongBilliard') }}</h2>
+        <p>{{ t('pongBilliardDescription') }}</p>
+        <h2 class="text-xl font-semibold text-yellow-300 mt-4">{{ t('yourAccount') }}</h2>
+        <h3 class="font-bold text-yellow-200 mt-2">{{ t('registration') }}</h3>
         <ul class="list-disc ml-6 mb-2">
-          <li>Vous pouvez créer un compte avec un nom d'utilisateur et un mot de passe ou vous connecter avec Google</li>
-          <li>Choisissez un nom d'utilisateur unique</li>
-          <li>Vous êtes responsable de votre mot de passe</li>
-          <li>Vous devez avoir au moins 13 ans pour utiliser Pong Billard</li>
+          <li>{{ t('canCreateAccount') }}</li>
+          <li>{{ t('chooseUniqueUsername') }}</li>
+          <li>{{ t('responsibleForPassword') }}</li>
+          <li>{{ t('mustBe13OrOlder') }}</li>
         </ul>
-        <h3 class="font-bold text-yellow-200 mt-2">Vos Données</h3>
-        <p>Nous collectons seulement :</p>
+        <h3 class="font-bold text-yellow-200 mt-2">{{ t('yourData') }}</h3>
+        <p>{{ t('weCollectOnly') }}</p>
         <ul class="list-disc ml-6 mb-2">
-          <li>Compte : nom d'utilisateur, mot de passe (crypté), avatar</li>
-          <li>Jeu : nombre de parties, victoires, défaites, scores</li>
-          <li>Social : votre liste d'amis</li>
+          <li>{{ t('accountData') }}</li>
+          <li>{{ t('gameData') }}</li>
+          <li>{{ t('socialData') }}</li>
         </ul>
-        <p>Pour les joueurs se connectant avec Google, nous stockons votre email personnel en plus de votre avatar Google (nous ne conservons pas de mot de passe pour les joueurs Google).</p>
-        <h3 class="font-bold text-yellow-200 mt-2">Pourquoi nous collectons vos données</h3>
+        <p>{{ t('googleUserNote') }}</p>
+        <h3 class="font-bold text-yellow-200 mt-2">{{ t('whyWeCollect') }}</h3>
         <ul class="list-disc ml-6 mb-2">
-          <li>Compte : pour vous identifier et sécuriser votre profil</li>
-          <li>Jeu : pour calculer vos statistiques et organiser les matchs</li>
-          <li>Social : pour gérer votre liste d'amis</li>
+          <li>{{ t('accountPurpose') }}</li>
+          <li>{{ t('gamePurpose') }}</li>
+          <li>{{ t('socialPurpose') }}</li>
         </ul>
-        <h2 class="text-xl font-semibold text-yellow-300 mt-4">3. Règles du Jeu</h2>
+        <h2 class="text-xl font-semibold text-yellow-300 mt-4">{{ t('gameRules') }}</h2>
         <div class="flex flex-col md:flex-row gap-6">
           <div class="flex-1">
-            <span class="font-bold text-green-400">✅ Autorisé :</span>
+            <span class="font-bold text-green-400">✅ {{ t('allowed') }}</span>
             <ul class="list-disc ml-6 mb-2">
-              <li>Jouer normalement contre d'autres joueurs</li>
-              <li>Ajouter des amis</li>
-              <li>Personnaliser votre avatar</li>
+              <li>{{ t('playNormally') }}</li>
+              <li>{{ t('addFriends') }}</li>
+              <li>{{ t('customizeAvatar') }}</li>
             </ul>
           </div>
           <div class="flex-1">
-            <span class="font-bold text-red-400">❌ Interdit :</span>
+            <span class="font-bold text-red-400">❌ {{ t('forbidden') }}</span>
             <ul class="list-disc ml-6 mb-2">
-              <li>Tricher ou utiliser des bots</li>
-              <li>Harceler d'autres joueurs</li>
+              <li>{{ t('cheatOrBots') }}</li>
+              <li>{{ t('harassOthers') }}</li>
             </ul>
           </div>
         </div>
-        <h2 class="text-xl font-semibold text-yellow-300 mt-4">4. Vos Droits sur vos Données</h2>
-        <p>Vous pouvez à tout moment :</p>
+        <h2 class="text-xl font-semibold text-yellow-300 mt-4">{{ t('dataRights') }}</h2>
+        <p>{{ t('youCanAlways') }}</p>
         <ul class="list-disc ml-6 mb-2">
-          <li>Voir vos données : dans les paramètres du profil</li>
-          <li>Exporter vos données : télécharger toutes vos informations</li>
-          <li>Modifier : changer nom d'utilisateur, avatar, mot de passe</li>
-          <li>Anonymiser : transformer votre compte en "utilisateur anonyme"</li>
-          <li>Supprimer : effacer complètement votre compte</li>
+          <li>{{ t('viewData') }}</li>
+          <li>{{ t('exportData') }}</li>
+          <li>{{ t('modifyData') }}</li>
+          <li>{{ t('anonymizeData') }}</li>
+          <li>{{ t('deleteData') }}</li>
         </ul>
-        <h3 class="font-bold text-yellow-200 mt-2">Combien de temps nous gardons vos données</h3>
+        <h3 class="font-bold text-yellow-200 mt-2">{{ t('dataRetention') }}</h3>
         <ul class="list-disc ml-6 mb-2">
-          <li>Tant que votre compte est actif</li>
-          <li>30 jours après suppression (pour récupération)</li>
-          <li>Historique anonymisé conservé pour les statistiques du jeu</li>
+          <li>{{ t('activeAccount') }}</li>
+          <li>{{ t('thirtyDaysAfterDeletion') }}</li>
+          <li>{{ t('anonymizedHistory') }}</li>
         </ul>
-        <h2 class="text-xl font-semibold text-yellow-300 mt-4">5. Sécurité</h2>
+        <h2 class="text-xl font-semibold text-yellow-300 mt-4">{{ t('security') }}</h2>
         <ul class="list-disc ml-6 mb-2">
-          <li>Nous protégeons vos données avec des mots de passe cryptés</li>
-          <li>L'authentification à 2 facteurs est disponible (recommandée)</li>
-          <li>Nous ne partageons jamais vos données avec des tiers</li>
+          <li>{{ t('encryptedPasswords') }}</li>
+          <li>{{ t('twoFactorAuthAvailability') }}</li>
+          <li>{{ t('noDataSharing') }}</li>
         </ul>
-        <h2 class="text-xl font-semibold text-yellow-300 mt-4">6. Disponibilité</h2>
-        <p>Le jeu est gratuit et le restera.</p>
-        <h2 class="text-xl font-semibold text-yellow-300 mt-4">7. Si vous ne respectez pas les règles</h2>
-        <p>Nous pouvons :</p>
+        <h2 class="text-xl font-semibold text-yellow-300 mt-4">{{ t('availability') }}</h2>
+        <p>{{ t('gameFreeAlways') }}</p>
+        <h2 class="text-xl font-semibold text-yellow-300 mt-4">{{ t('ruleViolations') }}</h2>
+        <p>{{ t('weMay') }}</p>
         <ul class="list-disc ml-6 mb-2">
-          <li>Suspendre temporairement votre compte</li>
-          <li>Supprimer votre compte définitivement</li>
+          <li>{{ t('suspendAccount') }}</li>
+          <li>{{ t('deleteAccountPermanently') }}</li>
         </ul>
-        <h2 class="text-xl font-semibold text-yellow-300 mt-4">8. Contact</h2>
-        <p>Une question ? Un problème ?<br>Email : <a href="mailto:kaliszczakm@yahoo.com" class="underline text-yellow-300 hover:text-yellow-400">kaliszczakm@yahoo.com</a></p>
-        <p class="mt-6 text-center text-sm text-gray-400">En jouant à Pong Billard, vous acceptez ces conditions d'utilisation.</p>
+        <h2 class="text-xl font-semibold text-yellow-300 mt-4">{{ t('contact') }}</h2>
+        <p>{{ t('questionOrProblem') }}<br>{{ t('emailContact') }} <a href="mailto:kaliszczakm@yahoo.com" class="underline text-yellow-300 hover:text-yellow-400">kaliszczakm@yahoo.com</a></p>
+        <p class="mt-6 text-center text-sm text-gray-400">{{ t('acceptanceNote') }}</p>
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
-// Pas de logique spécifique ici
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 </script>
 
 <style scoped>

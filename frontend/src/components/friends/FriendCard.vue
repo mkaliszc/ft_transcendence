@@ -21,20 +21,20 @@
       <button 
         @click="$emit('view-profile', friendship)" 
         class="btn-action btn-profile"
-        title="Voir le profil"
+        :title="t('viewProfile')"
       >
         <i class="fas fa-user"></i>
-        <span class="btn-text">Profil</span>
+        <span class="btn-text">{{ t('profile') }}</span>
       </button>
 
       <!-- Bouton Supprimer -->
       <button 
         @click="showConfirmModal = true" 
         class="btn-action btn-remove"
-        title="Supprimer l'ami"
+        :title="t('removeFriend')"
       >
         <i class="fas fa-user-minus"></i>
-        <span class="btn-text">Supprimer</span>
+        <span class="btn-text">{{ t('remove') }}</span>
       </button>
     </div>
 
@@ -43,22 +43,22 @@
       <div class="confirm-modal" @click.stop>
         <div class="modal-header">
           <i class="fas fa-exclamation-triangle"></i>
-          <h3>Confirmer la suppression</h3>
+          <h3>{{ t('confirmRemoval') }}</h3>
         </div>
         
         <div class="modal-body">
-          <p>Êtes-vous sûr de vouloir supprimer <strong>{{ displayName }}</strong> de vos amis ?</p>
-          <p class="warning-text">Cette action est irréversible.</p>
+          <p>{{ t('sureToRemove', { name: displayName }) }}</p>
+          <p class="warning-text">{{ t('actionIrreversible') }}</p>
         </div>
         
         <div class="modal-actions">
           <button @click="showConfirmModal = false" class="btn-cancel">
             <i class="fas fa-times"></i>
-            Annuler
+            {{ t('cancel') }}
           </button>
           <button @click="handleConfirmRemove" class="btn-confirm">
             <i class="fas fa-trash"></i>
-            Supprimer
+            {{ t('remove') }}
           </button>
         </div>
       </div>
@@ -68,6 +68,7 @@
 
 <script setup lang="ts">
 import { computed, ref } from 'vue';
+import { useI18n } from 'vue-i18n';
 import type { Friendship } from '../../services/friendsAPI';
 
 // Props
@@ -85,6 +86,9 @@ const emit = defineEmits<{
 // État local
 const showConfirmModal = ref(false);
 
+// Composable i18n
+const { t } = useI18n();
+
 // Computed
 const displayName = computed(() => 
   props.friendship.friend.username
@@ -95,7 +99,7 @@ const statusIcon = computed(() =>
 );
 
 const statusText = computed(() => 
-  props.isOnline ? 'En ligne' : 'Hors ligne'
+  props.isOnline ? t('online') : t('offline')
 );
 
 // Méthodes

@@ -29,7 +29,7 @@
       >
         <i v-if="!isAdding" class="fas fa-user-plus"></i>
         <i v-else class="fas fa-spinner fa-spin"></i>
-        <span class="btn-text">{{ isAdding ? 'Envoi...' : 'Ajouter' }}</span>
+        <span class="btn-text">{{ isAdding ? t('sending') : t('addFriend') }}</span>
       </button>
     </div>
   </div>
@@ -37,6 +37,7 @@
 
 <script setup lang="ts">
 import { computed } from 'vue';
+import { useI18n } from 'vue-i18n';
 import type { User } from '../../services/friendsAPI';
 
 // Props
@@ -49,6 +50,9 @@ const props = defineProps<{
 const emit = defineEmits<{
   'add-friend': [user: User];
 }>();
+
+// Composable i18n
+const { t } = useI18n();
 
 // Computed
 const displayName = computed(() => 
