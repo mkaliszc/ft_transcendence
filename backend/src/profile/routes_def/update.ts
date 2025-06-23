@@ -20,7 +20,6 @@ export async function update(request: FastifyRequest<{ Body: UpdateData }>, repl
 
 		if (update_payload.username) {
 			const checkUsername = validateUsername(update_payload.username.trim());
-			console.log('Username validation result:', checkUsername, 'for username:', update_payload.username.trim());
 			if (!checkUsername.isValid) {
 				return reply.status(400).send({ error: 'Invalid username format' });
 			}
