@@ -16,6 +16,8 @@ class User extends Model {
 	twoFA!: boolean
 	twoFA_secret?: string
 	google_user!: boolean
+	last_seen!: Date
+	is_online!: boolean 
 }
 
 User.init({
@@ -100,6 +102,16 @@ User.init({
 		type: DataTypes.BOOLEAN,
 		allowNull: false,
 		defaultValue: false
+	},
+	last_seen: {
+		type: DataTypes.DATE,
+		allowNull: false,
+		defaultValue: DataTypes.NOW
+	},
+	is_online: {
+		type: DataTypes.BOOLEAN,
+		allowNull: false,
+		defaultValue: false
 	}
 }, {
 	sequelize,
@@ -113,11 +125,16 @@ User.addHook('beforeUpdate', (user: User) => {
 });
 
 User.addHook('beforeCreate', (user: any) => {
-    user.creation_date = new Date();
-    user.last_update = new Date();
-    if (!user.avatar) {
-        user.avatar = DefaultAvatar;
-    }
+	user.creation_date = new Date();
+	user.last_update = new Date();
+	if (!user.avatar) {
+		user.avatar = DefaultAvatar;
+	}
+});
+
+User.addHook('beforeSave', (user: User) => {
+	user.last_seen = new Date();
+	user.is_online =  true;
 });
 
 export { User }

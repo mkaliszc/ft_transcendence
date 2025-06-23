@@ -1,6 +1,5 @@
 <template>
   <div class="friend-card" :class="{ 'online': isOnline }">
-    <!-- Avatar avec indicateur de statut -->
     <div class="avatar-container">
       <div class="avatar default-avatar">
         <div class="avatar-placeholder">
@@ -9,18 +8,14 @@
       </div>
       <div class="status-indicator" :class="{ 'online': isOnline, 'offline': !isOnline }"></div>
     </div>
-
-    <!-- Informations de l'ami -->
     <div class="friend-info">
       <h3 class="friend-name">{{ displayName }}</h3>
-      <p class="friend-username">@{{ friendship.friend.username }}</p>
+      <span class="friend-username">@{{ friendship.friend.username }}</span>
       <div class="friend-status">
         <i :class="statusIcon"></i>
         <span>{{ statusText }}</span>
       </div>
     </div>
-
-    <!-- Actions -->
     <div class="friend-actions">
       <!-- Bouton Profil -->
       <button 
@@ -72,7 +67,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue';
+import { computed } from 'vue';
 import type { Friendship } from '../../services/friendsAPI';
 
 // Props
@@ -120,22 +115,19 @@ const handleConfirmRemove = () => {
   padding: 1.25rem;
   background: rgba(0, 0, 0, 0.3);
   backdrop-filter: blur(10px);
-  border-radius: 1rem;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  transition: all 0.3s ease;
+  border-radius: 1.2rem;
+  border: 1.5px solid #2d5a3d;
+  box-shadow: 0 6px 32px rgba(40, 87, 42, 0.18);
+  transition: all 0.3s cubic-bezier(.4,2,.6,1);
   position: relative;
   min-height: 100px;
   box-sizing: border-box;
 }
 
 .friend-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
-  border-color: rgba(212, 175, 55, 0.5);
-}
-
-.friend-card.online {
-  border-color: rgba(40, 167, 69, 0.3);
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 12px 32px rgba(40, 87, 42, 0.28);
+  border-color: #d4af37;
 }
 
 .avatar-container {
@@ -144,36 +136,22 @@ const handleConfirmRemove = () => {
 }
 
 .avatar {
-  width: 60px;
-  height: 60px;
+  width: 68px;
+  height: 68px;
   border-radius: 50%;
-  border: 3px solid rgba(255, 255, 255, 0.2);
-  transition: border-color 0.3s ease;
+  border: 3px solid #d4af37;
   display: flex;
   align-items: center;
   justify-content: center;
   overflow: hidden;
-}
-
-.avatar img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.avatar.default-avatar {
   background: linear-gradient(135deg, #d4af37, #c19b2e);
 }
 
 .avatar-placeholder {
-  font-size: 1.5rem;
+  font-size: 2.1rem;
   font-weight: bold;
   color: #1a1a1a;
   text-align: center;
-}
-
-.friend-card.online .avatar {
-  border-color: rgba(40, 167, 69, 0.5);
 }
 
 .status-indicator {
@@ -198,23 +176,31 @@ const handleConfirmRemove = () => {
 
 .friend-info {
   flex: 1;
-  min-width: 0; /* Pour permettre le text-overflow */
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 0.2rem;
 }
 
 .friend-name {
-  font-size: 1.1rem;
-  font-weight: 600;
-  color: #f8f9fa;
-  margin: 0 0 0.25rem 0;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #fff;
+  margin: 0 0 0.1rem 0;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  letter-spacing: 0.5px;
 }
 
 .friend-username {
-  font-size: 0.9rem;
-  color: #adb5bd;
-  margin: 0 0 0.5rem 0;
+  font-size: 1.05rem;
+  color: #ffe082;
+  font-weight: 500;
+  margin-bottom: 0.1rem;
+  margin-top: -0.1rem;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -224,16 +210,17 @@ const handleConfirmRemove = () => {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  font-size: 0.8rem;
-  color: #6c757d;
+  font-size: 0.92rem;
+  color: #b6e7c9;
+  font-weight: 500;
 }
 
 .friend-status i {
-  font-size: 0.6rem;
+  font-size: 0.7rem;
 }
 
 .friend-card.online .friend-status {
-  color: #28a745;
+  color: #7fff9e;
 }
 
 .friend-actions {

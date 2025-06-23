@@ -136,6 +136,14 @@
       </button>
     </div>
 
+    <!-- Bouton Retour à l'accueil en bas de page -->
+    <div class="footer-home-btn">
+      <router-link to="/home2" class="btn-home-gold">
+        <i class="fas fa-home"></i>
+        Retour à l'accueil
+      </router-link>
+    </div>
+
   </div>
 </template>
 
@@ -521,31 +529,71 @@ onMounted(() => {
   }
 }
 
-.btn-primary {
-  background: #007bff;
+.btn-home-da, .btn-add-da {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  background: linear-gradient(135deg, #1a472a, #2d5a3d);
   color: #fff;
   border: none;
-  padding: 0.5rem 1rem;
-  border-radius: 4px;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
   margin: 0 0.5rem;
-  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(40, 87, 42, 0.10);
 }
-.btn-secondary {
-  background: #aaa;
-  color: #222;
-  border: none;
-  padding: 0.5rem 1rem;
-  border-radius: 4px;
-  margin: 0 0.5rem;
-  cursor: pointer;
-}
-.close-btn {
-  background: transparent;
-  color: #222;
-  border: none;
-  font-size: 1.2rem;
-  margin-left: 1rem;
-  cursor: pointer;
+.btn-home-da:hover, .btn-add-da:hover {
+  background: linear-gradient(135deg, #2d5a3d, #1a472a);
+  color: #fff;
+  transform: scale(1.07);
+  box-shadow: 0 4px 15px rgba(40, 87, 42, 0.18);
 }
 
+/* Style pour le bouton doré en bas de page */
+.btn-home-gold {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  background: linear-gradient(135deg, #d4af37, #c19b2e);
+  color: #1a1a1a;
+  border: none;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin: 2.5rem auto 0 auto;
+  box-shadow: 0 2px 8px rgba(212, 175, 55, 0.10);
+  justify-content: center;
+  min-width: 220px;
+}
+.btn-home-gold:hover {
+  background: linear-gradient(135deg, #ffe082, #d4af37);
+  color: #1a1a1a;
+  transform: scale(1.07);
+  box-shadow: 0 4px 15px rgba(212, 175, 55, 0.18);
+}
+
+.footer-home-btn {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  z-index: 10;
+  background: none;
+  padding-bottom: 2.5rem;
+  pointer-events: none;
+}
+.footer-home-btn .btn-home-gold {
+  pointer-events: auto;
+}
 </style>
