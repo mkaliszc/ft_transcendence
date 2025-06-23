@@ -137,6 +137,11 @@ const routes = [
     name: "Cgu",
     component: () => import("./components/common/Cgu.vue")
   },
+  {
+    path: "/:pathMatch(.*)*",
+    name: "NotFound",
+    component: () => import("./components/common/NotFound.vue")
+  }
 ];
 
 const router = createRouter({

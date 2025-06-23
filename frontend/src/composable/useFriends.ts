@@ -16,19 +16,38 @@ export function useFriends() {
   // État réactif
   const friends = ref<Friendship[]>([]);
   const pendingRequests = ref<FriendRequest[]>([]);
-  const onlineStatus = ref<Record<number, boolean>>({});
+  const friendsOnlineStatus = ref<{ [userId: number]: { username: string; is_online: boolean; last_seen: Date | null } }>({});
   const isLoading = ref(false);
   const error = ref<string | null>(null);
 
-  // Computed properties - Pour l'instant, on affiche tous les amis comme "en ligne"
-  // car nous n'avons pas de système de présence en temps réel
-  const onlineFriends = computed<Friendship[]>(() => 
-    friends.value // Tous les amis sont considérés comme "en ligne"
-  );
+  // Fonction pour obtenir l'ID de l'ami depuis une friendship
+//   const getFriendUserId = (friendship: Friendship, currentUserId: number): number => {
+//     return friendship.user_id1 === currentUserId ? friendship.user_id2 : friendship.user_id1;
+//   };
 
-  const offlineFriends = computed<Friendship[]>(() => 
-    [] // Aucun ami "hors ligne" pour l'instant
-  );
+  // Computed properties - Maintenant basé sur le vrai statut en ligne
+  const onlineFriends = computed<Friendship[]>(() => {
+    // On a besoin de l'ID de l'utilisateur actuel pour déterminer l'ami
+    // Pour l'instant, on va utiliser une approche simplifiée
+    return friends.value.filter(friendship => {
+      // Chercher dans friendsOnlineStatus par username
+      const friendUsername = friendship.friend.username;
+      const statusEntry = Object.values(friendsOnlineStatus.value).find(
+        status => status.username === friendUsername
+      );
+      return statusEntry?.is_online || false;
+    });
+  });
+
+  const offlineFriends = computed<Friendship[]>(() => {
+    return friends.value.filter(friendship => {
+      const friendUsername = friendship.friend.username;
+      const statusEntry = Object.values(friendsOnlineStatus.value).find(
+        status => status.username === friendUsername
+      );
+      return !statusEntry?.is_online;
+    });
+  });
 
   const onlineFriendsCount = computed(() => onlineFriends.value.length);
   const totalFriendsCount = computed(() => friends.value.length);
@@ -43,6 +62,8 @@ export function useFriends() {
       const response = await getFriends();
       if (response.success) {
         friends.value = response.data || [];
+        // Charger le statut en ligne après avoir chargé les amis
+        await loadOnlineStatus();
       } else {
         error.value = response.error || 'Erreur lors du chargement des amis';
       }
@@ -67,11 +88,11 @@ export function useFriends() {
   const loadOnlineStatus = async () => {
     try {
       const response = await getFriendsOnlineStatus();
-      if (response.success) {
-        onlineStatus.value = response.data || {};
+      if (response.success && response.data) {
+        friendsOnlineStatus.value = response.data.friends_status;
       }
     } catch (err: any) {
-      // Erreur silencieuse lors du chargement du statut en ligne
+      console.warn('Failed to load online status:', err);
     }
   };
 
@@ -139,27 +160,20 @@ export function useFriends() {
   const refreshData = async () => {
     await Promise.all([
       loadFriends(),
-      loadPendingRequests(),
-      loadOnlineStatus()
+      loadPendingRequests()
     ]);
   };
 
   // Initialisation
   onMounted(() => {
     refreshData();
-    
-    // Rafraîchir le statut en ligne toutes les 30 secondes
-    const interval = setInterval(loadOnlineStatus, 30000);
-    
-    // Nettoyer l'intervalle lors de la destruction du composant
-    return () => clearInterval(interval);
   });
 
   return {
     // État
     friends,
     pendingRequests,
-    onlineStatus,
+    friendsOnlineStatus,
     isLoading,
     error,
     
