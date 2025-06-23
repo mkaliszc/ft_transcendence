@@ -27,7 +27,7 @@ export async function getPersoData(request: FastifyRequest, reply: FastifyReply)
 								{
 									model: User,
 									as: 'user',
-									attributes: ['user_id', 'username', 'email_adress']
+									attributes: ['user_id', 'username']
 								}]
 						}]
 				}],
@@ -42,7 +42,7 @@ export async function getPersoData(request: FastifyRequest, reply: FastifyReply)
 				include: [{
 					model: User,
 					as: 'receiver',
-					attributes: ['user_id', 'username', 'email_adress']
+					attributes: ['user_id', 'username']
 				}],
 			});
 
@@ -51,7 +51,7 @@ export async function getPersoData(request: FastifyRequest, reply: FastifyReply)
 			include: [{
 					model: User,
 					as: 'sender',
-					attributes: ['user_id', 'username', 'email_adress']
+					attributes: ['user_id', 'username']
 				}]
 			});
 
@@ -68,7 +68,7 @@ export async function getPersoData(request: FastifyRequest, reply: FastifyReply)
 			personal_information: {
 				user_id: user.user_id,
 				username: user.username,
-				email_address: user.email_adress,
+				email_address: user.email_adress ? user.email_adress : "No email address set",
 				account_created: user.creation_date,
 				last_update: user.last_update,
 				two_factor_enabled: user.twoFA,

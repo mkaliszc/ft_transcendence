@@ -37,9 +37,11 @@ export async function check2FA(request: FastifyRequest, reply: FastifyReply) {
 	if (!verified) {
 		return reply.code(400).send({ error: 'Invalid 2FA code' });
 	}
-	if (!user.twoFA) {
+
+	if (!user.twoFA && user.twoFA_secret) {
 		await user.update( { twoFA: true } );
 	}
+	
 	const token = await reply.jwtSign(
 		{ username: user.username, user_id: user.user_id },
 		{ expiresIn: '15min' }
@@ -51,15 +53,9 @@ export async function check2FA(request: FastifyRequest, reply: FastifyReply) {
 
 	const userData = {
 		username: user.username,
-		email: user.email_adress,
 		userId: user.user_id,
-		avatar: user.avatar,
-		stats: {
-			matches: user.number_of_matches,
-			wins: user.number_of_win,
-			losses: user.number_of_lose
-		}
 	}
+	await user.save();
 
 	return reply.code(200).send({ token: token, refreshToken, user: userData });
 }
