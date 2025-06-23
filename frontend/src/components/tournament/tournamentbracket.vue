@@ -252,6 +252,7 @@
   
   <script setup lang="ts">
   import { ref, computed, onMounted, onUnmounted, nextTick } from 'vue'
+  import { useRoute } from 'vue-router'
   
   interface Team {
 	name: string
@@ -644,20 +645,26 @@
   
   // Initialisation avec vérification de l'état de montage
   onMounted(() => {
-    
-    nextTick(() => {
-      // S'assurer que le composant est complètement monté
-      setTimeout(() => {
+  const route = useRoute()
+  nextTick(() => {
+    setTimeout(() => {
+      let urlPlayers: string[] | null = null
+      if (route.query.players && typeof route.query.players === 'string') {
+        urlPlayers = route.query.players.split(',').map(n => n.trim()).filter(n => n)
+      }
+      if (urlPlayers && urlPlayers.length === 8) {
+        // On force la réinitialisation avec les noms de l'URL
+        localStorage.removeItem('tournament_state')
+        localStorage.removeItem('tournamentMatchResult')
+        initializeTournament(urlPlayers)
+      } else {
         initializeTournament()
-        
-        // Démarrer la vérification automatique des résultats
-        resultCheckInterval = setInterval(checkForMatchResults, 1000)
-        
-        // Vérification immédiate au cas où il y aurait déjà un résultat
-        checkForMatchResults()
-      }, 50)
-    })
+      }
+      resultCheckInterval = setInterval(checkForMatchResults, 1000)
+      checkForMatchResults()
+    }, 50)
   })
+})
   
   onUnmounted(() => {
 	if (resultCheckInterval) {
