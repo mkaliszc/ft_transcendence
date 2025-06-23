@@ -12,6 +12,7 @@ import { declineRequest } from '../routes_def/declineRequest';
 import { friendList } from '../routes_def/friendList';
 import { anonymization } from '../routes_def/anonymization';
 import { getPersoData } from '../routes_def/getPersoData';
+import { getFriendsOnlineStatus } from '../routes_def/getOnlineStatus';
 
 export default fp(async function routes_profile(fastify: any) {
 	fastify.get('/user/:username', { preHandler: fastify.authenticate }, getUser);
@@ -27,4 +28,5 @@ export default fp(async function routes_profile(fastify: any) {
 	fastify.get('/friendList', { preHandler: fastify.authenticate }, friendList );
 	fastify.patch('/anonymization', { preHandler: fastify.authenticate }, anonymization);
 	fastify.get('/data', { preHandler: fastify.authenticate }, getPersoData);
+	fastify.get('/friends/online-status', { preHandler: fastify.authenticate }, getFriendsOnlineStatus);
 });

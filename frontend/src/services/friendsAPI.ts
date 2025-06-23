@@ -185,37 +185,56 @@ export const getIncomingRequests = async (): Promise<ApiResponse<FriendRequest[]
   }
 };
 
-// Search users - using profile endpoint to search by username
+// Search users - CORRIGÉ avec debugging
 export const searchUsers = async (query: string): Promise<ApiResponse<User[]>> => {
   try {
+    console.log('🔍 Searching for user:', query);
+    console.log('🔗 URL:', `/profile/user/${query}`);
+    
     const response = await fetchWithAuth(`/profile/user/${query}`);
     
+    console.log('📦 Response received:', response);
+    
     // If user found, return as array
-    if (response) {
+    if (response && response.username) {
+      const userData = {
+        user_id: 0, // ✅ Valeur par défaut car user_id n'est pas dans la réponse publique
+        username: response.username,
+        display_name: response.username, // ✅ Utiliser username comme display_name
+        email: response.email_adress, // ✅ Attention: c'est email_adress dans votre backend
+        avatar: response.avatar,
+        is_online: false // ✅ Valeur par défaut
+      };
+      
+      console.log('✅ User data formatted:', userData);
+      
       return {
         success: true,
-        data: [{
-          user_id: response.user_id,
-          username: response.username,
-          display_name: response.display_name,
-          email: response.email,
-          avatar: response.avatar
-        }]
+        data: [userData]
       };
     }
     
+    console.log('❌ No user found or invalid response');
     return {
       success: true,
       data: []
     };
   } catch (error) {
-    // If it's a 404, just return empty results instead of an error
-    if (error instanceof Error && error.message.includes('404')) {
-      return {
-        success: true,
-        data: []
-      };
+    console.error('🚨 Error in searchUsers:', error);
+    
+    // If it's a 404 or 500 (user not found), just return empty results
+    if (error instanceof Error) {
+      const message = error.message.toLowerCase();
+      if (message.includes('404') || message.includes('500') || message.includes('not found')) {
+        console.log('🔍 User not found (404/500), returning empty results');
+        return {
+          success: true,
+          data: []
+        };
+      }
     }
+    
+    console.error('💥 Real error occurred:', error);
     return {
       success: false,
       error: error instanceof Error ? error.message : 'Failed to search users'
@@ -223,14 +242,17 @@ export const searchUsers = async (query: string): Promise<ApiResponse<User[]>> =
   }
 };
 
-// Get friends' online status - simplified implementation
-export const getFriendsOnlineStatus = async (): Promise<ApiResponse<{ [userId: number]: boolean }>> => {
+// Get friends' online status
+export const getFriendsOnlineStatus = async (): Promise<ApiResponse<{
+  friends_status: { [userId: number]: { username: string; is_online: boolean; last_seen: Date | null } };
+  total_friends: number;
+  online_friends: number;
+}>> => {
   try {
-    // For now, we'll return a simple status
-    // In a real implementation, you'd have a proper presence/status API
+    const response = await fetchWithAuth('/profile/friends/online-status');
     return {
       success: true,
-      data: {}
+      data: response
     };
   } catch (error) {
     return {

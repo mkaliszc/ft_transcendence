@@ -8,6 +8,7 @@ async function syncDatabase(maxRetries = 3, delay = 2000) {
     for (let attempt = 1; attempt <= maxRetries; attempt++) {
         try {
             await User.sync();
+
             await Matches.sync();
             await UserMatch.sync();
             await Friendship.sync();
