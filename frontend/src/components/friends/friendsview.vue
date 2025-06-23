@@ -136,24 +136,6 @@
       </button>
     </div>
 
-    <!-- Module GDPR -->
-    <div class="gdpr-banner" v-if="showGdpr">
-      <span>
-        Ce site utilise des cookies et collecte des données pour améliorer votre expérience. 
-        <a href="#" @click.prevent="showGdprModal = true">En savoir plus</a>
-      </span>
-      <button class="btn-primary" @click="acceptGdpr">Accepter</button>
-      <button class="btn-secondary" @click="declineGdpr">Refuser</button>
-    </div>
-    <div v-if="showGdprModal" class="gdpr-modal">
-      <div class="gdpr-modal-content">
-        <h2>Confidentialité &amp; Données</h2>
-        <p>Nous utilisons des cookies pour l'authentification et la personnalisation. Vous pouvez gérer vos préférences ici.</p>
-        <button class="btn-primary" @click="acceptGdpr">Accepter</button>
-        <button class="btn-secondary" @click="declineGdpr">Refuser</button>
-        <button class="close-btn" @click="showGdprModal = false">Fermer</button>
-      </div>
-    </div>
   </div>
 </template>
 
@@ -190,8 +172,6 @@ const notification = ref<{
   message: string;
   icon: string;
 } | null>(null);
-const showGdpr = ref(false);
-const showGdprModal = ref(false);
 
 // Gestionnaires d'événements
 const handleAcceptRequest = async (requestId: number) => {
@@ -245,21 +225,8 @@ const showNotification = (type: 'success' | 'error' | 'info', message: string, i
 };
 
 onMounted(() => {
-  if (!localStorage.getItem('gdpr_accepted')) {
-    showGdpr.value = true;
-  }
 });
 
-function acceptGdpr() {
-  localStorage.setItem('gdpr_accepted', 'true');
-  showGdpr.value = false;
-  showGdprModal.value = false;
-}
-function declineGdpr() {
-  localStorage.setItem('gdpr_accepted', 'false');
-  showGdpr.value = false;
-  showGdprModal.value = false;
-}
 </script>
 
 <style scoped>
@@ -523,39 +490,6 @@ function declineGdpr() {
   }
 }
 
-.gdpr-banner {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  width: 100vw;
-  background: #222;
-  color: #fff;
-  padding: 1rem;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 1rem;
-  z-index: 1000;
-}
-.gdpr-modal {
-  position: fixed;
-  top: 0; left: 0; right: 0; bottom: 0;
-  background: rgba(0,0,0,0.5);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 2000;
-}
-.gdpr-modal-content {
-  background: #fff;
-  color: #222;
-  padding: 2rem;
-  border-radius: 8px;
-  min-width: 300px;
-  max-width: 90vw;
-  box-shadow: 0 2px 16px rgba(0,0,0,0.2);
-  text-align: center;
-}
 .btn-primary {
   background: #007bff;
   color: #fff;

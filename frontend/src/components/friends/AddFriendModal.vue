@@ -8,7 +8,7 @@
           Ajouter un ami
         </h2>
         <button @click="$emit('close')" class="btn-close">
-          <i class="fas fa-times"></i>
+          ✗
         </button>
       </div>
 
@@ -20,17 +20,25 @@
             <i class="fas fa-search search-icon"></i>
             <input
               v-model="searchQuery"
-              @input="handleSearch"
+              @keyup.enter="handleSearchClick"
               type="text"
               placeholder="Rechercher un utilisateur par nom..."
               class="search-input"
               :disabled="isSearching"
             />
-            <div v-if="isSearching" class="search-loading">
-              <i class="fas fa-spinner fa-spin"></i>
-            </div>
+            <button 
+              @click="handleSearchClick"
+              :disabled="isSearching || searchQuery.length < 2"
+              class="search-button"
+              title="Rechercher"
+            >
+              <span v-if="!isSearching">✓</span>
+              <i v-else class="fas fa-spinner fa-spin"></i>
+            </button>
           </div>
-          <p class="search-hint">Tapez au moins 2 caractères pour commencer la recherche</p>
+          <p class="search-hint">
+            Tapez au moins 2 caractères puis cliquez sur "Rechercher" ou appuyez sur Entrée
+          </p>
         </div>
 
         <!-- Messages d'erreur/succès -->
@@ -59,20 +67,21 @@
         </div>
 
         <!-- Message si aucun résultat -->
-        <div v-else-if="searchQuery.length >= 2 && !isSearching" class="empty-results">
+        <div v-else-if="hasSearched && !isSearching && searchResults.length === 0" class="empty-results">
           <i class="fas fa-search"></i>
           <h3>Aucun utilisateur trouvé</h3>
-          <p>Aucun utilisateur ne correspond à votre recherche "{{ searchQuery }}"</p>
+          <p>Aucun utilisateur ne correspond à votre recherche "{{ lastSearchQuery }}"</p>
         </div>
 
         <!-- Instructions -->
-        <div v-if="searchQuery.length < 2 && !isSearching" class="instructions">
+        <div v-if="!hasSearched && !isSearching" class="instructions">
           <div class="instruction-item">
             <i class="fas fa-info-circle"></i>
             <div>
               <h4>Comment ajouter un ami ?</h4>
               <ul>
                 <li>Tapez le nom d'utilisateur ou nom d'affichage de votre ami</li>
+                <li>Cliquez sur le bouton "Rechercher" ou appuyez sur Entrée</li>
                 <li>Sélectionnez-le dans les résultats de recherche</li>
                 <li>Envoyez une demande d'ami</li>
                 <li>Attendez qu'il accepte votre demande</li>
@@ -111,38 +120,37 @@ const isSearching = ref(false);
 const addingUserId = ref<number | null>(null);
 const error = ref<string | null>(null);
 const successMessage = ref<string | null>(null);
-
-// Variables pour le debounce
-let searchTimeout: NodeJS.Timeout | null = null;
+const hasSearched = ref(false);
+const lastSearchQuery = ref('');
 
 // Méthodes
-const handleSearch = () => {
+const handleSearchClick = async () => {
   clearMessages();
   
   if (searchQuery.value.length < 2) {
-    searchResults.value = [];
+    error.value = 'Veuillez saisir au moins 2 caractères pour la recherche';
     return;
   }
 
-  // Clear previous timeout
-  if (searchTimeout) {
-    clearTimeout(searchTimeout);
-  }
+  if (isSearching.value) return;
 
-  // Debounce de 300ms
-  searchTimeout = setTimeout(async () => {
-    isSearching.value = true;
+  isSearching.value = true;
+  hasSearched.value = true;
+  lastSearchQuery.value = searchQuery.value;
+  
+  try {
+    const results = await searchUsers(searchQuery.value);
+    searchResults.value = (results.success && results.data) ? results.data : [];
     
-    try {
-      const results = await searchUsers(searchQuery.value);
-      searchResults.value = (results.success && results.data) ? results.data : [];
-    } catch (err: any) {
-      error.value = err.message || 'Erreur lors de la recherche';
-      searchResults.value = [];
-    } finally {
-      isSearching.value = false;
+    if (!results.success) {
+      error.value = results.error || 'Erreur lors de la recherche';
     }
-  }, 5000);
+  } catch (err: any) {
+    error.value = err.message || 'Erreur lors de la recherche';
+    searchResults.value = [];
+  } finally {
+    isSearching.value = false;
+  }
 };
 
 const handleAddFriend = async (user: User) => {
@@ -203,9 +211,6 @@ onMounted(() => {
 
 onUnmounted(() => {
   document.removeEventListener('keydown', handleEscapeKey);
-  if (searchTimeout) {
-    clearTimeout(searchTimeout);
-  }
 });
 </script>
 
@@ -263,19 +268,23 @@ onUnmounted(() => {
   width: 40px;
   height: 40px;
   border: none;
-  background: rgba(255, 255, 255, 0.1);
-  color: #adb5bd;
+  background: rgba(220, 53, 69, 0.2);
+  color: #ff3333;
   border-radius: 0.5rem;
   cursor: pointer;
   transition: all 0.3s ease;
   display: flex;
   align-items: center;
   justify-content: center;
+  border: 1px solid rgba(220, 53, 69, 0.5);
+  font-size: 1.5rem;
+  font-weight: bold;
 }
 
 .btn-close:hover {
-  background: rgba(220, 53, 69, 0.2);
-  color: #ff6b6b;
+  background: rgba(220, 53, 69, 0.4);
+  color: #fff;
+  transform: scale(1.05);
 }
 
 .modal-content {
@@ -291,10 +300,13 @@ onUnmounted(() => {
 .search-input-group {
   position: relative;
   margin-bottom: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
 .search-input {
-  width: 100%;
+  flex: 1;
   padding: 1rem 1rem 1rem 3rem;
   background: rgba(0, 0, 0, 0.3);
   border: 1px solid rgba(255, 255, 255, 0.2);
@@ -328,12 +340,37 @@ onUnmounted(() => {
   pointer-events: none;
 }
 
-.search-loading {
-  position: absolute;
-  right: 1rem;
-  top: 50%;
-  transform: translateY(-50%);
-  color: #d4af37;
+.search-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  background: linear-gradient(135deg, #28a745, #20c997);
+  border: none;
+  border-radius: 0.5rem;
+  color: white;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 1.5rem;
+  font-weight: bold;
+  flex-shrink: 0;
+  border: 1px solid rgba(40, 167, 69, 0.5);
+}
+
+.search-button:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(40, 167, 69, 0.4);
+  background: linear-gradient(135deg, #34ce57, #28a745);
+}
+
+.search-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+  background: rgba(108, 117, 125, 0.5);
+  color: #6c757d;
+  border: 1px solid rgba(108, 117, 125, 0.3);
 }
 
 .search-hint {

@@ -53,7 +53,7 @@
 		  </div>
   
 		  <!-- Fonctionnalités du jeu avec 4 boutons -->
-		<div class="features-buttons">
+		<div class="features-buttons" style="margin-bottom: 2.5rem;">
 		  <button @click="goToFeature1" class="feature-button">
 		    <div class="feature-icon">🏓</div>
 		    <h3>{{ $t('feature1Title') || 'Jeu Solo' }}</h3>
@@ -62,7 +62,7 @@
 		  </button>
 
 		  <button @click="goToFeature2" class="feature-button">
-		    <div class="feature-icon">🎯</div>
+		    <div class="feature-icon">👥</div>
 		    <h3>{{ $t('feature2Title') || 'Multijoueur' }}</h3>
 		    <p>{{ $t('feature2Description') || 'Défiez vos amis' }}</p>
 		    <div class="button-arrow">→</div>
@@ -624,7 +624,7 @@ html, body {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); /* Réduction de 200px à 180px */
   gap: 1rem; /* Réduction de 1.5rem à 1rem */
-  margin-top: 1.5rem; /* Réduction de 4rem à 1.5rem */
+  margin-top: 1rem; /* Réduction de 1.5rem à 1rem pour remonter les features */
   max-width: 900px; /* Réduction de 1000px à 900px */
   width: 100%;
 }

@@ -84,6 +84,17 @@
             </div>
           </div>
 
+          <!-- Case à cocher CGU (n'affecte que Google) -->
+      <div class="form-group" style="margin-bottom: 1.5rem;">
+            <label style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.95rem;">
+              <input type="checkbox" v-model="acceptCgu" :disabled="loading" required style="accent-color: #d4af37; width: 1.1em; height: 1.1em;" />
+              <span>
+                J'accepte les
+                <router-link to="/cgu" class="cgu-link" target="_blank">Conditions d'utilisation</router-link>
+              </span>
+            </label>
+          </div>
+
           <button type="submit" class="signin-button" :disabled="loading">
             <svg v-if="loading" class="loading-spinner" fill="none" viewBox="0 0 24 24">
               <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
@@ -97,8 +108,8 @@
             <span>{{ $t('orContinueWith') }}</span>
           </div>
 
-          <!-- Bouton Google -->
-          <button @click="handleGoogleSignIn" type="button" class="google-signin-button" :disabled="loading">
+          <!-- Bouton Google (désactivé si CGU non cochée) -->
+          <button @click="handleGoogleSignIn" type="button" class="google-signin-button" :disabled="loading || !acceptCgu">
             <svg class="google-icon" viewBox="0 0 24 24">
               <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
               <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
@@ -183,6 +194,7 @@ const showPassword = ref(false)
 const show2FA = ref(false)
 const twoFACode = ref('')
 const pendingLoginData = ref(null)
+const acceptCgu = ref(false)
 
 // Charger la langue préférée
 const savedLanguage = localStorage.getItem('preferred-language')
@@ -657,6 +669,12 @@ label {
   border-color: rgba(255, 255, 255, 0.3);
 }
 
+.google-signin-button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  transform: none;
+}
+
 .google-icon {
   width: 20px;
   height: 20px;
@@ -679,6 +697,35 @@ label {
 .link:hover {
   color: #c19b2e;
   text-decoration: underline;
+}
+
+.cgu-banner {
+  margin: 2rem auto 0 auto;
+  padding: 1rem 2rem;
+  background: rgba(0,0,0,0.3);
+  color: #d4af37;
+  border-radius: 0.75rem;
+  text-align: center;
+  font-size: 1rem;
+  font-weight: 500;
+  max-width: 420px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  justify-content: center;
+  align-items: center;
+}
+
+.cgu-banner .cgu-link {
+  color: #d4af37 !important;
+  text-decoration: underline;
+  font-weight: bold;
+  font-size: 1em;
+  transition: color 0.2s;
+}
+
+.cgu-banner .cgu-link:hover {
+  color: #fffbe6 !important;
 }
 
 .twofa-section {
@@ -732,5 +779,41 @@ label {
 @keyframes float {
   0%, 100% { transform: translateY(0px) rotate(0deg); }
   50% { transform: translateY(-20px) rotate(180deg); }
+}
+
+.cgu-checkbox-group {
+  margin-bottom: 0;
+  margin-top: -0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-direction: row;
+}
+
+.cgu-checkbox {
+  accent-color: #d4af37;
+  width: 1.2em;
+  height: 1.2em;
+  margin-right: 0.5em;
+}
+
+.cgu-checkbox-label {
+  color: #e0e0e0;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.25em;
+}
+
+.cgu-link {
+  color: #d4af37 !important;
+  text-decoration: underline;
+  font-weight: bold;
+  font-size: 1em;
+  transition: color 0.2s;
+}
+
+.cgu-link:hover {
+  color: #fffbe6 !important;
 }
 </style>

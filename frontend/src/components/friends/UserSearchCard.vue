@@ -16,7 +16,6 @@
       <p class="user-username">@{{ user.username }}</p>
       <div class="user-status">
         <i :class="user.is_online ? 'fas fa-circle online' : 'fas fa-circle offline'"></i>
-        <span>{{ user.is_online ? 'En ligne' : 'Hors ligne' }}</span>
       </div>
     </div>
 
