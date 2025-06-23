@@ -216,7 +216,7 @@
 		  </div>
 
 		  <!-- Section GDPR/Confidentialité & Données -->
-		  <div class="gdpr-section" style="margin-top: 3rem;">
+		  <div v-if="isOwnProfile" class="gdpr-section" style="margin-top: 3rem;">
 			<h2 class="gdpr-title">Confidentialité & Données</h2>
 			<div class="gdpr-actions">
 			  <button class="btn btn-secondary" @click="downloadPersonalData">Télécharger mes données</button>
@@ -676,8 +676,13 @@ const anonymizeAccount = async () => {
       headers: { Authorization: `Bearer ${token}` }
     });
     if (!response.ok) throw new Error('Erreur lors de l\'anonymisation');
-    alert('Votre compte a été anonymisé.');
-    window.location.reload();
+    alert('Votre compte a été anonymisé. Vous allez être déconnecté.');
+    localStorage.removeItem('auth_token');
+    // Si d'autres infos d'auth existent, les supprimer aussi
+    localStorage.removeItem('refresh_token');
+    sessionStorage.clear();
+    // Rediriger vers la page de connexion
+    router.push('/signin');
   } catch (err) {
     alert('Impossible d\'anonymiser votre compte.');
   }

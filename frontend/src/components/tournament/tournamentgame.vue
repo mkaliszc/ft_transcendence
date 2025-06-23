@@ -745,9 +745,7 @@ function handleResize() {
   justify-content: center;
   align-items: center;
   padding: 1rem;
-  background: #5d4037;
   border-radius: 1rem;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
   width: 800px;
 }
 
