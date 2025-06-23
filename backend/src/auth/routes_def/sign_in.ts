@@ -7,13 +7,13 @@ export async function sign_in(request: FastifyRequest, reply:FastifyReply) {
 		username: string;
 		password: string;
 	};
-
-	if (!password || !username) {
+	const usernameTrimmed = username.trim();
+	if (!password || !usernameTrimmed) {
 		return reply.code(400).send({ error: 'Username and password are required' })
 	}
 
 	try {
-		const user = await User.findOne({ where: { username: username } })
+		const user = await User.findOne({ where: { username: usernameTrimmed } })
 		if (!user) {
 		  return reply.code(404).send({ error: 'User not found' })
 		}

@@ -120,7 +120,7 @@ wss.on('connection', ws => {
     switch (type) {
       case 'create-game': {
         const maxPlayers = Number(payload.maxPlayers);
-        const gameId = randomUUID();
+        const gameId = randomUUID().substring(0, 8);
         const initialState = createInitialGameState(maxPlayers);
         const creatorName = payload.username || 'Joueur 1';
 

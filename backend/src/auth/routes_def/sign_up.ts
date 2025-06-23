@@ -14,8 +14,9 @@ export async function sign_up (request: FastifyRequest<{ Body: SignUpRequest }>,
 		if (typeof username !== 'string' || typeof password !== 'string') {
 			return reply.status(400).send({ error: 'Username and password must be strings' })
 		}
+		const usernametrim = username.trim();
 
-		const usernameValidation = validateUsername(username);
+		const usernameValidation = validateUsername(usernametrim);
 		if (!usernameValidation.isValid) {
 			return reply.status(400).send({ error: usernameValidation.error });
 		}
@@ -24,14 +25,14 @@ export async function sign_up (request: FastifyRequest<{ Body: SignUpRequest }>,
 			return reply.status(400).send({ error: 'Password must be at least 8 characters' })
 		}
 
-		const existingUser = await User.findOne({ where: { username: username } })
+		const existingUser = await User.findOne({ where: { username: usernametrim } })
 		if (existingUser) {
 			return reply.status(400).send({ error: 'Username already exists' })
 		}
 
 		const hashed_password = await bcrypt.hash(password, 13)
 		const newUser = await User.create({
-			username,
+			usernametrim,
 			email_adress: null,
 			hashed_password,
 			google_user: false
