@@ -94,6 +94,7 @@
               🔄 Rejouer
             </button>
             <button @click="confirmWinner" class="btn btn-primary btn-large">
+              Continuer
             </button>
           </div>
         </div>
@@ -129,15 +130,41 @@
       </div>
     </footer>
   </div>
+
+  <!-- Modal de confirmation pour quitter le tournoi -->
+  <div v-if="showExitModal" class="modal-overlay" @click="showExitModal = false">
+    <div class="confirm-modal" @click.stop>
+      <div class="modal-header">
+        <i class="fas fa-exclamation-triangle"></i>
+        <h3>Abandonner le match ?</h3>
+      </div>
+      
+      <div class="modal-body">
+        <p>Êtes-vous sûr de vouloir retourner au tournoi ?</p>
+        <p><strong>Le match en cours sera perdu.</strong></p>
+        <p class="warning-text">Cette action est irréversible.</p>
+      </div>
+      
+      <div class="modal-actions">
+        <button @click="showExitModal = false" class="btn-cancel">
+          <i class="fas fa-times"></i>
+          Continuer le match
+        </button>
+        <button @click="handleConfirmExit" class="btn-confirm">
+          <i class="fas fa-flag"></i>
+          Abandonner
+        </button>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted, watch, nextTick } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
+import { useRoute } from 'vue-router'
 
 // Props depuis la route
 const route = useRoute()
-const router = useRouter()
 
 // Noms des joueurs depuis les paramètres de la route
 const player1Name = ref(route.query.player1 as string || 'Joueur 1')
@@ -150,6 +177,7 @@ const ctx = ref<CanvasRenderingContext2D | null>(null)
 const isPaused = ref(false)
 const gameOver = ref(false)
 const gameStarted = ref(false)
+const showExitModal = ref(false)
 const player1Score = ref(0)
 const player2Score = ref(0)
 const winningScore = 5
@@ -476,16 +504,18 @@ function confirmWinner() {
 }
 
 function returnToTournament() {
-  if (confirm('Êtes-vous sûr de vouloir retourner au tournoi ? Le match en cours sera perdu.')) {
-    // Nettoyer le localStorage si on abandonne le match
-    localStorage.removeItem('lastMatchResult')
-    
-    if (router) {
-      router.push('/tournamentbracket')
-    } else {
-      window.location.href = '/tournamentbracket'
-    }
-  }
+  showExitModal.value = true
+}
+
+function handleConfirmExit() {
+  // Nettoyer le localStorage si on abandonne le match
+  localStorage.removeItem('lastMatchResult')
+  
+  // Fermer la modal d'abord
+  showExitModal.value = false
+  
+  // Utiliser window.location.href pour une redirection fiable
+  window.location.href = '/tournamentbracket'
 }
 
 function handleKeyboardMovement() {
@@ -923,6 +953,140 @@ function handleResize() {
   }
   60% {
     transform: translateY(-5px);
+  }
+}
+
+/* Modal de confirmation */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(5px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  animation: fadeIn 0.3s ease;
+}
+
+.confirm-modal {
+  background: rgba(26, 26, 26, 0.95);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(212, 175, 55, 0.3);
+  border-radius: 1rem;
+  padding: 2rem;
+  max-width: 450px;
+  width: 90%;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+  animation: slideUp 0.3s ease;
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  color: #ff6b6b;
+}
+
+.modal-header i {
+  font-size: 1.5rem;
+}
+
+.modal-header h3 {
+  margin: 0;
+  color: #f8f9fa;
+  font-size: 1.3rem;
+  font-weight: 600;
+}
+
+.modal-body {
+  margin-bottom: 2rem;
+  color: #adb5bd;
+  line-height: 1.6;
+}
+
+.modal-body p {
+  margin: 0 0 1rem 0;
+}
+
+.modal-body strong {
+  color: #d4af37;
+  font-weight: 600;
+}
+
+.warning-text {
+  font-size: 0.9rem;
+  color: #ff6b6b;
+  font-style: italic;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+}
+
+.btn-cancel {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 0.5rem;
+  color: #adb5bd;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: 600;
+}
+
+.btn-cancel:hover {
+  background: rgba(255, 255, 255, 0.2);
+  color: #f8f9fa;
+  transform: translateY(-2px);
+}
+
+.btn-confirm {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  background: linear-gradient(135deg, #dc3545, #c82333);
+  border: none;
+  border-radius: 0.5rem;
+  color: white;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: 600;
+}
+
+.btn-confirm:hover {
+  background: linear-gradient(135deg, #e74c3c, #dc3545);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(220, 53, 69, 0.4);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 </style>

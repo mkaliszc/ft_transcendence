@@ -23,11 +23,18 @@
           </div>
         </div>
       </div>
-      <!-- Bouton Ajouter un ami en haut à droite -->
-      <button @click="showAddFriend = true" class="btn-add-da">
-        <i class="fas fa-user-plus"></i>
-        Ajouter un ami
-      </button>
+      <div class="header-actions">
+        <!-- Bouton Accueil -->
+        <router-link to="/Home2" class="nav-link friends-link">
+          <i class="fas fa-home"></i>
+          <span>Accueil</span>
+        </router-link>
+        
+        <button @click="showAddFriend = true" class="btn-primary">
+          <i class="fas fa-user-plus"></i>
+          Ajouter un ami
+        </button>
+      </div>
     </div>
 
     <!-- Messages d'erreur -->
@@ -194,14 +201,12 @@ const handleRejectRequest = async (requestId: number) => {
 };
 
 const handleRemoveFriend = async (friendshipId: number) => {
-  if (confirm('Êtes-vous sûr de vouloir supprimer cet ami ?')) {
-    const result = await removeFriend(friendshipId);
-    showNotification(
-      result.success ? 'info' : 'error',
-      result.success ? 'Ami supprimé' : (result.error || 'Erreur lors de la suppression'),
-      result.success ? 'fas fa-user-minus' : 'fas fa-times'
-    );
-  }
+  const result = await removeFriend(friendshipId);
+  showNotification(
+    result.success ? 'info' : 'error',
+    result.success ? 'Ami supprimé' : (result.error || 'Erreur lors de la suppression'),
+    result.success ? 'fas fa-user-minus' : 'fas fa-times'
+  );
 };
 
 const handleViewProfile = (friendship: any) => {
@@ -249,6 +254,12 @@ onMounted(() => {
   display: flex;
   align-items: center;
   gap: 2rem;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
 }
 
 .page-title {
@@ -326,6 +337,38 @@ onMounted(() => {
   background: #d4af37;
   color: #1a1a1a;
   transform: translateY(-2px);
+}
+
+.nav-link.friends-link {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  background: rgba(212, 175, 55, 0.1);
+  border: 1px solid rgba(212, 175, 55, 0.3);
+  border-radius: 0.5rem;
+  color: #d4af37;
+  text-decoration: none;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.nav-link.friends-link:hover {
+  background: rgba(212, 175, 55, 0.2);
+  border-color: rgba(212, 175, 55, 0.5);
+  transform: translateY(-2px);
+}
+
+.notification-badge {
+  background: #dc3545;
+  color: white;
+  font-size: 0.7rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 50%;
+  font-weight: bold;
+  min-width: 1.2rem;
+  text-align: center;
 }
 .btn-retry {
   padding: 0.5rem 1.2rem;
