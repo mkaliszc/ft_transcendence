@@ -53,9 +53,6 @@ export async function getFriendsOnlineStatus(request: FastifyRequest, reply: Fas
 		let onlineCount = 0;
 
 		friends.forEach(friend => {
-			// Un utilisateur est considéré en ligne si :
-			// 1. is_online = true ET
-			// 2. last_seen dans les 5 dernières minutes
 			const isRecentlyActive = friend.last_seen ? 
 				(new Date().getTime() - friend.last_seen.getTime()) < 5 * 60 * 1000 : false;
 			
