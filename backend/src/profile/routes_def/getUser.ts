@@ -22,7 +22,7 @@ export async function getUser(request: FastifyRequest<{ Params: { username: stri
 			updated_at: user.last_update,
 			avatar: user.avatar,
 			...(isOwner && {
-				email_adress: user.email_adress,
+				email_adress: user.email_adress || null,
 				twoFA: user.twoFA
             })
 		}

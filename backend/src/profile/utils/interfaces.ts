@@ -3,15 +3,9 @@ export interface JWTpayload {
 	user_id: number;
 }
 
-export interface SignUpRequest {
-	username: string;
-	email_adress: string;
-	password: string;
-}
-
 export interface Pub_User {
 	username: string;
-	email_adress?: string;
+	email_adress?: string | null;
 	number_of_matches: number;
 	number_of_win: number;
 	number_of_lose: number;
@@ -27,28 +21,7 @@ export interface UpdateData {
 	avatar?: string;
 }
 
-export interface GoogleUserInfo {
-	id: string;
-	email: string;
-	verified_email: boolean;
-	name: string;
-	given_name: string;
-	family_name: string;
-	picture: string;
-	locale: string;
-}
-
 export interface ChangePasswordRequest {
 	currentPassword: string;
 	newPassword: string;
-}
-
-export interface CreateMatchRequest {
-    Players: Array<{
-        username: string;
-        score: number;
-        is_winner: boolean;
-    }>;
-    game_duration: string;
-
 }

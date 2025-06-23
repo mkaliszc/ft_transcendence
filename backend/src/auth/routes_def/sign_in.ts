@@ -3,21 +3,17 @@ import bcrypt from 'bcryptjs'
 import { User } from '../utils/db_models/user_model'
 
 export async function sign_in(request: FastifyRequest, reply:FastifyReply) {
-	const { email, password } = request.body as {
-		email: string;
+	const { username, password } = request.body as {
+		username: string;
 		password: string;
 	};
 
-	if (!email || !password) {
-		return reply.code(400).send({ error: 'Email and password are required' })
-	}
-	if (typeof email !== 'string' || typeof password !== 'string') {
-		return reply.code(400).send({ error: 'Email and password must be strings' })
+	if (!password || !username) {
+		return reply.code(400).send({ error: 'Username and password are required' })
 	}
 
-	// TODO: Add email validation + mdp
 	try {
-		const user = await User.findOne({ where: { email_adress: email } })
+		const user = await User.findOne({ where: { username: username } })
 		if (!user) {
 		  return reply.code(404).send({ error: 'User not found' })
 		}
@@ -50,6 +46,7 @@ export async function sign_in(request: FastifyRequest, reply:FastifyReply) {
 			username: user.username,
 			userId: user.user_id,
 		}
+		await user.save();
 		
 		return reply.code(200).send({ token: token, refreshToken, user: userData })
 	}

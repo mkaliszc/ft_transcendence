@@ -215,48 +215,52 @@
 			</div>
 		  </div>
 
-		  <!-- Boutons d'action - seulement pour son propre profil -->
-		  <div v-if="isOwnProfile" class="flex justify-center gap-4 mt-8">
-			<button 
-			  @click="openEditProfile" 
-			  class="bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-lg transition-colors flex items-center gap-2"
-			>
-			  ⚙️ {{ $t('editProfile') || 'Modifier le profil' }}
-			</button>
-			<router-link 
-			  to="/Home2" 
-			  class="bg-gray-600 hover:bg-gray-700 text-white font-bold py-3 px-6 rounded-lg transition-colors flex items-center gap-2"
-			>
-			  🏠 {{ $t('backToHome') }}
-			</router-link>
+		  <!-- Section GDPR/Confidentialité & Données -->
+		  <div class="gdpr-section" style="margin-top: 3rem;">
+			<h2 class="gdpr-title">Confidentialité & Données</h2>
+			<div class="gdpr-actions">
+			  <button class="btn btn-secondary" @click="downloadPersonalData">Télécharger mes données</button>
+			  <button class="btn btn-secondary" @click="anonymizeAccount">Anonymiser mon compte</button>
+			  <button class="btn btn-primary" @click="deleteAccount">Supprimer mon compte</button>
+			</div>
+			<p class="gdpr-info">Vous pouvez gérer vos données personnelles conformément à la réglementation RGPD.</p>
 		  </div>
 
-		  <!-- Boutons d'action pour les profils d'autres utilisateurs -->
-		  <div v-else class="flex justify-center gap-4 mt-8">
-			<router-link 
-			  to="/friends" 
-			  class="bg-gray-600 hover:bg-gray-700 text-white font-bold py-3 px-6 rounded-lg transition-colors flex items-center gap-2"
-			>
-			  👥 {{ $t('backToFriends') || 'Retour aux amis' }}
-			</router-link>
-			<router-link 
-			  to="/Home2" 
-			  class="bg-gray-600 hover:bg-gray-700 text-white font-bold py-3 px-6 rounded-lg transition-colors flex items-center gap-2"
-			>
-			  🏠 {{ $t('backToHome') }}
-			</router-link>
+		  <!-- Boutons d'action en bas de page -->
+		  <div class="profile-actions-bottom">
+			<div v-if="isOwnProfile" class="profile-actions-btns">
+			  <button 
+				@click="openEditProfile" 
+				class="profile-btn profile-btn-edit"
+			  >
+				<svg class="profile-btn-icon" fill="currentColor" viewBox="0 0 20 20"><path d="M17.414 2.586a2 2 0 00-2.828 0l-9.9 9.9A2 2 0 004 14v2a2 2 0 002 2h2a2 2 0 001.414-.586l9.9-9.9a2 2 0 000-2.828l-2.828-2.828zM6 16v-2.586l8.293-8.293 2.586 2.586L8.586 16H6z"></path></svg>
+				{{ $t('editProfile') || 'Modifier le profil' }}
+			  </button>
+			  <router-link 
+				to="/Home2" 
+				class="profile-btn profile-btn-home"
+			  >
+				<svg class="profile-btn-icon" fill="currentColor" viewBox="0 0 20 20"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7A1 1 0 003 11h1v6a1 1 0 001 1h4a1 1 0 001-1v-4h2v4a1 1 0 001 1h4a1 1 0 001-1v-6h1a1 1 0 00.707-1.707l-7-7z"></path></svg>
+				{{ $t('backToHome') || 'Accueil' }}
+			  </router-link>
+			</div>
+			<div v-else class="profile-actions-btns">
+			  <router-link 
+				to="/friends" 
+				class="profile-btn profile-btn-secondary"
+			  >
+				<svg class="profile-btn-icon" fill="currentColor" viewBox="0 0 20 20"><path d="M13 7a3 3 0 11-6 0 3 3 0 016 0zm-3 5a7 7 0 00-7 7 1 1 0 001 1h12a1 1 0 001-1 7 7 0 00-7-7z"></path></svg>
+				{{ $t('backToFriends') || 'Retour aux amis' }}
+			  </router-link>
+			  <router-link 
+				to="/Home2" 
+				class="profile-btn profile-btn-home"
+			  >
+				<svg class="profile-btn-icon" fill="currentColor" viewBox="0 0 20 20"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7A1 1 0 003 11h1v6a1 1 0 001 1h4a1 1 0 001-1v-4h2v4a1 1 0 001 1h4a1 1 0 001-1v-6h1a1 1 0 00.707-1.707l-7-7z"></path></svg>
+				{{ $t('backToHome') || 'Accueil' }}
+			  </router-link>
+			</div>
 		  </div>
-		</div>
-
-		<!-- Section GDPR/Confidentialité & Données -->
-		<div class="gdpr-section" style="margin-top: 3rem;">
-		  <h2 class="gdpr-title">Confidentialité & Données</h2>
-		  <div class="gdpr-actions">
-			<button class="btn btn-secondary" @click="downloadPersonalData">Télécharger mes données</button>
-			<button class="btn btn-secondary" @click="anonymizeAccount">Anonymiser mon compte</button>
-			<button class="btn btn-primary" @click="deleteAccount">Supprimer mon compte</button>
-		  </div>
-		  <p class="gdpr-info">Vous pouvez gérer vos données personnelles conformément à la réglementation RGPD.</p>
 		</div>
 	  </div>
 	</div>
@@ -456,7 +460,7 @@ const processMatchHistory = (matches) => {
   // Calculer les données de winrate au fil du temps (1v1)
   let wins = 0;
   const winrateData = [];
-  oneVsOneMatches.slice(-10).forEach((match, index) => {
+  oneVsOneMatches.forEach((match, index) => {
     if (match.i_won) wins++;
     const winrate = Math.round((wins / (index + 1)) * 100);
     winrateData.push({
@@ -470,7 +474,7 @@ const processMatchHistory = (matches) => {
 
   // Historique pour affichage : on mélange les deux types, mais on précise le type
   // On affiche tous les matchs (1v1 et 1v1v1v1), avec un affichage détaillé pour les 4 joueurs
-  pongMatchHistory.value = onlineMatches.slice(0, 10).map((match, index) => {
+  pongMatchHistory.value = onlineMatches.map((match, index) => {
     const isFourPlayers = match.opponents.length === 3;
     let matchType = isFourPlayers ? '1v1v1v1' : '1v1';
     let opponentsDisplay = '';
@@ -1249,5 +1253,75 @@ const deleteAccount = async () => {
   font-weight: bold;
   letter-spacing: 1px;
   padding-left: 0.5em;
+}
+
+/* Styles pour les boutons d'action en bas de page */
+.profile-actions-bottom {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 3rem;
+  margin-bottom: 1.5rem;
+}
+.profile-actions-btns {
+  display: flex;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+.profile-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 1.1rem;
+  font-weight: 700;
+  padding: 1rem 2rem;
+  border-radius: 0.75rem;
+  border: none;
+  min-width: 160px;
+  justify-content: center;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  letter-spacing: 1px;
+}
+.profile-btn.profile-btn-edit {
+  background: linear-gradient(135deg, #d4af37, #c19b2e);
+  color: #1a1a1a;
+  box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+  border: none;
+}
+.profile-btn.profile-btn-edit:hover {
+  background: linear-gradient(135deg, #c19b2e, #d4af37);
+  color: #1a1a1a;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(212, 175, 55, 0.4);
+}
+.profile-btn.profile-btn-home {
+  background: transparent;
+  color: #d4af37;
+  border: 2px solid #d4af37;
+  box-shadow: none;
+}
+.profile-btn.profile-btn-home:hover {
+  background: #d4af37;
+  color: #1a1a1a;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(212, 175, 55, 0.3);
+}
+.profile-btn.profile-btn-secondary {
+  background: transparent;
+  color: #d4af37;
+  border: 2px solid #d4af37;
+  box-shadow: none;
+}
+.profile-btn.profile-btn-secondary:hover {
+  background: #d4af37;
+  color: #1a1a1a;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(212, 175, 55, 0.3);
+}
+.profile-btn-icon {
+  width: 22px;
+  height: 22px;
 }
 </style>

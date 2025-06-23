@@ -5,7 +5,7 @@ class Friendship extends Model {
 	friendship_id!: number;
 	user_id1!: number;
 	user_id2!: number;
-	status!: string; // 'pending', 'accepted','none'
+	status!: string;
 	creation_date!: Date;
 	last_update!: Date;
 }

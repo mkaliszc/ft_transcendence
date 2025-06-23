@@ -123,8 +123,8 @@
 	x: 400,
 	y: 200,
 	radius: 12,
-	speedX: 5,
-	speedY: 3,
+	speedX: 6, // vitesse adaptée
+	speedY: 3.5, // vitesse adaptée
 	color: '#ffffff'
   });
   
@@ -134,17 +134,17 @@
 	width: 8,
 	height: 60,
 	color: '#d4af37',
-	speed: 8
-  });
-  
-  const ai = ref({
+	speed: 6 // vitesse harmonisée
+});
+
+const ai = ref({
 	x: 762,
 	y: 200,
 	width: 8,
 	height: 60,
 	color: '#d4af37',
-	speed: 4
-  });
+	speed: 6 // vitesse harmonisée
+});
   
   // Animation frame ID for cleanup
   let animationFrameId = null;
@@ -389,10 +389,12 @@
   }
   
   function resetBall() {
+	// Place la balle au centre du terrain et lui donne une vitesse initiale aléatoire
 	ball.value.x = gameCanvas.value.width / 2;
 	ball.value.y = gameCanvas.value.height / 2;
-	ball.value.speedX = 5 * (Math.random() > 0.5 ? 1 : -1);
-	ball.value.speedY = 3 * (Math.random() > 0.5 ? 1 : -1);
+	// Vitesse initiale harmonisée avec l'état initial (6, 3.5), direction aléatoire
+	ball.value.speedX = 6 * (Math.random() > 0.5 ? 1 : -1);
+	ball.value.speedY = 3.5 * (Math.random() > 0.5 ? 1 : -1);
   }
   
   function resetGame() {

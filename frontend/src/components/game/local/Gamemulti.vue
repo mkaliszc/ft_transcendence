@@ -216,11 +216,17 @@
   
 	if (player1Collision || player2Collision) {
 	  const paddle = player1Collision ? player1.value : player2.value;
-	  const hitPos = (ball.value.y - paddle.y) / (paddle.height / 2);
-	  
+	  // Clamp hitPos pour éviter les rebonds extrêmes sur les coins
+	  let hitPos = (ball.value.y - paddle.y) / (paddle.height / 2);
+	  hitPos = Math.max(-1, Math.min(1, hitPos));
+
 	  ball.value.speedX = -ball.value.speedX;
 	  ball.value.speedY = hitPos * 4;
-	  
+	  // Limiter la vitesse verticale pour éviter les trajectoires trop verticales
+	  const maxVerticalSpeed = 6;
+	  if (ball.value.speedY > maxVerticalSpeed) ball.value.speedY = maxVerticalSpeed;
+	  if (ball.value.speedY < -maxVerticalSpeed) ball.value.speedY = -maxVerticalSpeed;
+
 	  const minSpeed = 4;
 	  if (Math.abs(ball.value.speedX) < minSpeed) {
 		ball.value.speedX = ball.value.speedX > 0 ? minSpeed : -minSpeed;
@@ -231,6 +237,7 @@
 		ball.value.speedX *= 1.05;
 	  }
 	  
+	  // Correction du placement pour éviter de rester "collé" à la palette
 	  if (player1Collision) {
 		ball.value.x = paddle.x + paddle.width + ball.value.radius + 1;
 	  } else {
@@ -250,26 +257,29 @@
   }
   
   function checkImprovedPaddleCollision(paddle) {
+	// Ajout d'une tolérance pour éviter les ratés sur les bords
+	const tolerance = 4;
 	const ballLeft = ball.value.x - ball.value.radius;
 	const ballRight = ball.value.x + ball.value.radius;
 	const ballTop = ball.value.y - ball.value.radius;
 	const ballBottom = ball.value.y + ball.value.radius;
-	
-	const paddleLeft = paddle.x;
-	const paddleRight = paddle.x + paddle.width;
-	const paddleTop = paddle.y - paddle.height / 2;
-	const paddleBottom = paddle.y + paddle.height / 2;
-	
+
+	const paddleLeft = paddle.x - tolerance;
+	const paddleRight = paddle.x + paddle.width + tolerance;
+	const paddleTop = paddle.y - paddle.height / 2 - tolerance;
+	const paddleBottom = paddle.y + paddle.height / 2 + tolerance;
+
 	const overlapping = ballRight > paddleLeft && 
 					   ballLeft < paddleRight && 
 					   ballBottom > paddleTop && 
 					   ballTop < paddleBottom;
 	
 	if (!overlapping) return false;
-	
+
+	// Ne rebondit que si la balle va vers la palette
 	if (paddle === player1.value && ball.value.speedX > 0) return false;
 	if (paddle === player2.value && ball.value.speedX < 0) return false;
-	
+
 	return true;
   }
   

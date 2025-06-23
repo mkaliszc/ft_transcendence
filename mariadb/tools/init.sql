@@ -11,7 +11,7 @@ USE ${MARIADB_DATABASE};
 CREATE TABLE IF NOT EXISTS USERS (
     user_id INT AUTO_INCREMENT PRIMARY KEY,
     username VARCHAR(20) NOT NULL UNIQUE,
-    email_adress VARCHAR(255) NOT NULL UNIQUE,
+    email_adress VARCHAR(255) NULL UNIQUE,
     hashed_password VARCHAR(255) NOT NULL,
     number_of_matches INT DEFAULT 0,
     number_of_win INT DEFAULT 0,
