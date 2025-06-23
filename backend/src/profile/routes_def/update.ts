@@ -1,6 +1,7 @@
 import { User } from "../utils/db_models/user_model";
 import { FastifyRequest, FastifyReply } from "fastify";
 import { JWTpayload, UpdateData } from "../utils/interfaces";
+import { validateUsername } from "../utils/validation";
 
 export async function update(request: FastifyRequest<{ Body: UpdateData }>, reply: FastifyReply) {
 	try {
@@ -17,8 +18,12 @@ export async function update(request: FastifyRequest<{ Body: UpdateData }>, repl
 			return reply.status(404).send({ error: 'User not found' });
 		}
 
-
 		if (update_payload.username){
+			const checkUsername = validateUsername(update_payload.username.trim());
+			if (!checkUsername) {
+				return reply.status(400).send({ error: 'Invalid username format' });
+			}
+
 			const existingUser = await User.findOne({
 				where: { username: update_payload.username },
 			});
