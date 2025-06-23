@@ -8,7 +8,6 @@ export async function sign_up (request: FastifyRequest<{ Body: SignUpRequest }>,
 {
 	try {
 		const { username, password } = request.body
-		console.log('Sign up request received:', { username, password });
 		if (!username || !password) {
 			return reply.status(400).send({ error: 'Username and password are required' })
 		}

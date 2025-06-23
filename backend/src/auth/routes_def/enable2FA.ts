@@ -24,7 +24,7 @@ export async function enable2FA(request: FastifyRequest, reply: FastifyReply) {
 		await user.update({ twoFA_secret: generatedSecret.base32 });
 		if (generatedSecret.otpauth_url) {
 			const qrCode = await QRCode.toDataURL(generatedSecret.otpauth_url);
-			return reply.send({ qrCode: qrCode, secret: generatedSecret.base32 });
+			return reply.send({ qrCode: qrCode });
 		}
 
 		return reply.status(500).send('QR_CODE_GENERATION_ERROR ');
