@@ -16,8 +16,8 @@ class User extends Model {
 	twoFA!: boolean
 	twoFA_secret?: string
 	google_user!: boolean
-	last_seen!: Date  // NOUVEAU
-	is_online!: boolean  // NOUVEAU
+	last_seen!: Date
+	is_online!: boolean 
 }
 
 User.init({
@@ -103,11 +103,10 @@ User.init({
 		allowNull: false,
 		defaultValue: false
 	},
-	// NOUVEAUX CHAMPS
 	last_seen: {
 		type: DataTypes.DATE,
-		allowNull: true,
-		defaultValue: null
+		allowNull: false,
+		defaultValue: DataTypes.NOW
 	},
 	is_online: {
 		type: DataTypes.BOOLEAN,
@@ -131,6 +130,11 @@ User.addHook('beforeCreate', (user: any) => {
     if (!user.avatar) {
         user.avatar = DefaultAvatar;
     }
+});
+
+User.addHook('beforeSave', (user: User) => {
+    user.last_seen = new Date();
+    user.is_online =  true;
 });
 
 export { User }
