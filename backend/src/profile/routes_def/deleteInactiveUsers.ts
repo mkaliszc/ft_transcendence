@@ -1,4 +1,4 @@
-import { User } from '../db_models/user_model';
+import { User } from '../utils/db_models/user_model';
 import { Op } from 'sequelize';
 
 export async function deleteInactiveUsers() {
