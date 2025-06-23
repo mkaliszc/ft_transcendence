@@ -44,7 +44,7 @@ ${CERT_FILES}:
 	@mkdir -p $(CERT_PATH)
 	@openssl req -x509 -newkey rsa:4096 -sha256 -days 365 -nodes \
 		-keyout ${CERT_KEY} -out ${CERT_CRT} \
-		-subj "/CN=localhost" \
+		-subj "/C=FR/ST=Seine-Maritime/L=Le Havre/O=42 School/OU=ft_transcendence/CN=localhost" \
 		-addext "subjectAltName=DNS:localhost"
 
 .PHONY: all up down stop start restart re reload_certs create_dirs

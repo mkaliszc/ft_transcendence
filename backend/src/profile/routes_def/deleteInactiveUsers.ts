@@ -11,12 +11,12 @@ export async function deleteInactiveUsers() {
             where: {
                 [Op.or]: [
                     {
-                        last_login: {
+                        last_seen: {
                             [Op.lt]: cutoffDate
                         }
                     },
                     {
-                        last_login: null,
+                        last_seen: null,
                         creation_date: {
                             [Op.lt]: cutoffDate
                         }
@@ -25,7 +25,6 @@ export async function deleteInactiveUsers() {
             }
         });
 
-        console.log(`🗑️ ${deletedUsers} utilisateurs inactifs supprimés`);
         return deletedUsers;
     } catch (error) {
         console.error('❌ Erreur suppression utilisateurs:', error);
