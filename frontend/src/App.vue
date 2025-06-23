@@ -1,21 +1,31 @@
 <template>
-	<div id="app">
-	  <!-- Contenu principal -->
-	  <router-view v-slot="{ Component }">
-		<transition name="fade" mode="out-in">
-		  <component :is="Component" />
-		</transition>
-	  </router-view>
-	</div>
-  </template>
-  
-  <script setup>
-  // Il n'y a plus besoin de code ici car la navigation a été retirée
-  </script>
-  
-  <style>
-  /* Styles globaux */
-  * {
+  <div id="app">
+    <!-- Contenu principal -->
+    <router-view v-slot="{ Component, route }">
+      <transition name="fade" mode="out-in">
+        <component :is="Component" />
+      </transition>
+      <!-- Footer CGU uniquement sur Home et Home2 -->
+      <footer
+        v-if="route.name === 'Home' || route.name === 'Home2'"
+        class="footer-cgu w-full flex justify-center items-center py-4 bg-black/30 border-t border-yellow-500/20 mt-auto"
+        style="background: rgba(0,0,0,0.3); border-top: 1px solid rgba(212, 175, 55, 0.2);"
+      >
+        <router-link to="/cgu" class="cgu-link text-yellow-400 hover:text-yellow-300 text-base underline font-bold transition-colors duration-200">
+          Conditions d’utilisation
+        </router-link>
+      </footer>
+    </router-view>
+  </div>
+</template>
+
+<script setup>
+// Pas de code JS nécessaire ici
+</script>
+
+<style>
+/* Styles globaux */
+* {
 	margin: 0;
 	padding: 0;
 	box-sizing: border-box;
@@ -178,4 +188,18 @@
   .min-h-screen {
 	min-height: 100vh;
   }
+  .footer-cgu {
+  background: rgba(0,0,0,0.3);
+  border-top: 1px solid rgba(212, 175, 55, 0.2);
+}
+.cgu-link {
+  color: #d4af37;
+  text-decoration: underline;
+  font-weight: bold;
+  font-size: 1.1em;
+  transition: color 0.2s;
+}
+.cgu-link:hover {
+  color: #fffbe6;
+}
   </style>

@@ -389,10 +389,12 @@ const ai = ref({
   }
   
   function resetBall() {
+	// Place la balle au centre du terrain et lui donne une vitesse initiale aléatoire
 	ball.value.x = gameCanvas.value.width / 2;
 	ball.value.y = gameCanvas.value.height / 2;
-	ball.value.speedX = 5 * (Math.random() > 0.5 ? 1 : -1);
-	ball.value.speedY = 3 * (Math.random() > 0.5 ? 1 : -1);
+	// Vitesse initiale harmonisée avec l'état initial (6, 3.5), direction aléatoire
+	ball.value.speedX = 6 * (Math.random() > 0.5 ? 1 : -1);
+	ball.value.speedY = 3.5 * (Math.random() > 0.5 ? 1 : -1);
   }
   
   function resetGame() {
