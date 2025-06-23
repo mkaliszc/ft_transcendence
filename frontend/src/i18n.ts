@@ -11,11 +11,11 @@ const messages = {
     signUp: 'Sign Up',
     logout: 'Logout',
     
-    // Messages de navigation
+    // Navigation messages
     redirectingToSignIn: 'Redirecting to sign in...',
     redirectingToSignUp: 'Redirecting to sign up...',
     
-    // Page d'accueil
+    // Home page
     welcomeTitle: 'Welcome to ft_transcendence',
     gameDescription: 'Experience the classic Pong game with a billiard twist',
     feature1Title: 'Classic Gameplay',
@@ -27,7 +27,7 @@ const messages = {
     feature4Title: 'My Profile',
     feature4Description: 'Manage your account',
     
-    // Messages pour popup de profil
+    // Profile popup messages
     accessRestricted: 'Access Restricted',
     profileAccessTitle: 'Profile Access',
     profileLoginRequired: 'You must be logged in to access your profile and manage your game statistics.',
@@ -35,17 +35,17 @@ const messages = {
     profileAchievementsFeature: 'Achievements and rewards',
     profileSettingsFeature: 'Custom settings',
     
-    // Boutons d'action
+    // Action buttons
     getStarted: 'Get Started',
     learnMore: 'Learn More',
     startPlaying: 'Start Playing',
     
-    // Authentification
+    // Authentication
     backToHome: 'Back to Home',
     signInTitle: 'Sign In',
-    signInSubtitle: 'Welcome back to Billiard Pong',
+    signInSubtitle: 'Welcome back to ft_transcendence',
     signUpTitle: 'Sign Up',
-    signUpSubtitle: 'Create your Billiard Pong account',
+    signUpSubtitle: 'Create your ft_transcendence account',
     email: 'Email',
     emailPlaceholder: 'Enter your email',
     password: 'Password',
@@ -54,11 +54,14 @@ const messages = {
     firstNamePlaceholder: 'Enter your first name',
     lastName: 'Last Name',
     lastNamePlaceholder: 'Enter your last name',
+    username: 'Username',
+    usernamePlaceholder: 'Enter your username',
     confirmPassword: 'Confirm Password',
     confirmPasswordPlaceholder: 'Confirm your password',
     rememberMe: 'Remember me',
     forgotPassword: 'Forgot password?',
     signingIn: 'Signing in...',
+    signingUp: 'Signing up...',
     creatingAccount: 'Creating account...',
     createAccount: 'Create Account',
     orContinueWith: 'or continue with',
@@ -71,7 +74,7 @@ const messages = {
     and: 'and',
     privacyPolicy: 'Privacy Policy',
     
-    // 2FA / Authentification à deux facteurs
+    // 2FA
     twoFactorAuth: 'Two-Factor Authentication',
     enter2FACode: 'Please enter the 6-digit code from your authenticator app',
     authCode: 'Authentication Code',
@@ -84,7 +87,7 @@ const messages = {
     loginSuccessful: 'Login successful!',
     loginProcessingError: 'Error processing login',
     
-    // Setup 2FA
+    // 2FA Setup
     twoFactorSetup: 'Two-Factor Authentication Setup',
     twoFactorDescription: 'Add an extra layer of security to your account',
     enableTwoFactor: 'Enable Two-Factor Authentication',
@@ -111,16 +114,14 @@ const messages = {
     complete: 'Complete',
     continue: 'Continue',
     
-    // Messages d'inscription
-    username: 'Username',
-    signingUp: 'Signing up...',
+    // Registration messages
     registrationSuccessful: 'Registration successful!',
     registrationError: 'Registration error',
     allFieldsRequired: 'All fields are required',
     passwordsDoNotMatch: 'Passwords do not match',
     passwordTooShort: 'Password must be at least 8 characters',
     
-    // Messages d'erreur
+    // Error messages
     invalidCredentials: 'Invalid credentials',
     connectionError: 'Connection error',
     signupError: 'Signup error',
@@ -128,19 +129,19 @@ const messages = {
     tooManyAttempts: 'Too many attempts. Please try again later.',
     serverError: 'Server error. Please try again later.',
     
-    // Force du mot de passe
+    // Password strength
     passwordWeak: 'Weak',
     passwordMedium: 'Medium',
     passwordStrong: 'Strong',
     
-    // Messages non implémentés
+    // Not implemented messages
     googleSignInNotImplemented: 'Google Sign In not implemented yet',
     googleSignUpNotImplemented: 'Google Sign Up not implemented yet',
     forgotPasswordNotImplemented: 'Forgot password not implemented yet',
     termsNotImplemented: 'Terms not implemented yet',
     privacyNotImplemented: 'Privacy policy not implemented yet',
     
-    // Jeu
+    // Game
     player1: 'Player 1',
     player2: 'Player 2',
     score: 'Score',
@@ -150,7 +151,7 @@ const messages = {
     pause: 'Pause',
     resume: 'Resume',
     
-    // Profil
+    // Profile
     profileTitle: 'Profile',
     statistics: 'Statistics',
     gamesPlayed: 'Games Played',
@@ -158,7 +159,7 @@ const messages = {
     winRate: 'Win Rate',
     bestScore: 'Best Score',
     
-    // Profil utilisateur détaillé
+    // Detailed profile
     changeAvatar: 'Change Avatar',
     rank: 'Rank',
     enterUsername: 'Enter username',
@@ -166,11 +167,12 @@ const messages = {
     pongRating: 'Pong Rating',
     status: 'Status',
     online: 'Online',
+    offline: 'Offline',
     memberSince: 'Member Since',
     title: 'Title',
     saveProfile: 'Save Profile',
     
-    // Statistiques Pong
+    // Pong statistics
     pongStatistics: 'Pong Statistics',
     matchesPlayed: 'Matches Played',
     victories: 'Victories',
@@ -184,7 +186,7 @@ const messages = {
     accuracy: 'Accuracy',
     consistency: 'Consistency',
     
-    // Historique des matches
+    // Match history
     matchHistory: 'Match History',
     opponent: 'Opponent',
     duration: 'Duration',
@@ -193,18 +195,175 @@ const messages = {
     loss: 'Loss',
     points: 'Points',
     
-    // Activité quotidienne
+    // Daily activity
     dailyActivity: 'Daily Activity',
     totalThisWeek: 'Total This Week',
     avgPerDay: 'Average Per Day',
     bestDay: 'Best Day',
     
-    // Boutons d'action profil
+    // Profile action buttons
     playGame: 'Play Game',
     
-    // États de l'interface
+    // Interface states
     loading: 'Loading',
-    current: 'Current'
+    current: 'Current',
+    
+    // Tournaments
+    tournament: 'Tournament',
+    tournamentSetup: 'Tournament Setup',
+    playerConfiguration: 'Player Configuration',
+    playerSetup: 'Player Setup',
+    enterPlayerNames: 'Enter 8 player names to start the tournament',
+    fillDefaultNames: 'Fill Default Names',
+    clearAll: 'Clear All',
+    startTournament: 'Start Tournament',
+    tournamentBracket: 'Tournament Bracket',
+    quarterFinals: 'Quarter Finals',
+    semiFinals: 'Semi Finals',
+    final: 'Final',
+    champion: 'Champion',
+    tournamentChampion: 'Tournament Champion!',
+    newTournament: 'New Tournament',
+    playPong: 'Play Pong',
+    waiting: 'Waiting',
+    finalPong: 'PONG FINAL',
+    matchCompleted: 'Match Completed',
+    finishAllQuarterFinals: 'Finish all quarter finals',
+    finishAllSemiFinals: 'Finish all semi finals',
+    instructions: 'Instructions',
+    clickPlayPong: 'Click "Play Pong" to start a match between two players',
+    automatic: 'Automatic: Winners advance automatically to the next round after each match',
+    wonTheMatch: 'won the match!',
+    backToTournament: 'Back to Tournament',
+    returnToTournament: 'Return to Tournament',
+    firstToScore: 'First to {score} points wins',
+    pressP: 'Press P to pause',
+    pressR: 'Press R to restart',
+    controls: 'Controls',
+    leftPlayer: 'Left Player',
+    rightPlayer: 'Right Player',
+    keys: 'Keys',
+    arrows: 'Arrows',
+    hasWon: 'has won!',
+    confirmWinner: 'Confirm Winner',
+    
+    // Friends
+    friends: 'Friends',
+    myFriends: 'My Friends',
+    addFriend: 'Add Friend',
+    friendRequests: 'Friend Requests',
+    onlineFriends: 'Online',
+    offlineFriends: 'Offline',
+    noFriendsYet: 'No friends yet',
+    buildFriendNetwork: 'Start building your Pong friend network!',
+    addFirstFriend: 'Add your first friend',
+    searchUser: 'Search for a user...',
+    searchPlaceholder: 'Search for a user by name...',
+    search: 'Search',
+    usersFound: 'Users found',
+    noUsersFound: 'No users found',
+    noUserMatch: 'No users match your search',
+    add: 'Add',
+    adding: 'Adding...',
+    accept: 'Accept',
+    reject: 'Reject',
+    remove: 'Remove',
+    viewProfile: 'View Profile',
+    inviteToPlay: 'Invite to Play',
+    removeFriend: 'Remove Friend',
+    friendRequestSent: 'Friend request sent successfully!',
+    requestAccepted: 'Request accepted successfully',
+    requestRejected: 'Request rejected',
+    friendRemoved: 'Friend removed',
+    invitationSent: 'Invitation sent to {name}',
+    confirmRemoveFriend: 'Are you sure you want to remove this friend?',
+    loadingFriends: 'Loading friends...',
+    retry: 'Retry',
+    close: 'Close',
+    howToAddFriend: 'How to add a friend?',
+    typeUsername: 'Type your friend\'s username or display name',
+    clickSearch: 'Click the "Search" button or press Enter',
+    selectFromResults: 'Select them from the search results',
+    sendRequest: 'Send a friend request',
+    waitForAcceptance: 'Wait for them to accept your request',
+    typeAtLeast2Chars: 'Type at least 2 characters then click "Search" or press Enter',
+    atLeast2CharsRequired: 'Please enter at least 2 characters for the search',
+    errorAddingFriend: 'Error adding friend',
+    errorSearching: 'Error while searching',
+    
+    // Profile editing
+    editProfile: 'Edit Profile',
+    profileSettings: 'Profile Settings',
+    avatarSettings: 'Avatar Settings',
+    currentAvatar: 'Current Avatar',
+    uploadImage: 'Upload Image',
+    uploadAvatar: 'Upload Avatar',
+    backToDefault: 'Back to Default Avatar',
+    pngJpgUpTo2MB: 'PNG, JPG up to 2MB',
+    usernameSettings: 'Username Settings',
+    securitySettings: 'Security Settings',
+    enable2FA: 'Enable 2FA',
+    disable2FA: 'Disable 2FA',
+    changePassword: 'Change Password',
+    currentPassword: 'Current Password',
+    newPassword: 'New Password',
+    confirmNewPassword: 'Confirm New Password',
+    saveChanges: 'Save Changes',
+    saving: 'Saving...',
+    cancel: 'Cancel',
+    profileUpdated: 'Profile updated successfully!',
+    passwordChanged: 'Password changed successfully!',
+    avatarUploaded: 'Avatar uploaded successfully',
+    avatarResetToDefault: 'Avatar reset to default',
+    pleaseSelectValidImage: 'Please select a valid image file (PNG, JPG, etc.)',
+    newPasswordsDontMatch: 'New passwords do not match',
+    newPasswordTooShort: 'New password must be at least 6 characters',
+    errorChangingPassword: 'Error changing password',
+    errorUploadingAvatar: 'Error uploading avatar',
+    
+    // Online game
+    createGame: 'Create Game',
+    joinGame: 'Join Game',
+    gameId: 'Game ID',
+    copyGameId: 'Copy Game ID',
+    waitingForPlayers: 'Waiting for players...',
+    playersInGame: 'Players in game',
+    maxPlayers: 'Max players',
+    gameCreated: 'Game created successfully!',
+    errorCreatingGame: 'Error creating game',
+    errorJoiningGame: 'Error joining game',
+    invalidGameId: 'Invalid game ID',
+    gameNotFound: 'Game not found',
+    gameFull: 'Game is full',
+    alreadyInGame: 'Already in this game',
+    disconnected: 'Disconnected',
+    reconnecting: 'Reconnecting...',
+    
+    // Miscellaneous messages
+    confirmAction: 'Confirm Action',
+    areYouSure: 'Are you sure?',
+    yes: 'Yes',
+    no: 'No',
+    ok: 'OK',
+    error: 'Error',
+    success: 'Success',
+    warning: 'Warning',
+    info: 'Info',
+    
+    // Missing hardcoded texts
+    haveAGreatTime: 'Have a great time!',
+    welcomePlayerTemplate: 'Welcome {username}!',
+    defaultPlayerName: 'player',
+    termsOfUsePageTitle: 'Terms of Use - Pong Billiard',
+    lastUpdatedLabel: 'Last updated',
+    termsAcceptanceFooter: 'By playing Pong Billiard, you accept these terms of use.',
+    
+    // Password strength feedback
+    atLeast8Characters: 'At least 8 characters',
+    atLeastOneUppercase: 'At least one uppercase',
+    atLeastOneLowercase: 'At least one lowercase', 
+    atLeastOneDigit: 'At least one digit',
+    atLeastOneSpecialChar: 'At least one special character'
   },
   fr: {
     // Navigation
@@ -248,9 +407,9 @@ const messages = {
     // Authentification
     backToHome: 'Retour à l\'accueil',
     signInTitle: 'Connexion',
-    signInSubtitle: 'Bienvenue sur Pong Billard',
+    signInSubtitle: 'Bienvenue sur ft_transcendence',
     signUpTitle: 'Inscription',
-    signUpSubtitle: 'Créez votre compte Pong Billard',
+    signUpSubtitle: 'Créez votre compte ft_transcendence',
     email: 'Email',
     emailPlaceholder: 'Entrez votre email',
     password: 'Mot de passe',
@@ -259,11 +418,14 @@ const messages = {
     firstNamePlaceholder: 'Entrez votre prénom',
     lastName: 'Nom',
     lastNamePlaceholder: 'Entrez votre nom',
+    username: 'Nom d\'utilisateur',
+    usernamePlaceholder: 'Entrez votre nom d\'utilisateur',
     confirmPassword: 'Confirmer le mot de passe',
     confirmPasswordPlaceholder: 'Confirmez votre mot de passe',
     rememberMe: 'Se souvenir de moi',
     forgotPassword: 'Mot de passe oublié ?',
     signingIn: 'Connexion...',
+    signingUp: 'Inscription...',
     creatingAccount: 'Création du compte...',
     createAccount: 'Créer un compte',
     orContinueWith: 'ou continuer avec',
@@ -276,7 +438,7 @@ const messages = {
     and: 'et la',
     privacyPolicy: 'Politique de confidentialité',
     
-    // 2FA / Authentification à deux facteurs
+    // 2FA
     twoFactorAuth: 'Authentification à deux facteurs',
     enter2FACode: 'Veuillez entrer le code à 6 chiffres de votre application d\'authentification',
     authCode: 'Code d\'authentification',
@@ -317,8 +479,6 @@ const messages = {
     continue: 'Continuer',
     
     // Messages d'inscription
-    username: 'Nom d\'utilisateur',
-    signingUp: 'Inscription...',
     registrationSuccessful: 'Inscription réussie !',
     registrationError: 'Erreur d\'inscription',
     allFieldsRequired: 'Tous les champs sont requis',
@@ -330,6 +490,8 @@ const messages = {
     connectionError: 'Erreur de connexion',
     signupError: 'Erreur d\'inscription',
     passwordMismatch: 'Les mots de passe ne correspondent pas',
+    tooManyAttempts: 'Trop de tentatives. Veuillez réessayer plus tard.',
+    serverError: 'Erreur du serveur. Veuillez réessayer plus tard.',
     
     // Force du mot de passe
     passwordWeak: 'Faible',
@@ -369,6 +531,7 @@ const messages = {
     pongRating: 'Classement Pong',
     status: 'Statut',
     online: 'En ligne',
+    offline: 'Hors ligne',
     memberSince: 'Membre depuis',
     title: 'Titre',
     saveProfile: 'Sauvegarder le profil',
@@ -407,9 +570,166 @@ const messages = {
     
     // États de l'interface
     loading: 'Chargement',
-    current: 'Actuel'
+    current: 'Actuel',
+    
+    // Tournois
+    tournament: 'Tournoi',
+    tournamentSetup: 'Configuration du tournoi',
+    playerConfiguration: 'Configuration des joueurs',
+    playerSetup: 'Configuration des joueurs',
+    enterPlayerNames: 'Entrez 8 noms de joueurs pour commencer le tournoi',
+    fillDefaultNames: 'Remplir avec des noms par défaut',
+    clearAll: 'Tout effacer',
+    startTournament: 'Commencer le tournoi',
+    tournamentBracket: 'Tableau du tournoi',
+    quarterFinals: 'Quarts de finale',
+    semiFinals: 'Demi-finales',
+    final: 'Finale',
+    champion: 'Champion',
+    tournamentChampion: 'Champion du tournoi !',
+    newTournament: 'Nouveau tournoi',
+    playPong: 'Jouer au Pong',
+    waiting: 'En attente',
+    finalPong: 'FINALE PONG',
+    matchCompleted: 'Match terminé',
+    finishAllQuarterFinals: 'Terminer tous les quarts de finale',
+    finishAllSemiFinals: 'Terminer toutes les demi-finales',
+    instructions: 'Instructions',
+    clickPlayPong: 'Cliquez sur "Jouer au Pong" pour commencer un match entre deux joueurs',
+    automatic: 'Automatique : Les gagnants avancent automatiquement au tour suivant après chaque match',
+    wonTheMatch: 'a gagné le match !',
+    backToTournament: 'Retour au tournoi',
+    returnToTournament: 'Retour au tournoi',
+    firstToScore: 'Le premier à {score} points gagne',
+    pressP: 'Appuyez sur P pour mettre en pause',
+    pressR: 'Appuyez sur R pour redémarrer',
+    controls: 'Contrôles',
+    leftPlayer: 'Joueur de gauche',
+    rightPlayer: 'Joueur de droite',
+    keys: 'Touches',
+    arrows: 'Flèches',
+    hasWon: 'a gagné !',
+    confirmWinner: 'Confirmer le gagnant',
+    
+    // Amis
+    friends: 'Amis',
+    myFriends: 'Mes amis',
+    addFriend: 'Ajouter un ami',
+    friendRequests: 'Demandes d\'amis',
+    onlineFriends: 'En ligne',
+    offlineFriends: 'Hors ligne',
+    noFriendsYet: 'Pas encore d\'amis',
+    buildFriendNetwork: 'Commencez à construire votre réseau d\'amis Pong !',
+    addFirstFriend: 'Ajoutez votre premier ami',
+    searchUser: 'Rechercher un utilisateur...',
+    searchPlaceholder: 'Rechercher un utilisateur par nom...',
+    search: 'Rechercher',
+    usersFound: 'Utilisateurs trouvés',
+    noUsersFound: 'Aucun utilisateur trouvé',
+    noUserMatch: 'Aucun utilisateur ne correspond à votre recherche',
+    add: 'Ajouter',
+    adding: 'Ajout...',
+    accept: 'Accepter',
+    reject: 'Rejeter',
+    remove: 'Supprimer',
+    viewProfile: 'Voir le profil',
+    inviteToPlay: 'Inviter à jouer',
+    removeFriend: 'Supprimer l\'ami',
+    friendRequestSent: 'Demande d\'ami envoyée avec succès !',
+    requestAccepted: 'Demande acceptée avec succès',
+    requestRejected: 'Demande rejetée',
+    friendRemoved: 'Ami supprimé',
+    invitationSent: 'Invitation envoyée à {name}',
+    confirmRemoveFriend: 'Êtes-vous sûr de vouloir supprimer cet ami ?',
+    loadingFriends: 'Chargement des amis...',
+    retry: 'Réessayer',
+    close: 'Fermer',
+    howToAddFriend: 'Comment ajouter un ami ?',
+    typeUsername: 'Tapez le nom d\'utilisateur ou le nom d\'affichage de votre ami',
+    clickSearch: 'Cliquez sur le bouton "Rechercher" ou appuyez sur Entrée',
+    selectFromResults: 'Sélectionnez-le dans les résultats de recherche',
+    sendRequest: 'Envoyer une demande d\'ami',
+    waitForAcceptance: 'Attendez qu\'il accepte votre demande',
+    typeAtLeast2Chars: 'Tapez au moins 2 caractères puis cliquez sur "Rechercher" ou appuyez sur Entrée',
+    atLeast2CharsRequired: 'Veuillez entrer au moins 2 caractères pour la recherche',
+    errorAddingFriend: 'Erreur lors de l\'ajout d\'ami',
+    errorSearching: 'Erreur lors de la recherche',
+    
+    // Édition de profil
+    editProfile: 'Modifier le profil',
+    profileSettings: 'Paramètres du profil',
+    avatarSettings: 'Paramètres de l\'avatar',
+    currentAvatar: 'Avatar actuel',
+    uploadImage: 'Télécharger une image',
+    uploadAvatar: 'Télécharger l\'avatar',
+    backToDefault: 'Retour à l\'avatar par défaut',
+    pngJpgUpTo2MB: 'PNG, JPG jusqu\'à 2 Mo',
+    usernameSettings: 'Paramètres du nom d\'utilisateur',
+    securitySettings: 'Paramètres de sécurité',
+    enable2FA: 'Activer 2FA',
+    disable2FA: 'Désactiver 2FA',
+    changePassword: 'Changer le mot de passe',
+    currentPassword: 'Mot de passe actuel',
+    newPassword: 'Nouveau mot de passe',
+    confirmNewPassword: 'Confirmer le nouveau mot de passe',
+    saveChanges: 'Enregistrer les modifications',
+    saving: 'Enregistrement...',
+    cancel: 'Annuler',
+    profileUpdated: 'Profil mis à jour avec succès !',
+    passwordChanged: 'Mot de passe changé avec succès !',
+    avatarUploaded: 'Avatar téléchargé avec succès',
+    avatarResetToDefault: 'Avatar remis par défaut',
+    pleaseSelectValidImage: 'Veuillez sélectionner un fichier image valide (PNG, JPG, etc.)',
+    newPasswordsDontMatch: 'Les nouveaux mots de passe ne correspondent pas',
+    newPasswordTooShort: 'Le nouveau mot de passe doit contenir au moins 6 caractères',
+    errorChangingPassword: 'Erreur lors du changement de mot de passe',
+    errorUploadingAvatar: 'Erreur lors du téléchargement de l\'avatar',
+    
+    // Jeu en ligne
+    createGame: 'Créer une partie',
+    joinGame: 'Rejoindre une partie',
+    gameId: 'ID de la partie',
+    copyGameId: 'Copier l\'ID de la partie',
+    waitingForPlayers: 'En attente de joueurs...',
+    playersInGame: 'Joueurs dans la partie',
+    maxPlayers: 'Joueurs maximum',
+    gameCreated: 'Partie créée avec succès !',
+    errorCreatingGame: 'Erreur lors de la création de la partie',
+    errorJoiningGame: 'Erreur lors de la connexion à la partie',
+    invalidGameId: 'ID de partie invalide',
+    gameNotFound: 'Partie non trouvée',
+    gameFull: 'La partie est pleine',
+    alreadyInGame: 'Déjà dans cette partie',
+    disconnected: 'Déconnecté',
+    reconnecting: 'Reconnexion...',
+    
+    // Messages divers
+    confirmAction: 'Confirmer l\'action',
+    areYouSure: 'Êtes-vous sûr ?',
+    yes: 'Oui',
+    no: 'Non',
+    ok: 'OK',
+    error: 'Erreur',
+    success: 'Succès',
+    warning: 'Avertissement',
+    info: 'Info',
+    
+    // Textes hardcodés manquants
+    haveAGreatTime: 'Amusez-vous bien !',
+    welcomePlayerTemplate: 'Bienvenue {username} !',
+    defaultPlayerName: 'joueur',
+    termsOfUsePageTitle: 'Conditions d\'Utilisation - Pong Billard',
+    lastUpdatedLabel: 'Dernière mise à jour',
+    termsAcceptanceFooter: 'En jouant à Pong Billard, vous acceptez ces conditions d\'utilisation.',
+    
+    // Commentaires force du mot de passe
+    atLeast8Characters: 'Au moins 8 caractères',
+    atLeastOneUppercase: 'Au moins une majuscule',
+    atLeastOneLowercase: 'Au moins une minuscule',
+    atLeastOneDigit: 'Au moins un chiffre',
+    atLeastOneSpecialChar: 'Au moins un caractère spécial'
   },
-  es: {
+      es: {
     // Navigation
     gameTitle: 'ft_transcendence',
     home: 'Inicio',
@@ -419,11 +739,11 @@ const messages = {
     signUp: 'Registrarse',
     logout: 'Cerrar Sesión',
     
-    // Messages de navigation
+    // Mensajes de navegación
     redirectingToSignIn: 'Redirigiendo al inicio de sesión...',
     redirectingToSignUp: 'Redirigiendo al registro...',
     
-    // Page d'accueil
+    // Página de inicio
     welcomeTitle: 'Bienvenido a ft_transcendence',
     gameDescription: 'Descubre el clásico juego Pong con un toque de billar',
     feature1Title: 'Jugabilidad Clásica',
@@ -435,27 +755,25 @@ const messages = {
     feature4Title: 'Mi Perfil',
     feature4Description: 'Gestiona tu cuenta',
     
-    // Messages pour popup de profil
+    // Mensajes para popup de perfil
     accessRestricted: 'Acceso Restringido',
     profileAccessTitle: 'Acceso al Perfil',
     profileLoginRequired: 'Debes estar conectado para acceder a tu perfil y gestionar tus estadísticas de juego.',
     profileStatsFeature: 'Estadísticas de juego',
     profileAchievementsFeature: 'Logros y recompensas',
     profileSettingsFeature: 'Configuración personalizada',
-
-
     
-    // Boutons d'action
+    // Botones de acción
     getStarted: 'Comenzar',
     learnMore: 'Saber más',
     startPlaying: 'Empezar a jugar',
     
-    // Authentification
+    // Autenticación
     backToHome: 'Volver al Inicio',
     signInTitle: 'Iniciar Sesión',
-    signInSubtitle: 'Bienvenido de vuelta a Pong Billar',
+    signInSubtitle: 'Bienvenido de vuelta a ft_transcendence',
     signUpTitle: 'Registrarse',
-    signUpSubtitle: 'Crea tu cuenta de Pong Billar',
+    signUpSubtitle: 'Crea tu cuenta de ft_transcendence',
     email: 'Email',
     emailPlaceholder: 'Ingresa tu email',
     password: 'Contraseña',
@@ -464,11 +782,14 @@ const messages = {
     firstNamePlaceholder: 'Ingresa tu nombre',
     lastName: 'Apellido',
     lastNamePlaceholder: 'Ingresa tu apellido',
+    username: 'Nombre de Usuario',
+    usernamePlaceholder: 'Ingresa tu nombre de usuario',
     confirmPassword: 'Confirmar Contraseña',
     confirmPasswordPlaceholder: 'Confirma tu contraseña',
     rememberMe: 'Recordarme',
     forgotPassword: '¿Olvidaste tu contraseña?',
     signingIn: 'Iniciando sesión...',
+    signingUp: 'Registrándose...',
     creatingAccount: 'Creando cuenta...',
     createAccount: 'Crear Cuenta',
     orContinueWith: 'o continuar con',
@@ -481,7 +802,7 @@ const messages = {
     and: 'y la',
     privacyPolicy: 'Política de Privacidad',
     
-    // 2FA / Autenticación de dos factores
+    // 2FA
     twoFactorAuth: 'Autenticación de Dos Factores',
     enter2FACode: 'Por favor ingresa el código de 6 dígitos de tu aplicación de autenticación',
     authCode: 'Código de Autenticación',
@@ -522,15 +843,13 @@ const messages = {
     continue: 'Continuar',
     
     // Mensajes de registro
-    username: 'Nombre de Usuario',
-    signingUp: 'Registrándose...',
     registrationSuccessful: '¡Registro exitoso!',
     registrationError: 'Error de registro',
     allFieldsRequired: 'Todos los campos son requeridos',
     passwordsDoNotMatch: 'Las contraseñas no coinciden',
     passwordTooShort: 'La contraseña debe tener al menos 8 caracteres',
     
-    // Messages d'erreur
+    // Mensajes de error
     invalidCredentials: 'Credenciales inválidas',
     connectionError: 'Error de conexión',
     signupError: 'Error de registro',
@@ -538,19 +857,19 @@ const messages = {
     tooManyAttempts: 'Demasiados intentos. Por favor inténtalo de nuevo más tarde.',
     serverError: 'Error del servidor. Por favor inténtalo de nuevo más tarde.',
     
-    // Force du mot de passe
+    // Fuerza de la contraseña
     passwordWeak: 'Débil',
     passwordMedium: 'Medio',
     passwordStrong: 'Fuerte',
     
-    // Messages non implémentés
+    // Mensajes no implementados
     googleSignInNotImplemented: 'Inicio de sesión con Google no implementado aún',
     googleSignUpNotImplemented: 'Registro con Google no implementado aún',
     forgotPasswordNotImplemented: 'Recuperar contraseña no implementado aún',
     termsNotImplemented: 'Términos no implementados aún',
     privacyNotImplemented: 'Política de privacidad no implementada aún',
     
-    // Jeu
+    // Juego
     player1: 'Jugador 1',
     player2: 'Jugador 2',
     score: 'Puntuación',
@@ -560,7 +879,7 @@ const messages = {
     pause: 'Pausa',
     resume: 'Reanudar',
     
-    // Profil
+    // Perfil
     profileTitle: 'Perfil',
     statistics: 'Estadísticas',
     gamesPlayed: 'Partidas Jugadas',
@@ -568,7 +887,7 @@ const messages = {
     winRate: 'Tasa de Victoria',
     bestScore: 'Mejor Puntuación',
     
-    // Profil utilisateur détaillé
+    // Perfil de usuario detallado
     changeAvatar: 'Cambiar Avatar',
     rank: 'Rango',
     enterUsername: 'Ingresa nombre de usuario',
@@ -576,11 +895,12 @@ const messages = {
     pongRating: 'Clasificación Pong',
     status: 'Estado',
     online: 'En línea',
+    offline: 'Desconectado',
     memberSince: 'Miembro desde',
     title: 'Título',
     saveProfile: 'Guardar perfil',
     
-    // Statistiques Pong
+    // Estadísticas Pong
     pongStatistics: 'Estadísticas Pong',
     matchesPlayed: 'Partidas jugadas',
     victories: 'Victorias',
@@ -594,7 +914,7 @@ const messages = {
     accuracy: 'Precisión',
     consistency: 'Consistencia',
     
-    // Historique des matches
+    // Historial de partidas
     matchHistory: 'Historial de partidas',
     opponent: 'Oponente',
     duration: 'Duración',
@@ -603,18 +923,175 @@ const messages = {
     loss: 'Derrota',
     points: 'Puntos',
     
-    // Activité quotidienne
+    // Actividad diaria
     dailyActivity: 'Actividad diaria',
     totalThisWeek: 'Total esta semana',
     avgPerDay: 'Promedio por día',
     bestDay: 'Mejor día',
     
-    // Boutons d'action profil
+    // Botones de acción del perfil
     playGame: 'Jugar',
     
-    // États de l'interface
-    loading: 'Loading',
-    current: 'Current'
+    // Estados de la interfaz
+    loading: 'Cargando',
+    current: 'Actual',
+    
+    // Torneos
+    tournament: 'Torneo',
+    tournamentSetup: 'Configuración del torneo',
+    playerConfiguration: 'Configuración de jugadores',
+    playerSetup: 'Configuración de jugadores',
+    enterPlayerNames: 'Ingresa 8 nombres de jugadores para comenzar el torneo',
+    fillDefaultNames: 'Llenar con nombres por defecto',
+    clearAll: 'Limpiar todo',
+    startTournament: 'Comenzar torneo',
+    tournamentBracket: 'Tabla del torneo',
+    quarterFinals: 'Cuartos de final',
+    semiFinals: 'Semifinales',
+    final: 'Final',
+    champion: 'Campeón',
+    tournamentChampion: '¡Campeón del torneo!',
+    newTournament: 'Nuevo torneo',
+    playPong: 'Jugar Pong',
+    waiting: 'Esperando',
+    finalPong: 'FINAL PONG',
+    matchCompleted: 'Partida completada',
+    finishAllQuarterFinals: 'Terminar todos los cuartos de final',
+    finishAllSemiFinals: 'Terminar todas las semifinales',
+    instructions: 'Instrucciones',
+    clickPlayPong: 'Haz clic en "Jugar Pong" para comenzar una partida entre dos jugadores',
+    automatic: 'Automático: Los ganadores avanzan automáticamente a la siguiente ronda después de cada partida',
+    wonTheMatch: '¡ganó la partida!',
+    backToTournament: 'Volver al torneo',
+    returnToTournament: 'Volver al torneo',
+    firstToScore: 'El primero en {score} puntos gana',
+    pressP: 'Presiona P para pausar',
+    pressR: 'Presiona R para reiniciar',
+    controls: 'Controles',
+    leftPlayer: 'Jugador izquierdo',
+    rightPlayer: 'Jugador derecho',
+    keys: 'Teclas',
+    arrows: 'Flechas',
+    hasWon: '¡ha ganado!',
+    confirmWinner: 'Confirmar ganador',
+    
+    // Amigos
+    friends: 'Amigos',
+    myFriends: 'Mis amigos',
+    addFriend: 'Agregar amigo',
+    friendRequests: 'Solicitudes de amistad',
+    onlineFriends: 'En línea',
+    offlineFriends: 'Desconectado',
+    noFriendsYet: 'Aún no tienes amigos',
+    buildFriendNetwork: '¡Comienza a construir tu red de amigos de Pong!',
+    addFirstFriend: 'Agrega tu primer amigo',
+    searchUser: 'Buscar un usuario...',
+    searchPlaceholder: 'Buscar un usuario por nombre...',
+    search: 'Buscar',
+    usersFound: 'Usuarios encontrados',
+    noUsersFound: 'No se encontraron usuarios',
+    noUserMatch: 'Ningún usuario coincide con tu búsqueda',
+    add: 'Agregar',
+    adding: 'Agregando...',
+    accept: 'Aceptar',
+    reject: 'Rechazar',
+    remove: 'Eliminar',
+    viewProfile: 'Ver perfil',
+    inviteToPlay: 'Invitar a jugar',
+    removeFriend: 'Eliminar amigo',
+    friendRequestSent: '¡Solicitud de amistad enviada exitosamente!',
+    requestAccepted: 'Solicitud aceptada exitosamente',
+    requestRejected: 'Solicitud rechazada',
+    friendRemoved: 'Amigo eliminado',
+    invitationSent: 'Invitación enviada a {name}',
+    confirmRemoveFriend: '¿Estás seguro de que quieres eliminar a este amigo?',
+    loadingFriends: 'Cargando amigos...',
+    retry: 'Reintentar',
+    close: 'Cerrar',
+    howToAddFriend: '¿Cómo agregar un amigo?',
+    typeUsername: 'Escribe el nombre de usuario o nombre de tu amigo',
+    clickSearch: 'Haz clic en el botón "Buscar" o presiona Enter',
+    selectFromResults: 'Selecciónalo de los resultados de búsqueda',
+    sendRequest: 'Enviar solicitud de amistad',
+    waitForAcceptance: 'Espera a que acepte tu solicitud',
+    typeAtLeast2Chars: 'Escribe al menos 2 caracteres luego haz clic en "Buscar" o presiona Enter',
+    atLeast2CharsRequired: 'Por favor ingresa al menos 2 caracteres para la búsqueda',
+    errorAddingFriend: 'Error al agregar amigo',
+    errorSearching: 'Error al buscar',
+    
+    // Edición de perfil
+    editProfile: 'Editar perfil',
+    profileSettings: 'Configuración del perfil',
+    avatarSettings: 'Configuración del avatar',
+    currentAvatar: 'Avatar actual',
+    uploadImage: 'Subir imagen',
+    uploadAvatar: 'Subir avatar',
+    backToDefault: 'Volver al avatar por defecto',
+    pngJpgUpTo2MB: 'PNG, JPG hasta 2 MB',
+    usernameSettings: 'Configuración del nombre de usuario',
+    securitySettings: 'Configuración de seguridad',
+    enable2FA: 'Habilitar 2FA',
+    disable2FA: 'Deshabilitar 2FA',
+    changePassword: 'Cambiar contraseña',
+    currentPassword: 'Contraseña actual',
+    newPassword: 'Nueva contraseña',
+    confirmNewPassword: 'Confirmar nueva contraseña',
+    saveChanges: 'Guardar cambios',
+    saving: 'Guardando...',
+    cancel: 'Cancelar',
+    profileUpdated: '¡Perfil actualizado exitosamente!',
+    passwordChanged: '¡Contraseña cambiada exitosamente!',
+    avatarUploaded: 'Avatar subido exitosamente',
+    avatarResetToDefault: 'Avatar restablecido por defecto',
+    pleaseSelectValidImage: 'Por favor selecciona un archivo de imagen válido (PNG, JPG, etc.)',
+    newPasswordsDontMatch: 'Las nuevas contraseñas no coinciden',
+    newPasswordTooShort: 'La nueva contraseña debe tener al menos 6 caracteres',
+    errorChangingPassword: 'Error al cambiar la contraseña',
+    errorUploadingAvatar: 'Error al subir el avatar',
+    
+    // Juego en línea
+    createGame: 'Crear partida',
+    joinGame: 'Unirse a partida',
+    gameId: 'ID de la partida',
+    copyGameId: 'Copiar ID de la partida',
+    waitingForPlayers: 'Esperando jugadores...',
+    playersInGame: 'Jugadores en la partida',
+    maxPlayers: 'Jugadores máximos',
+    gameCreated: '¡Partida creada exitosamente!',
+    errorCreatingGame: 'Error al crear la partida',
+    errorJoiningGame: 'Error al unirse a la partida',
+    invalidGameId: 'ID de partida inválido',
+    gameNotFound: 'Partida no encontrada',
+    gameFull: 'La partida está llena',
+    alreadyInGame: 'Ya estás en esta partida',
+    disconnected: 'Desconectado',
+    reconnecting: 'Reconectando...',
+    
+    // Mensajes diversos
+    confirmAction: 'Confirmar acción',
+    areYouSure: '¿Estás seguro?',
+    yes: 'Sí',
+    no: 'No',
+    ok: 'OK',
+    error: 'Error',
+    success: 'Éxito',
+    warning: 'Advertencia',
+    info: 'Info',
+    
+    // Textos hardcodeados faltantes
+    haveAGreatTime: '¡Que te diviertas!',
+    welcomePlayerTemplate: '¡Bienvenido {username}!',
+    defaultPlayerName: 'jugador',
+    termsOfUsePageTitle: 'Términos de Uso - Pong Billar',
+    lastUpdatedLabel: 'Última actualización',
+    termsAcceptanceFooter: 'Al jugar Pong Billar, aceptas estos términos de uso.',
+    
+    // Comentarios fuerza de contraseña
+    atLeast8Characters: 'Al menos 8 caracteres',
+    atLeastOneUppercase: 'Al menos una mayúscula',
+    atLeastOneLowercase: 'Al menos una minúscula',
+    atLeastOneDigit: 'Al menos un dígito',
+    atLeastOneSpecialChar: 'Al menos un carácter especial'
   },
   
   it: {
@@ -822,8 +1299,34 @@ const messages = {
     playGame: 'Gioca',
     
     // États de l'interface
-    loading: 'Loading',
-    current: 'Current'
+    loading: 'Caricamento',
+    current: 'Attuale',
+    
+    // Messages vari
+    confirmAction: 'Conferma azione',
+    areYouSure: 'Sei sicuro?',
+    yes: 'Sì',
+    no: 'No',
+    ok: 'OK',
+    error: 'Errore',
+    success: 'Successo',
+    warning: 'Avvertimento',
+    info: 'Info',
+    
+    // Testi hardcoded mancanti
+    haveAGreatTime: 'Divertiti!',
+    welcomePlayerTemplate: 'Benvenuto {username}!',
+    defaultPlayerName: 'giocatore',
+    termsOfUsePageTitle: 'Condizioni d\'Uso - Pong Biliardo',
+    lastUpdatedLabel: 'Ultimo aggiornamento',
+    termsAcceptanceFooter: 'Giocando a Pong Biliardo, accetti questi termini d\'uso.',
+    
+    // Commenti forza password
+    atLeast8Characters: 'Almeno 8 caratteri',
+    atLeastOneUppercase: 'Almeno una maiuscola',
+    atLeastOneLowercase: 'Almeno una minuscola',
+    atLeastOneDigit: 'Almeno una cifra',
+    atLeastOneSpecialChar: 'Almeno un carattere speciale'
   }
 }
 

@@ -79,12 +79,39 @@
         <p>Une question ? Un problème ?<br>Email : <a href="mailto:kaliszczakm@yahoo.com" class="underline text-yellow-300 hover:text-yellow-400">kaliszczakm@yahoo.com</a></p>
         <p class="mt-6 text-center text-sm text-gray-400">En jouant à Pong Billard, vous acceptez ces conditions d'utilisation.</p>
       </div>
+      
+      <!-- Bouton retour en bas -->
+      <div class="mt-8 flex justify-center">
+        <button 
+          @click="goBack" 
+          class="back-button flex items-center gap-2 px-4 py-2 bg-transparent border-2 border-yellow-400 text-yellow-400 rounded-lg hover:bg-yellow-400 hover:text-green-900 transition-all duration-300 font-semibold text-sm"
+        >
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+          </svg>
+          RETOUR
+        </button>
+      </div>
     </div>
   </div>
 </template>
 
 <script setup>
-// Pas de logique spécifique ici
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
+
+// Fonction pour revenir à la page précédente
+const goBack = () => {
+  // Utiliser router.go(-1) qui est plus fiable que window.history.back()
+  // car il fonctionne avec le système de routage de Vue
+  try {
+    router.go(-1)
+  } catch (error) {
+    // Si erreur ou pas d'historique, rediriger vers l'accueil
+    router.push('/')
+  }
+}
 </script>
 
 <style scoped>
@@ -100,6 +127,27 @@
   align-items: center;
   justify-content: flex-start;
 }
+
+.back-button {
+  transition: all 0.3s ease;
+  user-select: none;
+  min-width: 100px;
+  background-color: #fbbf24;
+  color: #1a1a1a;
+  border: 2px solid #fbbf24;
+}
+
+.back-button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3);
+  background-color: #f59e0b;
+  border-color: #f59e0b;
+}
+
+.back-button:active {
+  transform: translateY(0);
+}
+
 .cgu-container {
   /* Suppression du fond, bordure, ombre, arrondi pour un affichage pleine page */
   background: none;
