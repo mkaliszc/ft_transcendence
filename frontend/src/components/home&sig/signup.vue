@@ -135,7 +135,7 @@
               <input type="checkbox" v-model="acceptCgu" :disabled="loading" required style="accent-color: #d4af37; width: 1.1em; height: 1.1em;" />
               <span>
                 J'accepte les
-                <router-link to="/cgu" class="cgu-link" target="_blank">Conditions d'utilisation</router-link>
+                <router-link to="/cgu" class="cgu-link">Conditions d'utilisation</router-link>
               </span>
             </label>
           </div>
