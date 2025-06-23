@@ -4,7 +4,7 @@
 		<div class="header-container">
 		  <div class="header-brand">
 			<div class="billiard-ball ball-8-small"></div>
-			<span class="brand-text">Pong Billard</span>
+			<span class="brand-text">Pong Billard - IA</span>
 		  </div>
 		  <div class="header-controls">
 			<button @click="goHome" class="btn btn-secondary">
@@ -123,8 +123,8 @@
 	x: 400,
 	y: 200,
 	radius: 12,
-	speedX: 6, // vitesse adaptée
-	speedY: 3.5, // vitesse adaptée
+	speedX: 6,
+	speedY: 3.5,
 	color: '#ffffff'
   });
   
@@ -134,7 +134,7 @@
 	width: 8,
 	height: 60,
 	color: '#d4af37',
-	speed: 6 // vitesse harmonisée
+	speed: 6
 });
 
 const ai = ref({
@@ -143,7 +143,7 @@ const ai = ref({
 	width: 8,
 	height: 60,
 	color: '#d4af37',
-	speed: 6 // vitesse harmonisée
+	speed: 6 
 });
   
   // Animation frame ID for cleanup
@@ -152,7 +152,7 @@ const ai = ref({
   // --- Ajout pour IA : prise de décision toutes les secondes ---
   const aiKeyState = ref({ up: false, down: false });
   let aiLastUpdate = Date.now();
-  const aiUpdateInterval = 1; // 1 seconde
+  const aiUpdateInterval = 1000; // 1 seconde
   
   // Initialize game
   onMounted(() => {

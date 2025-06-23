@@ -86,14 +86,14 @@
 
           <!-- Case à cocher CGU (n'affecte que Google) -->
       <div class="form-group" style="margin-bottom: 1.5rem;">
-            <label style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.95rem;">
-              <input type="checkbox" v-model="acceptCgu" :disabled="loading" required style="accent-color: #d4af37; width: 1.1em; height: 1.1em;" />
-              <span>
-                J'accepte les
-                <router-link to="/cgu" class="cgu-link" target="_blank">Conditions d'utilisation</router-link>
-              </span>
-            </label>
-          </div>
+        <label style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.95rem;">
+          <input type="checkbox" v-model="acceptCgu" :disabled="loading" style="accent-color: #d4af37; width: 1.1em; height: 1.1em;" />
+          <span>
+            J'accepte les
+            <router-link to="/cgu" class="cgu-link" target="_blank">Conditions d'utilisation</router-link>
+          </span>
+        </label>
+      </div>
 
           <button type="submit" class="signin-button" :disabled="loading">
             <svg v-if="loading" class="loading-spinner" fill="none" viewBox="0 0 24 24">

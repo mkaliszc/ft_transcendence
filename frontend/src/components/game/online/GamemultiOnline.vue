@@ -4,7 +4,7 @@
 		<div class="header-container">
 		  <div class="header-brand">
 			<div class="billiard-ball ball-8-small"></div>
-			<span class="brand-text">{{ $t('pongOnlineTitle') }}</span>
+			<span class="brand-text">{{ $t('Pong Billard - OnLine') }}</span>
 		  </div>
 		  <div class="header-controls">
 			<div class="score-display" v-if="gameState">

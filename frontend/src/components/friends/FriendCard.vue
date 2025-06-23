@@ -1,6 +1,5 @@
 <template>
   <div class="friend-card" :class="{ 'online': isOnline }">
-    <!-- Avatar avec indicateur de statut -->
     <div class="avatar-container">
       <div class="avatar default-avatar">
         <div class="avatar-placeholder">
@@ -9,76 +8,37 @@
       </div>
       <div class="status-indicator" :class="{ 'online': isOnline, 'offline': !isOnline }"></div>
     </div>
-
-    <!-- Informations de l'ami -->
     <div class="friend-info">
       <h3 class="friend-name">{{ displayName }}</h3>
-      <p class="friend-username">@{{ friendship.friend.username }}</p>
+      <span class="friend-username">@{{ friendship.friend.username }}</span>
       <div class="friend-status">
         <i :class="statusIcon"></i>
         <span>{{ statusText }}</span>
       </div>
     </div>
-
-    <!-- Actions -->
     <div class="friend-actions">
-      <!-- Actions pour ami en ligne -->
-      <div v-if="isOnline" class="online-actions">
-        <button 
-          @click="$emit('invite-game', friendship)" 
-          class="btn-action btn-game"
-          title="Inviter à jouer"
-        >
-          <i class="fas fa-gamepad"></i>
-        </button>
-        <button 
-          @click="$emit('view-profile', friendship)" 
-          class="btn-action btn-profile"
-          title="Voir le profil"
-        >
-          <i class="fas fa-user"></i>
-        </button>
-      </div>
-      
-      <!-- Actions pour ami hors ligne -->
-      <div v-else class="offline-actions">
-        <button 
-          @click="$emit('view-profile', friendship)" 
-          class="btn-action btn-profile"
-          title="Voir le profil"
-        >
-          <i class="fas fa-user"></i>
-        </button>
-      </div>
-
-      <!-- Menu d'options -->
-      <div class="options-menu" ref="optionsMenu">
-        <button @click="toggleOptions" class="btn-options" title="Options">
-          <i class="fas fa-ellipsis-v"></i>
-        </button>
-        
-        <div v-if="showOptions" class="options-dropdown">
-          <button @click="handleViewProfile" class="option-item">
-            <i class="fas fa-user"></i>
-            Voir le profil
-          </button>
-          <button @click="handleInviteGame" class="option-item" v-if="isOnline">
-            <i class="fas fa-gamepad"></i>
-            Inviter à jouer
-          </button>
-          <hr class="option-divider">
-          <button @click="handleRemove" class="option-item remove">
-            <i class="fas fa-user-minus"></i>
-            Supprimer
-          </button>
-        </div>
-      </div>
+      <button 
+        @click="$emit('view-profile', friendship)" 
+        class="btn-action btn-profile"
+        title="Voir le profil de cet ami"
+      >
+        <i class="fas fa-id-card"></i>
+        <span class="btn-label">Profil</span>
+      </button>
+      <button 
+        @click="handleRemove" 
+        class="btn-action btn-remove"
+        title="Supprimer de la liste d'amis"
+      >
+        <i class="fas fa-user-minus"></i>
+        <span class="btn-label">Supprimer</span>
+      </button>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, onUnmounted } from 'vue';
+import { computed } from 'vue';
 import type { Friendship } from '../../services/friendsAPI';
 
 // Props
@@ -89,14 +49,9 @@ const props = defineProps<{
 
 // Émissions
 const emit = defineEmits<{
-  'invite-game': [friendship: Friendship];
   'view-profile': [friendship: Friendship];
   'remove': [friendshipId: number];
 }>();
-
-// État local
-const showOptions = ref(false);
-const optionsMenu = ref<HTMLElement>();
 
 // Computed
 const displayName = computed(() => 
@@ -112,65 +67,36 @@ const statusText = computed(() =>
 );
 
 // Méthodes
-const toggleOptions = () => {
-  showOptions.value = !showOptions.value;
-};
-
-const closeOptions = (event: Event) => {
-  if (optionsMenu.value && !optionsMenu.value.contains(event.target as Node)) {
-    showOptions.value = false;
-  }
-};
-
-const handleViewProfile = () => {
-  emit('view-profile', props.friendship);
-  showOptions.value = false;
-};
-
-const handleInviteGame = () => {
-  emit('invite-game', props.friendship);
-  showOptions.value = false;
-};
-
 const handleRemove = () => {
   if (confirm(`Supprimer ${displayName.value} de vos amis ?`)) {
     emit('remove', props.friendship.friendship_id);
   }
-  showOptions.value = false;
 };
 
 // Lifecycle
-onMounted(() => {
-  document.addEventListener('click', closeOptions);
-});
-
-onUnmounted(() => {
-  document.removeEventListener('click', closeOptions);
-});
 </script>
 
 <style scoped>
 .friend-card {
   display: flex;
   align-items: center;
-  gap: 1rem;
-  padding: 1.5rem;
-  background: rgba(0, 0, 0, 0.3);
+  gap: 2.2rem;
+  padding: 2.2rem 2.2rem 1.7rem 2.2rem;
+  min-height: 130px;
+  background: linear-gradient(135deg, #1a472a 0%, #2d5a3d 100%);
   backdrop-filter: blur(10px);
-  border-radius: 1rem;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  transition: all 0.3s ease;
+  border-radius: 1.2rem;
+  border: 1.5px solid #2d5a3d;
+  box-shadow: 0 6px 32px rgba(40, 87, 42, 0.18);
+  transition: all 0.3s cubic-bezier(.4,2,.6,1);
   position: relative;
+  overflow: hidden;
 }
 
 .friend-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
-  border-color: rgba(212, 175, 55, 0.5);
-}
-
-.friend-card.online {
-  border-color: rgba(40, 167, 69, 0.3);
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 12px 32px rgba(40, 87, 42, 0.28);
+  border-color: #d4af37;
 }
 
 .avatar-container {
@@ -179,36 +105,22 @@ onUnmounted(() => {
 }
 
 .avatar {
-  width: 60px;
-  height: 60px;
+  width: 68px;
+  height: 68px;
   border-radius: 50%;
-  border: 3px solid rgba(255, 255, 255, 0.2);
-  transition: border-color 0.3s ease;
+  border: 3px solid #d4af37;
   display: flex;
   align-items: center;
   justify-content: center;
   overflow: hidden;
-}
-
-.avatar img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.avatar.default-avatar {
   background: linear-gradient(135deg, #d4af37, #c19b2e);
 }
 
 .avatar-placeholder {
-  font-size: 1.5rem;
+  font-size: 2.1rem;
   font-weight: bold;
   color: #1a1a1a;
   text-align: center;
-}
-
-.friend-card.online .avatar {
-  border-color: rgba(40, 167, 69, 0.5);
 }
 
 .status-indicator {
@@ -233,23 +145,31 @@ onUnmounted(() => {
 
 .friend-info {
   flex: 1;
-  min-width: 0; /* Pour permettre le text-overflow */
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 0.2rem;
 }
 
 .friend-name {
-  font-size: 1.1rem;
-  font-weight: 600;
-  color: #f8f9fa;
-  margin: 0 0 0.25rem 0;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #fff;
+  margin: 0 0 0.1rem 0;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  letter-spacing: 0.5px;
 }
 
 .friend-username {
-  font-size: 0.9rem;
-  color: #adb5bd;
-  margin: 0 0 0.5rem 0;
+  font-size: 1.05rem;
+  color: #ffe082;
+  font-weight: 500;
+  margin-bottom: 0.1rem;
+  margin-top: -0.1rem;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -259,61 +179,72 @@ onUnmounted(() => {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  font-size: 0.8rem;
-  color: #6c757d;
+  font-size: 0.92rem;
+  color: #b6e7c9;
+  font-weight: 500;
 }
 
 .friend-status i {
-  font-size: 0.6rem;
+  font-size: 0.7rem;
 }
 
 .friend-card.online .friend-status {
-  color: #28a745;
+  color: #7fff9e;
 }
 
 .friend-actions {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-}
-
-.online-actions,
-.offline-actions {
-  display: flex;
-  gap: 0.5rem;
+  gap: 1.1rem;
+  flex-wrap: wrap;
+  margin-left: 2.7rem;
 }
 
 .btn-action {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 40px;
+  gap: 0.4rem;
+  min-width: 36px;
   height: 40px;
+  padding: 0 1.2rem;
   border: none;
   border-radius: 0.5rem;
   cursor: pointer;
-  transition: all 0.3s ease;
-  font-size: 1rem;
-}
-
-.btn-game {
-  background: linear-gradient(135deg, #28a745, #20c997);
-  color: white;
-}
-
-.btn-game:hover {
-  transform: scale(1.05);
-  box-shadow: 0 4px 15px rgba(40, 167, 69, 0.4);
+  transition: all 0.2s cubic-bezier(.4,2,.6,1);
+  font-size: 1.05rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
 }
 
 .btn-profile {
-  background: linear-gradient(135deg, #17a2b8, #138496);
-  color: white;
+  background: linear-gradient(135deg, #d4af37, #c19b2e);
+  color: #1a1a1a;
+  border: none;
+  box-shadow: 0 2px 8px rgba(212, 175, 55, 0.10);
 }
 
 .btn-profile:hover {
-  transform: scale(1.05);
-  box-shadow: 0 4px 15px rgba(23, 162, 184, 0.4);
+  background: linear-gradient(135deg, #ffe082, #d4af37);
+  color: #1a1a1a;
+  transform: scale(1.07);
+  box-shadow: 0 4px 15px rgba(212, 175, 55, 0.18);
+}
+
+.btn-remove {
+  background: linear-gradient(135deg, #1a472a, #2d5a3d);
+  color: #fff;
+  border: none;
+  box-shadow: 0 2px 8px rgba(40, 87, 42, 0.10);
+}
+
+.btn-remove:hover {
+  background: linear-gradient(135deg, #2d5a3d, #1a472a);
+  color: #fff;
+  transform: scale(1.07);
+  box-shadow: 0 4px 15px rgba(40, 87, 42, 0.18);
 }
 
 .options-menu {
