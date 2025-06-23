@@ -341,6 +341,12 @@ wss.on('connection', ws => {
         break;
       }
 
+      case 'player-disconnect': {
+        const { gameId: leaveId, playerId: leavePid } = payload;
+        handlePlayerDisconnection(leaveId, leavePid);
+        break;
+      }
+
       default:
         break;
     }

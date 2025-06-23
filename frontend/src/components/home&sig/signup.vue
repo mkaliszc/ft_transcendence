@@ -120,7 +120,6 @@
               >
                 <svg v-if="showConfirmPassword" class="eye-icon" fill="currentColor" viewBox="0 0 20 20">
                   <path fill-rule="evenodd" d="M3.707 2.293a1 1 0 00-1.414 1.414l14 14a1 1 0 001.414-1.414l-1.473-1.473A10.014 10.014 0 0019.542 10C18.268 5.943 14.478 3 10 3a9.958 9.958 0 00-4.512 1.074l-1.78-1.781zm4.261 4.26l1.514 1.515a2.003 2.003 0 012.45 2.45l1.514 1.514a4 4 0 00-5.478-5.478z" clip-rule="evenodd"></path>
-                  <path d="M12.454 16.697L9.75 13.992a4 4 0 01-3.742-3.741L2.335 6.578A9.98 9.98 0 00.458 10c1.274 4.057 5.065 7 9.542 7 .847 0 1.669-.105 2.454-.303z"></path>
                 </svg>
                 <svg v-else class="eye-icon" fill="currentColor" viewBox="0 0 20 20">
                   <path d="M10 12a2 2 0 100-4 2 2 0 000 4z"></path>
@@ -129,8 +128,19 @@
               </button>
             </div>
           </div>
-          
-          <button type="submit" class="signup-button" :disabled="loading">
+
+          <!-- Case à cocher CGU -->
+          <div class="form-group" style="margin-bottom: 1.5rem;">
+            <label style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.95rem;">
+              <input type="checkbox" v-model="acceptCgu" :disabled="loading" required style="accent-color: #d4af37; width: 1.1em; height: 1.1em;" />
+              <span>
+                J'accepte les
+                <router-link to="/cgu" class="cgu-link" target="_blank">Conditions d'utilisation</router-link>
+              </span>
+            </label>
+          </div>
+
+          <button type="submit" class="signup-button" :disabled="loading || !acceptCgu">
             <svg v-if="loading" class="loading-spinner" fill="none" viewBox="0 0 24 24">
               <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
               <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
@@ -185,6 +195,7 @@ const showPassword = ref(false)
 const showConfirmPassword = ref(false)
 const passwordStrength = ref(0)
 const passwordFeedback = ref('')
+const acceptCgu = ref(false)
 
 // Charger la langue préférée
 const savedLanguage = localStorage.getItem('preferred-language')
@@ -269,6 +280,10 @@ const validateForm = () => {
 }
 
 const handleSignUp = async () => {
+  if (!acceptCgu.value) {
+    error.value = "Vous devez accepter les Conditions Générales d'Utilisation pour vous inscrire.";
+    return;
+  }
   if (!validateForm()) return
 
   error.value = ''
@@ -635,5 +650,25 @@ watch(() => form.value.password, (newPassword) => {
   font-size: 0.75rem;
   color: #e0e0e0;
   text-align: left;
+}
+
+.cgu-link-info {
+  text-align: center !important;
+  width: 100%;
+  display: block;
+  font-size: 0.875rem;
+  margin-top: 0.5rem;
+}
+
+.cgu-link {
+  color: #d4af37 !important;
+  text-decoration: underline;
+  font-weight: bold;
+  font-size: 1em;
+  transition: color 0.2s;
+}
+
+.cgu-link:hover {
+  color: #fffbe6 !important;
 }
 </style>

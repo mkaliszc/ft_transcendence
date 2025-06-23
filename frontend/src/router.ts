@@ -92,12 +92,7 @@ const routes = [
     name: "CreateOrJoin",
     component: CreateOrJoin
   },
-  // 7) Flux en ligne : créer, rejoindre, waiting-room, jeu en ligne
-//   {
-//     path: "/multiplayer/create",
-//     name: "CreateGame",
-//     component: () => import("./components/CreateGame.vue")
-//   },
+
   {
     path: "/multiplayer/join",
     name: "JoinGame",
@@ -137,6 +132,11 @@ const routes = [
     component: () => import("./components/friends/friendsview.vue"),
     meta: { requiresAuth: true }
   },
+  {
+    path: "/cgu",
+    name: "Cgu",
+    component: () => import("./components/common/Cgu.vue")
+  },
 ];
 
 const router = createRouter({
@@ -155,7 +155,7 @@ const router = createRouter({
 // Navigation guard
 router.beforeEach((to, _from, next) => {
   // Liste des routes protégées qui nécessitent une authentification
-  const protectedRoutes = ['/profile', '/friends'];
+  const protectedRoutes = ['/profile', '/friends', '/multiplayer/choose'];
   
   // Si la route est protégée et que l'utilisateur n'est pas authentifié
   if (protectedRoutes.includes(to.path) && !isAuthenticated()) {

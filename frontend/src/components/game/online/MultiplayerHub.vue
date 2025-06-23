@@ -42,15 +42,35 @@
         </button>
       </div>
     </div>
+
+    <LoginRequiredModal
+      :show="showLoginPopup"
+      :title="'Accès restreint'"
+      :subtitle="'Connexion requise'"
+      :message="'Vous devez être connecté pour accéder au mode en ligne.'"
+      :features="[
+        { icon: '👥', text: 'Jouer en ligne avec d\'autres joueurs' },
+        { icon: '🏆', text: 'Classements et tournois' },
+        { icon: '⚙️', text: 'Gestion de votre profil et historique' }
+      ]"
+      signInLabel="Se connecter"
+      signUpLabel="S'inscrire"
+      @close="showLoginPopup = false"
+      @signIn="goToSignIn"
+      @signUp="goToSignUp"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
+import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { useAuth } from '@/composable/useAuths';
+import LoginRequiredModal from '@/components/common/LoginRequiredModal.vue';
 
 const router = useRouter();
 const { isAuthenticated } = useAuth();
+const showLoginPopup = ref(false);
 
 function goHome() {
   if (isAuthenticated.value) {
@@ -61,11 +81,24 @@ function goHome() {
 }
 
 function goOnline() {
+  if (!isAuthenticated.value) {
+    showLoginPopup.value = true;
+    return;
+  }
   router.push({ name: 'CreateOrJoin' });
 }
 
 function goLocal() {
   router.push({ name: 'MultiplayerLocal' });
+}
+
+function goToSignIn() {
+  showLoginPopup.value = false;
+  router.push({ name: 'Signin' });
+}
+function goToSignUp() {
+  showLoginPopup.value = false;
+  router.push({ name: 'Signup' });
 }
 </script>
 
