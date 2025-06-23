@@ -18,14 +18,15 @@ export async function update(request: FastifyRequest<{ Body: UpdateData }>, repl
 			return reply.status(404).send({ error: 'User not found' });
 		}
 
-		if (update_payload.username){
+		if (update_payload.username) {
 			const checkUsername = validateUsername(update_payload.username.trim());
-			if (!checkUsername) {
+			console.log('Username validation result:', checkUsername, 'for username:', update_payload.username.trim());
+			if (!checkUsername.isValid) {
 				return reply.status(400).send({ error: 'Invalid username format' });
 			}
 
 			const existingUser = await User.findOne({
-				where: { username: update_payload.username },
+				where: { username: update_payload.username.trim() },
 			});
 			if (existingUser && existingUser.user_id !== userId) {
 				return reply.status(400).send({ error: 'Username already exists' });
