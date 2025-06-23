@@ -16,6 +16,8 @@ class User extends Model {
 	twoFA!: boolean
 	twoFA_secret?: string
 	google_user!: boolean
+	last_seen!: Date  // NOUVEAU
+	is_online!: boolean  // NOUVEAU
 }
 
 User.init({
@@ -97,6 +99,17 @@ User.init({
 		defaultValue: null
 	},
 	google_user : {
+		type: DataTypes.BOOLEAN,
+		allowNull: false,
+		defaultValue: false
+	},
+	// NOUVEAUX CHAMPS
+	last_seen: {
+		type: DataTypes.DATE,
+		allowNull: true,
+		defaultValue: null
+	},
+	is_online: {
 		type: DataTypes.BOOLEAN,
 		allowNull: false,
 		defaultValue: false
