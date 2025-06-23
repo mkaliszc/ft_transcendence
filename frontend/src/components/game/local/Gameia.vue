@@ -152,7 +152,7 @@ const ai = ref({
   // --- Ajout pour IA : prise de décision toutes les secondes ---
   const aiKeyState = ref({ up: false, down: false });
   let aiLastUpdate = Date.now();
-  const aiUpdateInterval = 1; // 1 seconde
+  const aiUpdateInterval = 1000; // 1 seconde
   
   // Initialize game
   onMounted(() => {

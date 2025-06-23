@@ -13,10 +13,6 @@
     <div class="request-info">
       <h3 class="user-name">{{ displayName }}</h3>
       <p class="user-username">@{{ request.sender.username }}</p>
-      <div class="request-time">
-        <i class="fas fa-clock"></i>
-        <span>{{ timeAgo }}</span>
-      </div>
     </div>
 
     <!-- Actions -->
@@ -70,23 +66,6 @@ const isProcessing = ref(false);
 const displayName = computed(() => 
   props.request.sender.username
 );
-
-const timeAgo = computed(() => {
-  const now = new Date();
-  const requestTime = new Date(props.request.creation_date);
-  const diffInMinutes = Math.floor((now.getTime() - requestTime.getTime()) / (1000 * 60));
-  
-  if (diffInMinutes < 1) return 'À l\'instant';
-  if (diffInMinutes < 60) return `Il y a ${diffInMinutes} min`;
-  
-  const diffInHours = Math.floor(diffInMinutes / 60);
-  if (diffInHours < 24) return `Il y a ${diffInHours}h`;
-  
-  const diffInDays = Math.floor(diffInHours / 24);
-  if (diffInDays < 7) return `Il y a ${diffInDays}j`;
-  
-  return requestTime.toLocaleDateString();
-});
 
 // Méthodes
 const handleAccept = async () => {
@@ -207,18 +186,6 @@ const handleReject = async () => {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-}
-
-.request-time {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  font-size: 0.8rem;
-  color: #ffc107;
-}
-
-.request-time i {
-  font-size: 0.7rem;
 }
 
 .request-actions {
