@@ -15,7 +15,6 @@ export async function sign_up (request: FastifyRequest<{ Body: SignUpRequest }>,
 			return reply.status(400).send({ error: 'Username and password must be strings' })
 		}
 		const usernametrim = username.trim();
-
 		const usernameValidation = validateUsername(usernametrim);
 		if (!usernameValidation.isValid) {
 			return reply.status(400).send({ error: usernameValidation.error });
@@ -29,10 +28,9 @@ export async function sign_up (request: FastifyRequest<{ Body: SignUpRequest }>,
 		if (existingUser) {
 			return reply.status(400).send({ error: 'Username already exists' })
 		}
-
 		const hashed_password = await bcrypt.hash(password, 13)
 		const newUser = await User.create({
-			usernametrim,
+			username: usernametrim,
 			email_adress: null,
 			hashed_password,
 			google_user: false
