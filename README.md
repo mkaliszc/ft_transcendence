@@ -24,42 +24,41 @@ ft_transcendence is a complete web application that reimplements the classic gam
 ![Système d'amis](screenshots/friends.png)
 *Manage friends with online status and interaction options*
 
-## ✨ Fonctionnalités
+## ✨ Fonctionnality
 
 ### 🏠 Interface Principale
-- **Accueil personnalisé** : Interface d'accueil avec message de bienvenue
-- **Menu principal** avec accès rapide aux différentes sections :
-  - Gameplay Classique (jeu contre IA)
-  - Mode Multijoueur (jeu contre d'autres joueurs)
-  - Jeu Compétitif (tournois)
-  - Profil utilisateur
+- **Welcome pagee** : Home interface with welcome message
+- **Menu** with quick access to the various sections :
+  - Classic Gameplay (user vs IA)
+  - Multiplayer mode (user vs user up to 4)
+  - Local tournament
+  - User's profil
 
 ### 👤 Système de Profil
-- **Profils utilisateur complets** avec :
-  - Avatar personnalisable
-  - Nom d'utilisateur unique
-  - Statut en ligne/hors ligne
-  - Date d'inscription
-- **Gestion des données** :
-  - Téléchargement des données personnelles
-  - Anonymisation du compte
-  - Suppression du compte
+- **Comprehensive user profiles** with :
+  - Customisable avatar
+  - Unique username
+  - Online/Offline status
+  - Date of registration
+- **Data management** :
+  - Downloading personal data
+  - Anonymising your account
+  - Account deletion
 
-### 📊 Statistiques Détaillées
-- **Statistiques de jeu** :
-  - Nombre de matches joués
-  - Victoires et défaites
-  - Taux de victoire
-  - Parties à 4 joueurs
-- **Historique des matches** avec graphiques
-- **Évolution du taux de victoire** dans le temps
+### 📊 Detailed statistics
+- **Game statistics** :
+  - Number of matches played
+  - Victories & defeats
+  - Ratio
+  - $ player games
+- **Match history** with graphics
+- **Evolution of the win rate** over time
 
 ### 🎯 Gameplay
-- **Jeu Pong classique** avec :
-  - Contrôles fluides (touches W/S)
-  - Affichage du score en temps réel
-  - Interface de jeu épurée
-  - Système de pause
+- **Classic Pong game** with :
+  - Fluid controls (W/S keys)
+  - Real-time score display
+  - Pause system
 
 ### 👥 Social
 - **Friends** :
@@ -68,6 +67,8 @@ ft_transcendence is a complete web application that reimplements the classic gam
 
 ### 🔓 Security
 - **JSON Web Token**
+- **Google authentification**
+- **GDPR**
 
 ## 🛠️ Technology
 
