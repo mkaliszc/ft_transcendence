@@ -67,17 +67,22 @@ ft_transcendence est une application web complète qui réimplémente le jeu cla
   - Ajout/suppression d'amis
   - Invitations de jeu
 
+### 🔓 Security
+- **JSON Web Token**
+
 ## 🛠️ Technologies Utilisées
 
 - **Frontend** : Vue avec TS
 - **Interface** : Interface responsive avec design moderne
 - **Temps réel** : WebSockets pour le gameplay multijoueur
 - **Authentification** : Système de connexion sécurisé
-- **Base de données** : Stockage des profils et statistiques
+- **Base de données** : Stockage des profils et statistiques (MariaDB)
+- **Backend** : Fastify, Node.js, TS
 
 ## 🚀 Installation et Utilisation
 
 ### Prérequis
+- .env (voir .env.example)
 - Docker et Docker Compose
 - Navigateur web moderne
 
