@@ -96,5 +96,12 @@ make
 
 ### ✅ Valid modules for 42 evaluation 
 - Framework
--Standard user management, authentication, users across
+- Standard user management, authentication, users across
 tournaments
+- Implementing a remote authentication
+- Remote Players
+- Multiplayer (more than 3 players in the same game)
+- Ai opponent
+- User and game dashboard
+- GDPR
+- Two-factor
