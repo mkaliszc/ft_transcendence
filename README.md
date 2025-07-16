@@ -78,9 +78,9 @@ ft_transcendence is a complete web application that reimplements the classic gam
 - **DataBase** : MariDB, SQL
 - **Backend** : Fastify, Node.js, TS, Sequelize
 
-## 🚀 Installation et Utilisation
+## 🚀  Installation and use
 
-### Prérequis
+### Prerequisites
 - .env (see .env.example)
 - Docker & Docker Compose
 - Web navigator
@@ -109,6 +109,6 @@ tournaments
 - Microservices in backend
 - Support one all devices
 
-### 🤝 Colaborators :
+### 🤝 Collaborators :
 - [calberti](https://github.com/charles-albertini)
 - [axburin-](https://github.com/axburin)
