@@ -1,26 +1,26 @@
 # ft_transcendence
 
-Un jeu de Pong en ligne moderne avec interface web, développé dans le cadre du cursus 42.
+A modern online Pong game with a web interface, developed as part of the 42 curriculum.
 
 ## 🎮 Aperçu du Projet
 
-ft_transcendence est une application web complète qui réimplémente le jeu classique Pong avec des fonctionnalités modernes multijoueurs. Le projet comprend un système d'authentification, des profils utilisateur, des statistiques de jeu et un gameplay en temps réel.
+ft_transcendence is a complete web application that reimplements the classic game Pong with modern multiplayer features. The project includes an authentication system, user profiles, game statistics and real-time gameplay.
 
-## 📸 Captures d'écran
+## 📸 ScreenShots
 
-### Interface d'accueil
+### Home page
 ![Interface d'accueil](screenshots/home.png)
 *Interface principale avec menu de navigation et options de jeu*
 
-### Profil utilisateur et statistiques
+### Profil page with stats
 ![Profil utilisateur](screenshots/profile.png)
 *Profil détaillé avec statistiques complètes et graphiques de progression*
 
-### Gameplay en action
+### Gameplay
 ![Gameplay](screenshots/gameplay.png)
 *Jeu Pong en cours avec interface de score et contrôles*
 
-### Système d'amis
+### Friend system
 ![Système d'amis](screenshots/friends.png)
 *Gestion des amis avec statuts en ligne et options d'interaction*
 
@@ -61,36 +61,33 @@ ft_transcendence est une application web complète qui réimplémente le jeu cla
   - Interface de jeu épurée
   - Système de pause
 
-### 👥 Système Social
-- **Gestion des amis** :
-  - Liste d'amis avec statut en ligne
-  - Ajout/suppression d'amis
-  - Invitations de jeu
+### 👥 Social
+- **Friends** :
+  - Friend list with online status
+  - Add/delete friends
 
 ### 🔓 Security
 - **JSON Web Token**
 
-## 🛠️ Technologies Utilisées
+## 🛠️ Technology
 
 - **Frontend** : Vue avec TS
-- **Interface** : Interface responsive avec design moderne
-- **Temps réel** : WebSockets pour le gameplay multijoueur
-- **Authentification** : Système de connexion sécurisé
-- **Base de données** : Stockage des profils et statistiques (MariaDB)
-- **Backend** : Fastify, Node.js, TS
+- **Multiplayer** : WebSockets
+- **DataBase** : MariDB, SQL
+- **Backend** : Fastify, Node.js, TS, Sequelize
 
 ## 🚀 Installation et Utilisation
 
 ### Prérequis
-- .env (voir .env.example)
-- Docker et Docker Compose
-- Navigateur web moderne
+- .env (see .env.example)
+- Docker & Docker Compose
+- Web navigator
 
 ### Installation
 ```bash
-# Cloner le repository
-git clone https://github.com/votre-username/ft_transcendence.git
+# Clone the repository
+git clone https://github.com/mkaliszc/ft_transcendence.git
 cd ft_transcendence
 
-# Lancer l'application avec Docker
-docker-compose up --build
+# Launch the application with Makefile
+make
