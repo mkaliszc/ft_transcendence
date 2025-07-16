@@ -2,7 +2,7 @@
 
 A modern online Pong game with a web interface, developed as part of the 42 curriculum.
 
-## 🎮 Aperçu du Projet
+## 🎮 Project overview
 
 ft_transcendence is a complete web application that reimplements the classic game Pong with modern multiplayer features. The project includes an authentication system, user profiles, game statistics and real-time gameplay.
 
@@ -90,5 +90,11 @@ ft_transcendence is a complete web application that reimplements the classic gam
 git clone https://github.com/mkaliszc/ft_transcendence.git
 cd ft_transcendence
 
-# Launch the application with Makefile
+# Launch the application with Makefile, make sure to have a complete .env
 make
+```
+
+### ✅ Valid modules for 42 evaluation 
+- Framework
+-Standard user management, authentication, users across
+tournaments
