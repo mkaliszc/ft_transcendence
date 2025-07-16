@@ -10,19 +10,19 @@ ft_transcendence is a complete web application that reimplements the classic gam
 
 ### Home page
 ![Interface d'accueil](screenshots/home.png)
-*Interface principale avec menu de navigation et options de jeu*
+*Main interface with navigation menu and game options*
 
 ### Profil page with stats
 ![Profil utilisateur](screenshots/profile.png)
-*Profil détaillé avec statistiques complètes et graphiques de progression*
+*Detailed profile with full statistics and progress charts*
 
 ### Gameplay
 ![Gameplay](screenshots/gameplay.png)
-*Jeu Pong en cours avec interface de score et contrôles*
+*Pong game in progress with score interface and controls*
 
 ### Friend system
 ![Système d'amis](screenshots/friends.png)
-*Gestion des amis avec statuts en ligne et options d'interaction*
+*Manage friends with online status and interaction options*
 
 ## ✨ Fonctionnalités
 
