@@ -50,7 +50,7 @@ ft_transcendence is a complete web application that reimplements the classic gam
   - Number of matches played
   - Victories & defeats
   - Ratio
-  - $ player games
+  - Player games
 - **Match history** with graphics
 - **Evolution of the win rate** over time
 
@@ -69,6 +69,7 @@ ft_transcendence is a complete web application that reimplements the classic gam
 - **JSON Web Token**
 - **Google authentification**
 - **GDPR**
+- **Two-factor authentification**
 
 ## 🛠️ Technology
 
@@ -104,4 +105,6 @@ tournaments
 - Ai opponent
 - User and game dashboard
 - GDPR
-- Two-factor
+- Two-factor authentification and JWT
+- Microservices in backend
+- Support one all devices
