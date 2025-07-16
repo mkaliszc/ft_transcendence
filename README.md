@@ -108,3 +108,7 @@ tournaments
 - Two-factor authentification and JWT
 - Microservices in backend
 - Support one all devices
+
+### 🤝 Colaborators :
+- [calberti](https://github.com/charles-albertini)
+- [axburin-](https://github.com/axburin)
